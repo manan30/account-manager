@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-query": "2.25.2",
+    "react-router": "5.2.0"
   }
 }
