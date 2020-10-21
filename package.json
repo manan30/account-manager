@@ -1,0 +1,33 @@
+{
+  "name": "react-parcel-starter",
+  "version": "1.0.0",
+  "description": "A starter repo for creating React applications using Parcel as the module bundler",
+  "main": "index.js",
+  "author": "Manan Joshi",
+  "license": "MIT",
+  "scripts": {
+    "parcel:help": "parcel help",
+    "start": "parcel public/index.html --port 1741 --open",
+    "build": "parcel build public/index.html --no-source-maps",
+    "lint": "eslint 'src/**/*.js'",
+    "lint:fix": "eslint --fix 'src/**/*.js'",
+    "format": "prettier --write 'src/**/*.{js, css}'",
+    "format:check": "prettier --check 'src/**/*.{js, css}'"
+  },
+  "devDependencies": {
+    "eslint": "7.8.1",
+    "eslint-config-airbnb": "18.2.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.20.6",
+    "eslint-plugin-react-hooks": "4.1.0",
+    "parcel-bundler": "1.12.4",
+    "prettier": "2.1.1"
+  },
+  "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  }
+}
