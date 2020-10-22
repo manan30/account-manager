@@ -20,6 +20,8 @@
   },
   "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
+    "global-require": "off",
+    "import/no-extraneous-dependencies": "off",
     "react/jsx-filename-extension": "off"
   }
 }
