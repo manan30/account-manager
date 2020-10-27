@@ -373,7 +373,8 @@ module.exports = {
     minHeight: {
       0: '0',
       full: '100%',
-      screen: '100vh'
+      screen: '100vh',
+      'c-8': '8rem'
     },
     minWidth: {
       0: '0',
