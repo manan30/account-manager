@@ -12,9 +12,9 @@ const links = [
 function SideNav() {
   const { pathname } = useLocation();
   return (
-    <div className='bg-gray-300 px-8'>
+    <div className='bg-gray-300 px-8 flex flex-col'>
       <h2 className='text-3xl mt-6 text-gray-800'>Account Manager</h2>
-      <nav className='flex flex-col'>
+      <nav className='flex flex-col flex-auto'>
         {links.map((link) => (
           <Link
             to={link.to}
@@ -28,6 +28,12 @@ function SideNav() {
           </Link>
         ))}
       </nav>
+      <Link
+        to='/new-transaction'
+        className='w-full block text-center text-xl text-gray-300 mb-3 bg-gray-700 p-1 rounded'
+      >
+        New Transaction
+      </Link>
     </div>
   );
 }
