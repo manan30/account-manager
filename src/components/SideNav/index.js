@@ -11,22 +11,27 @@ const links = [
 
 function SideNav() {
   const { pathname } = useLocation();
+
   return (
     <div className='bg-gray-300 px-8 flex flex-col'>
       <h2 className='text-3xl mt-6 text-gray-800'>Account Manager</h2>
       <nav className='flex flex-col flex-auto'>
-        {links.map((link) => (
-          <Link
-            to={link.to}
-            className={cn(
-              'mt-5 text-xl text-indigo-600',
-              'hover:opacity-100',
-              pathname !== link.to && 'opacity-50'
-            )}
-          >
-            {link.linkText}
-          </Link>
-        ))}
+        {links.map((link, i) => {
+          const key = i;
+          return (
+            <Link
+              key={key}
+              to={link.to}
+              className={cn(
+                'mt-5 text-xl text-indigo-600',
+                'hover:opacity-100',
+                pathname !== link.to && 'opacity-50'
+              )}
+            >
+              {link.linkText}
+            </Link>
+          );
+        })}
       </nav>
       <Link
         to='/new-transaction'

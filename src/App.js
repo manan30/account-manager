@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import SideNav from './components/SideNav';
-import Overview from './pages/Overview';
+
+const routes = [
+  { path: '/', component: React.lazy(() => import('./pages/Overview')) },
+  {
+    path: '/new-transaction',
+    component: React.lazy(() => import('./pages/NewTransaction'))
+  }
+];
 
 function App() {
   return (
     <Router>
       <div className='flex h-full w-full'>
         <SideNav />
-        <Switch>
-          <Route exact path='/' component={Overview} />
-        </Switch>
+        <Suspense fallback={<div />}>
+          <Switch>
+            {routes.map((route, i) => {
+              const key = i;
+              return (
+                <Route
+                  exact
+                  key={key}
+                  path={route.path}
+                  component={route.component}
+                />
+              );
+            })}
+          </Switch>
+        </Suspense>
       </div>
     </Router>
   );
