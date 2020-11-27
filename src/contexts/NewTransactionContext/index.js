@@ -5,7 +5,7 @@ import useTransactionReducer from '../../reducers/NewTransactionReducer';
 const NewTransactionStateContext = React.createContext();
 const NewTransactionDispatchContext = React.createContext();
 
-function NewTransactionContextProvider({ children }) {
+function NewTransactionProvider({ children }) {
   const [state, dispatch] = useTransactionReducer();
   return (
     <NewTransactionStateContext.Provider value={state}>
@@ -16,14 +16,28 @@ function NewTransactionContextProvider({ children }) {
   );
 }
 
-NewTransactionContextProvider.propTypes = {
+NewTransactionProvider.propTypes = {
   children: PropTypes.element.isRequired
 };
 
-export default NewTransactionContextProvider;
+export default NewTransactionProvider;
 
-export const useNewTransactionStateContext = () =>
-  useContext(NewTransactionStateContext);
+export const useNewTransactionStateContext = () => {
+  const context = useContext(NewTransactionStateContext);
+  if (context === undefined) {
+    throw new Error(
+      'useNewTransactionState must be used within a NewTransactionProvider'
+    );
+  }
+  return context;
+};
 
-export const useNewTransactionDispatchContext = () =>
-  useContext(NewTransactionDispatchContext);
+export const useNewTransactionDispatchContext = () => {
+  const context = useContext(NewTransactionDispatchContext);
+  if (context === undefined) {
+    throw new Error(
+      'useNewTransactionDispatch must be used within a NewTransactionProvider'
+    );
+  }
+  return context;
+};

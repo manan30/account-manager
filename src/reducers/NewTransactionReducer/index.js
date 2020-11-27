@@ -13,7 +13,7 @@ const newTransactionReducer = (state, action) => {
     case ADD_AMOUNT:
       return { ...state, amount: action.payload };
     default:
-      throw new Error('Unknown action');
+      throw new Error(`Unhandled action type: ${action.type}`);
   }
 };
 
