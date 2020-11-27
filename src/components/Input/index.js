@@ -12,7 +12,7 @@ function Input({ type, required, name, placeHolder, label, setFormState }) {
   };
 
   return (
-    <label htmlFor={name} className='p-2 text-indigo-600'>
+    <label htmlFor={name} className='text-indigo-600'>
       {label}
       <input
         id={name}
