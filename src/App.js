@@ -6,7 +6,7 @@ const routes = [
   { path: '/', component: React.lazy(() => import('./pages/Overview')) },
   {
     path: '/new-transaction',
-    component: React.lazy(() => import('./pages/CodeSplitPages/NewTransaction'))
+    component: React.lazy(() => import('./pages/NewTransaction/withContext.js'))
   }
 ];
 
