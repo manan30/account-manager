@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaChevronDown } from 'react-icons/fa';
+import Label from '../Label';
 
 function Select({ name, label, placeHolder, selectOptions }) {
   const [selectValue, setSelectValue] = useState('');
@@ -20,9 +21,8 @@ function Select({ name, label, placeHolder, selectOptions }) {
 
   return (
     <div>
-      <label htmlFor={name} className='text-indigo-600'>
-        {label}
-        <div className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2 flex items-center'>
+      <Label name={name} label={label}>
+        <div className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2 flex items-center text-base'>
           <input
             id={name}
             name={name}
@@ -40,7 +40,7 @@ function Select({ name, label, placeHolder, selectOptions }) {
             <FaChevronDown />
           </button>
         </div>
-      </label>
+      </Label>
       {showOptions && (
         <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border'>
           {options.map((option, i) => {

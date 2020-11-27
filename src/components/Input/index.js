@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import Label from '../Label';
 
 function Input({ type, required, name, placeHolder, label, setFormState }) {
   const [inputValue, setInputValue] = useState('');
@@ -12,8 +13,7 @@ function Input({ type, required, name, placeHolder, label, setFormState }) {
   };
 
   return (
-    <label htmlFor={name} className='text-indigo-600'>
-      {label}
+    <Label name={name} label={label}>
       <input
         id={name}
         type={type}
@@ -24,7 +24,7 @@ function Input({ type, required, name, placeHolder, label, setFormState }) {
         placeholder={placeHolder}
         className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2'
       />
-    </label>
+    </Label>
   );
 }
 
