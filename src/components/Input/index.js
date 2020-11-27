@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Label from '../Label';
 
-function Input({ type, required, name, placeHolder, label, setFormState }) {
+function Input({
+  type,
+  required,
+  name,
+  placeHolder,
+  label,
+  setFormState,
+  onBlurUpdate
+}) {
   const [inputValue, setInputValue] = useState('');
 
   const handleChange = (e) => {
@@ -23,6 +31,9 @@ function Input({ type, required, name, placeHolder, label, setFormState }) {
         onChange={handleChange}
         placeholder={placeHolder}
         className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2'
+        onBlur={() => {
+          if (onBlurUpdate) onBlurUpdate(inputValue);
+        }}
       />
     </Label>
   );
@@ -34,14 +45,16 @@ Input.propTypes = {
   name: PropTypes.string.isRequired,
   placeHolder: PropTypes.string,
   label: PropTypes.string.isRequired,
-  setFormState: PropTypes.func
+  setFormState: PropTypes.func,
+  onBlurUpdate: PropTypes.func
 };
 
 Input.defaultProps = {
   type: 'text',
   required: true,
   placeHolder: '',
-  setFormState: undefined
+  setFormState: undefined,
+  onBlurUpdate: undefined
 };
 
 export default Input;

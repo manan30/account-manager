@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaChevronDown } from 'react-icons/fa';
 import Label from '../Label';
 
-function Select({ name, label, placeHolder, selectOptions }) {
+function Select({
+  name,
+  label,
+  placeHolder,
+  selectOptions,
+  onSelectValueChange
+}) {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [options, setOptions] = useState(selectOptions);
@@ -18,6 +24,10 @@ function Select({ name, label, placeHolder, selectOptions }) {
       );
     }
   };
+
+  useEffect(() => {
+    if (onSelectValueChange) onSelectValueChange(selectValue);
+  }, [selectValue, onSelectValueChange]);
 
   return (
     <div>
@@ -73,12 +83,14 @@ Select.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
   placeHolder: PropTypes.string,
-  selectOptions: PropTypes.arrayOf(PropTypes.string).isRequired
+  selectOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onSelectValueChange: PropTypes.func
 };
 
 Select.defaultProps = {
   label: '',
-  placeHolder: ''
+  placeHolder: '',
+  onSelectValueChange: undefined
 };
 
 export default Select;
