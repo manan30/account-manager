@@ -7,6 +7,10 @@ const routes = [
   {
     path: '/new-transaction',
     component: React.lazy(() => import('./pages/NewTransaction/withContext.js'))
+  },
+  {
+    path: '/new-creditor',
+    component: React.lazy(() => import('./pages/NewCreditor'))
   }
 ];
 

@@ -3,6 +3,8 @@ import Input from '../../components/Input';
 import Select from '../../components/Select';
 
 function NewCreditor() {
+  const [formState, setFormState] = useState({});
+
   return (
     <div className='flex justify-center w-full'>
       <form className='my-8 w-1/3'>
