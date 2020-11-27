@@ -1,17 +1,24 @@
 import React, { useContext } from 'react';
 import useTransactionReducer from '../../reducers/NewTransactionReducer';
 
-const NewTransactionContext = React.createContext();
+const NewTransactionStateContext = React.createContext();
+const NewTransactionDispatchContext = React.createContext();
 
 function NewTransactionContextProvider({ children }) {
   const [state, dispatch] = useTransactionReducer();
   return (
-    <NewTransactionContext.Provider value={{ state, dispatch }}>
-      {children}
-    </NewTransactionContext.Provider>
+    <NewTransactionStateContext.Provider value={state}>
+      <NewTransactionDispatchContext.Provider value={dispatch}>
+        {children}
+      </NewTransactionDispatchContext.Provider>
+    </NewTransactionStateContext.Provider>
   );
 }
 
 export default NewTransactionContextProvider;
 
-export const useNewTransactionContext = () => useContext(NewTransactionContext);
+export const useNewTransactionStateContext = () =>
+  useContext(NewTransactionStateContext);
+
+export const useNewTransactionDispatchContext = () =>
+  useContext(NewTransactionDispatchContext);

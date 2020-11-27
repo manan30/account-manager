@@ -12,6 +12,5 @@ const newTransactionReducer = (state, action) => {
   }
 };
 
-export default function useTransactionReducer() {
-  return useReducer(newTransactionReducer, newTransactionInitialState);
-}
+export default () =>
+  useReducer(newTransactionReducer, newTransactionInitialState);

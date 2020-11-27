@@ -1,10 +1,10 @@
 import React from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import { useNewTransactionContext } from '../../contexts/NewTransactionContext';
+import { useNewTransactionDispatchContext } from '../../contexts/NewTransactionContext';
 
 function NewTransaction() {
-  const { dispatch } = useNewTransactionContext();
+  const dispatch = useNewTransactionDispatchContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
