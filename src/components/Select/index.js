@@ -1,28 +1,36 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { FaChevronDown } from 'react-icons/fa';
 
-function Select() {
+function Select({ name, label, placeHolder, selectOptions }) {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
+  const [options, setOptions] = useState(selectOptions);
 
   const handleChange = (e) => {
     setSelectValue(e.target.value);
+    if (e.target.value === '') {
+      setOptions(selectOptions);
+    } else {
+      setOptions(
+        selectOptions.filter((item) => item.startsWith(e.target.value))
+      );
+    }
   };
 
   return (
     <div>
-      <label htmlFor='transaction-type' className='text-indigo-600'>
-        Transaction Type
+      <label htmlFor={name} className='text-indigo-600'>
+        {label}
         <div className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2 flex items-center'>
           <input
-            id='transaction-type'
-            name='transaction-type'
+            id={name}
+            name={name}
             value={selectValue}
-            placeholder='Eg. Credit, Debit'
+            placeholder={placeHolder}
             className='mr-4 w-select-width flex-auto'
             onChange={handleChange}
             onFocus={() => setShowOptions(true)}
-            onBlur={() => setShowOptions(false)}
           />
           <button
             className='border-none text-gray-600'
@@ -34,16 +42,43 @@ function Select() {
         </div>
       </label>
       {showOptions && (
-        <ul className='flex flex-col mt-2 bg-white rounded-lg border-gray-400 border-solid border-2'>
-          <l1 className='hover:bg-red-500 px-2 py-1 mt-2'>Item 1</l1>
-          <l1 className='hover:bg-red-500 px-2 py-1 mt-2'>Item 2</l1>
-          <l1 className='hover:bg-red-500 px-2 py-1 mt-2'>Item 3</l1>
-          <l1 className='hover:bg-red-500 px-2 py-1 mt-2'>Item 4</l1>
-          <l1 className='hover:bg-red-500 px-2 py-1 mt-2'>Item 5</l1>
+        <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border'>
+          {options.map((option, i) => {
+            const key = i;
+            return (
+              <li
+                key={key}
+                className='hover:bg-indigo-300 px-2 py-1 mt-2 text-gray-800'
+              >
+                <button
+                  type='button'
+                  className='w-full text-left'
+                  onClick={() => {
+                    setSelectValue(option);
+                    setShowOptions(false);
+                  }}
+                >
+                  {option}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
   );
 }
+
+Select.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  placeHolder: PropTypes.string,
+  selectOptions: PropTypes.arrayOf(PropTypes.string).isRequired
+};
+
+Select.defaultProps = {
+  label: '',
+  placeHolder: ''
+};
 
 export default Select;
