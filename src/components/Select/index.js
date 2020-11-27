@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaChevronDown } from 'react-icons/fa';
 import Label from '../Label';
+import { useNewTransactionContext } from '../../contexts/NewTransactionContext';
 
 function Select({ name, label, placeHolder, selectOptions }) {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [options, setOptions] = useState(selectOptions);
+
+  const data = useNewTransactionContext();
+
+  console.log({ data });
 
   const handleChange = (e) => {
     setSelectValue(e.target.value);
