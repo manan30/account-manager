@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import useTransactionReducer from '../../reducers/NewTransactionReducer';
 
 const NewTransactionStateContext = React.createContext();
@@ -14,6 +15,10 @@ function NewTransactionContextProvider({ children }) {
     </NewTransactionStateContext.Provider>
   );
 }
+
+NewTransactionContextProvider.propTypes = {
+  children: PropTypes.element.isRequired
+};
 
 export default NewTransactionContextProvider;
 

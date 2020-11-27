@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Label({ children, label, name }) {
   return (
@@ -8,5 +9,15 @@ function Label({ children, label, name }) {
     </label>
   );
 }
+
+Label.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  children: PropTypes.element.isRequired
+};
+
+Label.defaultProps = {
+  label: ''
+};
 
 export default Label;
