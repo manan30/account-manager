@@ -5,7 +5,11 @@ import {
   useNewTransactionDispatchContext,
   useNewTransactionStateContext
 } from '../../contexts/NewTransactionContext';
-import { ADD_AMOUNT, ADD_TRANSACTION_TYPE } from '../../utils/Constants';
+import {
+  ADD_AMOUNT,
+  ADD_NAME,
+  ADD_TRANSACTION_TYPE
+} from '../../utils/Constants';
 
 function NewTransaction() {
   const state = useNewTransactionStateContext();
@@ -38,6 +42,16 @@ function NewTransaction() {
             label='Amount'
             onBlurUpdate={(inputValue) =>
               dispatch({ type: ADD_AMOUNT, payload: inputValue })
+            }
+          />
+        </div>
+        <div className='mt-6'>
+          <Input
+            name='name'
+            placeHolder='Name of person or entity'
+            label='Name'
+            onBlurUpdate={(inputValue) =>
+              dispatch({ type: ADD_NAME, payload: inputValue })
             }
           />
         </div>
