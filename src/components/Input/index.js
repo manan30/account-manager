@@ -32,7 +32,7 @@ function Input({
         placeholder={placeHolder}
         className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2'
         onBlur={() => {
-          if (onBlurUpdate) onBlurUpdate(inputValue);
+          if (onBlurUpdate) onBlurUpdate(inputValue, name);
         }}
       />
     </Label>

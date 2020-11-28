@@ -26,8 +26,8 @@ function Select({
   };
 
   useEffect(() => {
-    if (onSelectValueChange) onSelectValueChange(selectValue);
-  }, [selectValue, onSelectValueChange]);
+    if (onSelectValueChange) onSelectValueChange(selectValue, name);
+  }, [selectValue, onSelectValueChange, name]);
 
   return (
     <div>
