@@ -1,8 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
+import { useFirebaseContext } from '../../contexts/FirebaseContext';
 
 function NewCreditor() {
+  const { firestore } = useFirebaseContext();
+
   const [formState, setFormState] = useState({
     name: '',
     amount: '',
@@ -18,6 +21,17 @@ function NewCreditor() {
       setFormState((prevState) => ({ ...prevState, [name]: value })),
     [setFormState]
   );
+
+  useEffect(() => {
+    firestore
+      .collection('creditors')
+      .get()
+      .then((querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => doc.data());
+        console.log(data); // array of cities objects
+      })
+      .catch((err) => console.log(err.message));
+  }, [firestore]);
 
   return (
     <div className='flex justify-center w-full'>

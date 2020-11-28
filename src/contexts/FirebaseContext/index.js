@@ -1,10 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import FirebaseService from '../../services/firebase';
 
 const FirebaseContext = React.createContext();
 
 function FirebaseProvider({ children }) {
-  return <FirebaseContext.Provider>{children}</FirebaseContext.Provider>;
+  return (
+    <FirebaseContext.Provider value={new FirebaseService()}>
+      {children}
+    </FirebaseContext.Provider>
+  );
 }
 
 FirebaseProvider.propTypes = {

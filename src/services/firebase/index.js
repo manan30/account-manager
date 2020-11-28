@@ -1,9 +1,10 @@
-import { config as env } from 'dotenv';
+import dotenv from 'dotenv';
 import app from 'firebase/app';
+import 'firebase/firestore';
 
-env();
+dotenv.config();
 
-const prodConfig = {
+const config = {
   apiKey: process.env.PROD_API_KEY,
   authDomain: process.env.PROD_AUTH_DOMAIN,
   databaseURL: process.env.PROD_DATABASE_URL,
@@ -14,23 +15,12 @@ const prodConfig = {
   measurementId: process.env.PROD_MEASUREMENT_ID
 };
 
-const devConfig = {
-  apiKey: process.env.DEV_API_KEY,
-  authDomain: process.env.DEV_AUTH_DOMAIN,
-  databaseURL: process.env.DEV_DATABASE_URL,
-  projectId: process.env.DEV_PROJECT_ID,
-  storageBucket: process.env.DEV_STORAGE_BUCKET,
-  messagingSenderId: process.env.DEV_MESSAGING_SENDER_ID,
-  appId: process.env.DEV_APP_ID,
-  measurementId: process.env.DEV_MEASUREMENT_ID
-};
-
-const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
-
-class Firebase {
-  constructor() {
-    app.initializeApp(config);
-  }
+function FirebaseService() {
+  app.initializeApp(config);
+  const firestore = app.firestore();
+  if (window.location.hostname === 'localhost')
+    firestore.useEmulator('localhost', 8080);
+  return { firestore };
 }
 
-export default Firebase;
+export default FirebaseService;
