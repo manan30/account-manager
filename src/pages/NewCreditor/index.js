@@ -21,15 +21,13 @@ function NewCreditor() {
 
   return (
     <div className='flex justify-center w-full'>
-      <form className='my-8 w-1/3'>
-        <div className='mt-6'>
-          <Input
-            name='name'
-            placeHolder='Name of person or entity'
-            label='Name'
-            onBlurUpdate={handleFormUpdate}
-          />
-        </div>
+      <form className='mb-8 w-1/3 mt-16'>
+        <Input
+          name='name'
+          placeHolder='Name of person or entity'
+          label='Name'
+          onBlurUpdate={handleFormUpdate}
+        />
         <div className='mt-6'>
           <Input
             name='amount'
