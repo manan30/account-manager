@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import SideNav from './components/SideNav';
 import NotificationProvider from './contexts/NotificationContext';
+import NotificationManager from './components/Notification';
 
 const routes = [
   { path: '/', component: React.lazy(() => import('./pages/Overview')) },
@@ -34,6 +35,7 @@ function App() {
           </Suspense>
         </div>
       </Router>
+      <NotificationManager />
     </NotificationProvider>
   );
 }
