@@ -1,5 +1,8 @@
 import { useReducer } from 'react';
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '../../utils/Constants';
+import {
+  ADD_NOTIFICATION,
+  REMOVE_NOTIFICATION
+} from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 
 const notificationDefaultState = {
   content: '',
