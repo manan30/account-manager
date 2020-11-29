@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Card from '../../components/Card';
-import Header from '../../components/Header';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
 import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 
@@ -8,12 +7,14 @@ function Home() {
   const dispatch = useNotificationDispatchContext();
 
   useEffect(() => {
-    for (let i = 0; i < 5; i += 1) {
-      dispatch({
-        type: ADD_NOTIFICATION,
-        payload: { content: 'Test Notification' }
-      });
-    }
+    // for (let i = 0; i < 5; i += 1) {
+    dispatch({
+      type: ADD_NOTIFICATION,
+      payload: {
+        content: 'Test Notification'
+      }
+    });
+    // }
   }, [dispatch]);
 
   return (

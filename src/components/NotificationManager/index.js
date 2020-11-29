@@ -1,17 +1,19 @@
 import React from 'react';
 import Notification from './Notification';
 import { useNotificationStateContext } from '../../contexts/NotificationContext';
+import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
 
 function NotificationManager() {
   const { notifications } = useNotificationStateContext();
-
-  console.log({ notifications });
 
   return notifications.length !== 0 ? (
     <div className='fixed top-0 right-0 mr-8 mt-8'>
       {notifications.map((notification, id) => {
         return (
-          <Notification id={id} theme={notification.theme}>
+          <Notification
+            id={id}
+            theme={notification.theme || NOTIFICATION_THEME_SUCCESS}
+          >
             {notification.content}
           </Notification>
         );
