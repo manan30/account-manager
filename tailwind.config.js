@@ -470,7 +470,8 @@ module.exports = {
       '11/12': '91.666667%',
       full: '100%',
       screen: '100vw',
-      'select-width': 'calc(100% - 2rem)'
+      'select-width': 'calc(100% - 2rem)',
+      'notification-width': '20rem'
     }),
     zIndex: {
       auto: 'auto',

@@ -1,15 +1,20 @@
 import React from 'react';
+import Notification from './Notification';
 import { useNotificationStateContext } from '../../contexts/NotificationContext';
 
-function Notification() {
+function NotificationManager() {
   const { notifications } = useNotificationStateContext();
 
   return notifications.length !== 0 ? (
-    <div className='fixed top-0 right-0 mr-8 mt-8 bg-green-500 rounded'>
+    <div className='fixed top-0 right-0 mr-8 mt-8'>
       {notifications.map((notification, id) => {
-        return <div>{notification.content}</div>;
+        return (
+          <Notification id={id} theme={notification.theme}>
+            {notification.content}
+          </Notification>
+        );
       })}
     </div>
   ) : null;
 }
-export default Notification;
+export default NotificationManager;
