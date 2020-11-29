@@ -9,8 +9,10 @@ function NotificationManager() {
   return notifications.length !== 0 ? (
     <div className='fixed top-0 right-0 mr-8 mt-8'>
       {notifications.map((notification, id) => {
+        const key = id;
         return (
           <Notification
+            key={key}
             id={id}
             theme={notification.theme || NOTIFICATION_THEME_SUCCESS}
           >

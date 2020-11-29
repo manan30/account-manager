@@ -7,14 +7,14 @@ function Home() {
   const dispatch = useNotificationDispatchContext();
 
   useEffect(() => {
-    // for (let i = 0; i < 5; i += 1) {
-    dispatch({
-      type: ADD_NOTIFICATION,
-      payload: {
-        content: 'Test Notification'
-      }
-    });
-    // }
+    for (let i = 0; i < 5; i += 1) {
+      dispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content: `Test Notification ${i}`
+        }
+      });
+    }
   }, [dispatch]);
 
   return (
