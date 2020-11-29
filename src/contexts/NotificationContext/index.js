@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import useNotificationReducer from '../../reducers/NotificationReducer';
 
 const NotificationStateContext = React.createContext();
 const NotificationDispatchContext = React.createContext();
 
 function NotificationProvider({ children }) {
+  const [state, dispatch] = useNotificationReducer();
   return (
-    <NotificationStateContext.Provider>
-      <NotificationDispatchContext.Provider>
+    <NotificationStateContext.Provider value={state}>
+      <NotificationDispatchContext.Provider value={dispatch}>
         {children}
       </NotificationDispatchContext.Provider>
     </NotificationStateContext.Provider>
