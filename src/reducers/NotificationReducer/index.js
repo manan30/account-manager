@@ -13,9 +13,12 @@ const notificationReducer = (state, action) => {
     case ADD_NOTIFICATION:
       return { notifications: [...state.notifications, action.payload] };
     case REMOVE_NOTIFICATION:
+      // console.log(
+      //   action.state.notifications.filter((_, i) => i !== action.payload)
+      // );
       return {
         notifications: state.notifications.filter(
-          (notification) => notification.id !== action.id
+          (_, i) => i !== action.payload
         )
       };
     default:
