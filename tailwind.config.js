@@ -701,7 +701,9 @@ module.exports = {
       spin: 'spin 1s linear infinite',
       ping: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
       pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      bounce: 'bounce 1s infinite'
+      bounce: 'bounce 1s infinite',
+      'notification-entry': 'notification-entry 0.5s ease-out',
+      'notification-exit': 'notification-exit 0.5s ease-in'
     },
     keyframes: {
       spin: {
@@ -721,6 +723,22 @@ module.exports = {
         '50%': {
           transform: 'none',
           animationTimingFunction: 'cubic-bezier(0,0,0.2,1)'
+        }
+      },
+      'notification-entry': {
+        '0%': {
+          transform: 'translateX(20rem)'
+        },
+        '100%': {
+          transform: 'translateX(0)'
+        }
+      },
+      'notification-exit': {
+        '0%': {
+          transform: 'translateX(0)'
+        },
+        '100%': {
+          transform: 'translateX(30rem)'
         }
       }
     }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
 import {
@@ -11,21 +11,31 @@ import { REMOVE_NOTIFICATION } from '../../utils/Constants/ActionTypes/Notificat
 
 function Notification({ id, children, theme }) {
   const dispatch = useNotificationDispatchContext();
+  const [isNotificationShown, setIsNotificationShown] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      dispatch({ type: REMOVE_NOTIFICATION, payload: id });
-    }, 2000);
-  }, [id, dispatch]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsNotificationShown(false);
+  //   }, 2000 * id);
+  // }, [id]);
 
   return (
     <div
       className={cn(
         'w-notification-width rounded p-2 mb-4 text-indigo-100',
+        isNotificationShown
+          ? 'animate-notification-entry'
+          : 'animate-notification-exit',
         theme === NOTIFICATION_THEME_SUCCESS && 'bg-indigo-600',
         theme === NOTIFICATION_THEME_FAILURE && 'bg-red-600',
         theme === NOTIFICATION_THEME_WARNING && 'bg-yellow-500'
       )}
+      onAnimationEnd={() => {
+        console.log(!isNotificationShown);
+        if (!isNotificationShown) {
+          dispatch({ type: REMOVE_NOTIFICATION, payload: id });
+        }
+      }}
     >
       {children}
     </div>
