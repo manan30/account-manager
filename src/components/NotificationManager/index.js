@@ -5,6 +5,8 @@ import { useNotificationStateContext } from '../../contexts/NotificationContext'
 function NotificationManager() {
   const { notifications } = useNotificationStateContext();
 
+  console.log({ notifications });
+
   return notifications.length !== 0 ? (
     <div className='fixed top-0 right-0 mr-8 mt-8'>
       {notifications.map((notification, id) => {
