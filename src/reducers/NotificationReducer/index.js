@@ -5,21 +5,17 @@ import {
 } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 
 const notificationDefaultState = {
-  content: '',
-  theme: '',
-  showNotification: false
+  notifications: []
 };
 
 const notificationReducer = (state, action) => {
   switch (action.type) {
     case ADD_NOTIFICATION:
-      return {
-        content: action.payload.content,
-        theme: action.payload.theme,
-        showNotification: true
-      };
+      return state.notifications.concat(action.payload);
     case REMOVE_NOTIFICATION:
-      return { ...state, showNotification: false };
+      return state.notifications.filter(
+        (notification) => notification.id !== action.id
+      );
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
