@@ -11,11 +11,13 @@ const notificationDefaultState = {
 const notificationReducer = (state, action) => {
   switch (action.type) {
     case ADD_NOTIFICATION:
-      return state.notifications.concat(action.payload);
+      return { notifications: [...state.notifications, action.payload] };
     case REMOVE_NOTIFICATION:
-      return state.notifications.filter(
-        (notification) => notification.id !== action.id
-      );
+      return {
+        notifications: state.notifications.filter(
+          (notification) => notification.id !== action.id
+        )
+      };
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }

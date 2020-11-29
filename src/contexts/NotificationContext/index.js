@@ -17,7 +17,10 @@ function NotificationProvider({ children }) {
 }
 
 NotificationProvider.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.element.isRequired),
+    PropTypes.element
+  ]).isRequired
 };
 
 export default NotificationProvider;
