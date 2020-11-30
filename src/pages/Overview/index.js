@@ -2,10 +2,6 @@ import React, { useEffect } from 'react';
 import Card from '../../components/Card';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
 import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
-import {
-  NOTIFICATION_THEME_FAILURE,
-  NOTIFICATION_THEME_WARNING
-} from '../../utils/Constants/ThemeConstants';
 
 function Home() {
   const dispatch = useNotificationDispatchContext();
@@ -17,8 +13,7 @@ function Home() {
       dispatch({
         type: ADD_NOTIFICATION,
         payload: {
-          content: `Test Notification ${i}`,
-          theme: NOTIFICATION_THEME_WARNING
+          content: `Test Notification ${i}`
         }
       });
       // [2000]
