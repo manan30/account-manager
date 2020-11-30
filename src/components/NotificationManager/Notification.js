@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
+import { IoIosClose } from 'react-icons/io';
 import {
   NOTIFICATION_THEME_SUCCESS,
   NOTIFICATION_THEME_FAILURE,
@@ -16,28 +17,35 @@ function Notification({ id, children, theme }) {
   // useEffect(() => {
   //   setTimeout(() => {
   //     setIsNotificationShown(false);
-  //   }, 2000 * id);
+  //   }, 2000);
   // }, [id]);
 
   return (
     <div
       className={cn(
-        'w-notification-width rounded p-2 mb-4 text-indigo-100',
+        'w-notification-width rounded p-2 mb-4',
         isNotificationShown
           ? 'animate-notification-entry'
           : 'animate-notification-exit',
-        theme === NOTIFICATION_THEME_SUCCESS && 'bg-indigo-600',
-        theme === NOTIFICATION_THEME_FAILURE && 'bg-red-600',
-        theme === NOTIFICATION_THEME_WARNING && 'bg-yellow-500'
+        theme === NOTIFICATION_THEME_SUCCESS && 'bg-indigo-200 text-indigo-800',
+        theme === NOTIFICATION_THEME_FAILURE && 'bg-red-200 text-red-800',
+        theme === NOTIFICATION_THEME_WARNING && 'bg-yellow-200 text-yellow-800'
       )}
       onAnimationEnd={() => {
-        console.log(!isNotificationShown);
         if (!isNotificationShown) {
           dispatch({ type: REMOVE_NOTIFICATION, payload: id });
         }
       }}
     >
-      {children}
+      <div className='flex items-center'>
+        <div className='flex-auto'>{children}</div>
+        <button
+          type='button'
+          onClick={() => dispatch({ type: REMOVE_NOTIFICATION, payload: id })}
+        >
+          <IoIosClose size={24} />
+        </button>
+      </div>
     </div>
   );
 }

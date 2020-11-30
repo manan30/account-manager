@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Notification from './Notification';
-import { useNotificationStateContext } from '../../contexts/NotificationContext';
+import {
+  useNotificationDispatchContext,
+  useNotificationStateContext
+} from '../../contexts/NotificationContext';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
+import { REMOVE_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 
 function NotificationManager() {
+  // const dispatch = useNotificationDispatchContext();
   const { notifications } = useNotificationStateContext();
+  // const [notificationHidden, setNotificationHidden] = useState(false);
+
+  // useEffect(() => {
+  //   console.log({ notifications });
+  // }, [notifications]);
 
   return notifications.length !== 0 ? (
     <div className='fixed top-0 right-0 mr-8 mt-8'>
@@ -13,8 +23,9 @@ function NotificationManager() {
         return (
           <Notification
             key={key}
-            id={id}
+            id={notification.id}
             theme={notification.theme || NOTIFICATION_THEME_SUCCESS}
+            // onNotificationHidden={setNotificationHidden}
           >
             {notification.content}
           </Notification>
