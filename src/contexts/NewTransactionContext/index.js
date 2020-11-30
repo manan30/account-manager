@@ -26,7 +26,7 @@ export const useNewTransactionStateContext = () => {
   const context = useContext(NewTransactionStateContext);
   if (context === undefined) {
     throw new Error(
-      'useNewTransactionState must be used within a NewTransactionProvider'
+      'useNewTransactionState must be used within a NewTransactionStateProvider'
     );
   }
   return context;
@@ -36,7 +36,7 @@ export const useNewTransactionDispatchContext = () => {
   const context = useContext(NewTransactionDispatchContext);
   if (context === undefined) {
     throw new Error(
-      'useNewTransactionDispatch must be used within a NewTransactionProvider'
+      'useNewTransactionDispatch must be used within a NewTransactionDispatchProvider'
     );
   }
   return context;

@@ -3,7 +3,7 @@ import {
   ADD_AMOUNT,
   ADD_NAME,
   ADD_TRANSACTION_TYPE
-} from '../../utils/Constants';
+} from '../../utils/Constants/ActionTypes/NewTransactionReducerActionTypes';
 
 const newTransactionInitialState = {
   transactionType: '',
