@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Label from '../Label';
@@ -13,7 +13,8 @@ function Input({
   setFormState,
   subContent,
   theme,
-  onBlurUpdate
+  onBlurUpdate,
+  resetField
 }) {
   const [inputValue, setInputValue] = useState('');
 
@@ -23,6 +24,13 @@ function Input({
     if (setFormState)
       setFormState((prevState) => ({ ...prevState, [name]: e.target.value }));
   };
+
+  useEffect(() => {
+    if (resetField) {
+      setInputValue('');
+      if (onBlurUpdate) onBlurUpdate('', name);
+    }
+  }, [resetField, name, onBlurUpdate]);
 
   return (
     <>

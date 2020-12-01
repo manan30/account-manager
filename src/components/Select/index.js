@@ -12,7 +12,8 @@ function Select({
   selectOptions,
   onSelectValueChange,
   subContent,
-  theme
+  theme,
+  resetField
 }) {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
@@ -32,6 +33,13 @@ function Select({
   useEffect(() => {
     if (onSelectValueChange) onSelectValueChange(selectValue, name);
   }, [selectValue, onSelectValueChange, name]);
+
+  useEffect(() => {
+    if (resetField) {
+      setSelectValue('');
+      if (onSelectValueChange) onSelectValueChange('', name);
+    }
+  }, [resetField, name, onSelectValueChange]);
 
   return (
     <div>

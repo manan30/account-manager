@@ -1,27 +1,33 @@
 import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
-import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import {
+  INPUT_THEME_ERROR,
+  NOTIFICATION_THEME_FAILURE,
+  NOTIFICATION_THEME_SUCCESS
+} from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
 import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 
 function NewCreditor() {
-  const { firestore } = useFirebaseContext();
+  const { firebase, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
+  const history = useHistory();
 
   const [formState, setFormState] = useState({
     name: '',
     amount: '',
     currency: ''
   });
-
   const [formErrors, setFormErrors] = useState({
     name: { error: false, content: '' },
     amount: { error: false, content: '' },
     currency: { error: false, content: '' }
   });
+  const [resetForm, setResetForm] = useState(false);
 
   const handleFormError = (key) => {
     setFormErrors((prevState) => ({
@@ -55,17 +61,32 @@ function NewCreditor() {
     if (error) return;
 
     try {
+      console.log({ firestore });
       await firestore.collection('creditors').add({
         name: formState.name,
         amount: Number(formState.amount),
         currency: formState.currency,
-        created_at: firestore.Timestamp.fromDate(Date.now())
+        remaining_amount: Number(formState.amount),
+        created_at: firestore.Timestamp.now(),
+        account_settled_on: null
       });
       notificationDispatch({
         type: ADD_NOTIFICATION,
-        payload: 'New Creditor Added'
+        payload: {
+          content: 'New Creditor Added',
+          theme: NOTIFICATION_THEME_SUCCESS
+        }
       });
+      history.push('/creditors');
     } catch (err) {
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content: 'Error occurred while adding new creditor',
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+      setResetForm(true);
       console.error({ err });
     }
   };
@@ -86,6 +107,7 @@ function NewCreditor() {
           onBlurUpdate={handleFormUpdate}
           subContent={formErrors.name.error && formErrors.name.content}
           theme={formErrors.name.error && INPUT_THEME_ERROR}
+          resetField={resetForm}
         />
         <div className='mt-6'>
           <Input
@@ -96,6 +118,7 @@ function NewCreditor() {
             onBlurUpdate={handleFormUpdate}
             subContent={formErrors.amount.error && formErrors.amount.content}
             theme={formErrors.amount.error && INPUT_THEME_ERROR}
+            resetField={resetForm}
           />
         </div>
         <div className='mt-6'>
@@ -110,6 +133,7 @@ function NewCreditor() {
               formErrors.currency.error && formErrors.currency.content
             }
             theme={formErrors.currency.error && INPUT_THEME_ERROR}
+            resetField={resetForm}
           />
         </div>
         <div className='mt-10'>
