@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
+import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
+import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 
 function NewCreditor() {
   const { firestore } = useFirebaseContext();
+  const notificationDispatch = useNotificationDispatchContext();
 
   const [formState, setFormState] = useState({
     name: '',
@@ -30,7 +33,7 @@ function NewCreditor() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let error = false;
 
@@ -51,16 +54,20 @@ function NewCreditor() {
 
     if (error) return;
 
-    // if (formState.amount.error.content) {
-    //   error = error || true;
-    //   setFormState((prevState) => ({
-    //     ...prevState,
-    //     amount: {
-    //       value: prevState.amount.value,
-    //       error: { content: 'Required Field', status: true }
-    //     }
-    //   }));
-    // }
+    try {
+      await firestore.collection('creditors').add({
+        name: formState.name,
+        amount: Number(formState.amount),
+        currency: formState.currency,
+        created_at: firestore.Timestamp.fromDate(Date.now())
+      });
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: 'New Creditor Added'
+      });
+    } catch (err) {
+      console.error({ err });
+    }
   };
 
   const handleFormUpdate = useCallback(
@@ -68,17 +75,6 @@ function NewCreditor() {
       setFormState((prevState) => ({ ...prevState, [name]: value })),
     [setFormState]
   );
-
-  useEffect(() => {
-    // firestore
-    //   .collection('creditors')
-    //   .get()
-    //   .then((querySnapshot) => {
-    //     const data = querySnapshot.docs.map((doc) => doc.data());
-    //     console.log(data); // array of cities objects
-    //   })
-    //   .catch((err) => console.log(err.message));
-  }, [firestore]);
 
   return (
     <div className='flex justify-center w-full'>
