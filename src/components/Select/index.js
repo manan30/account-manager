@@ -57,9 +57,10 @@ function Select({
             name={name}
             value={selectValue}
             placeholder={placeHolder}
-            className='mr-4 w-select-width flex-auto'
+            className='mr-4 w-select-width flex-auto bg-white'
             onChange={handleChange}
             onFocus={() => setShowOptions(true)}
+            readOnly
           />
           <button
             className='border-none text-gray-600'
