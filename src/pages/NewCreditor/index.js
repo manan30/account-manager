@@ -12,6 +12,7 @@ import { isEmptyString } from '../../utils/Functions';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
 import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 import Button from '../../components/Button';
+import { AmountFormatter } from '../../utils/Formatters';
 
 function NewCreditor() {
   const { firebase, firestore } = useFirebaseContext();
@@ -140,6 +141,7 @@ function NewCreditor() {
             subContent={formErrors.amount.error && formErrors.amount.content}
             theme={formErrors.amount.error && INPUT_THEME_ERROR}
             resetField={resetForm}
+            valueFormatter={AmountFormatter}
           />
         </div>
         <div className='mt-6'>

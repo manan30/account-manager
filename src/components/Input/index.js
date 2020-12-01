@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { isEmptyString } from '../../utils/Functions';
 
 function Input({
   type,
@@ -14,13 +15,17 @@ function Input({
   subContent,
   theme,
   onBlurUpdate,
-  resetField
+  resetField,
+  valueFormatter
 }) {
   const [inputValue, setInputValue] = useState('');
 
   const handleChange = (e) => {
     e.persist();
-    setInputValue(e.target.value);
+    if (valueFormatter && !isEmptyString(inputValue))
+      setInputValue(valueFormatter.unFormat(e.target.value));
+    else setInputValue(e.target.value);
+
     if (setFormState)
       setFormState((prevState) => ({ ...prevState, [name]: e.target.value }));
   };
@@ -39,7 +44,11 @@ function Input({
           id={name}
           type={type}
           name={name}
-          value={inputValue}
+          value={
+            valueFormatter && !isEmptyString(inputValue)
+              ? valueFormatter.format(inputValue)
+              : inputValue
+          }
           required={required}
           onChange={handleChange}
           placeholder={placeHolder}
@@ -78,7 +87,11 @@ Input.propTypes = {
   onBlurUpdate: PropTypes.func,
   subContent: PropTypes.oneOf([PropTypes.string, PropTypes.element]),
   theme: PropTypes.string,
-  resetField: PropTypes.bool
+  resetField: PropTypes.bool,
+  valueFormatter: PropTypes.shape({
+    format: PropTypes.func,
+    unFormat: PropTypes.func
+  })
 };
 
 Input.defaultProps = {
@@ -89,7 +102,8 @@ Input.defaultProps = {
   onBlurUpdate: undefined,
   subContent: undefined,
   theme: '',
-  resetField: undefined
+  resetField: undefined,
+  valueFormatter: undefined
 };
 
 export default Input;
