@@ -75,7 +75,10 @@ Input.propTypes = {
   placeHolder: PropTypes.string,
   label: PropTypes.string.isRequired,
   setFormState: PropTypes.func,
-  onBlurUpdate: PropTypes.func
+  onBlurUpdate: PropTypes.func,
+  subContent: PropTypes.oneOf([PropTypes.string, PropTypes.element]),
+  theme: PropTypes.string,
+  resetField: PropTypes.bool
 };
 
 Input.defaultProps = {
@@ -83,7 +86,10 @@ Input.defaultProps = {
   required: true,
   placeHolder: '',
   setFormState: undefined,
-  onBlurUpdate: undefined
+  onBlurUpdate: undefined,
+  subContent: undefined,
+  theme: '',
+  resetField: undefined
 };
 
 export default Input;

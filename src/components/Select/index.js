@@ -114,13 +114,19 @@ Select.propTypes = {
   label: PropTypes.string,
   placeHolder: PropTypes.string,
   selectOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onSelectValueChange: PropTypes.func
+  onSelectValueChange: PropTypes.func,
+  subContent: PropTypes.oneOf([PropTypes.string, PropTypes.element]),
+  theme: PropTypes.string,
+  resetField: PropTypes.bool
 };
 
 Select.defaultProps = {
   label: '',
   placeHolder: '',
-  onSelectValueChange: undefined
+  onSelectValueChange: undefined,
+  subContent: undefined,
+  theme: '',
+  resetField: undefined
 };
 
 export default Select;

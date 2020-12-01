@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import {
-  useNewTransactionDispatchContext,
-  useNewTransactionStateContext
-} from '../../contexts/NewTransactionContext';
+import { useNewTransactionDispatchContext } from '../../contexts/NewTransactionContext';
 import {
   ADD_AMOUNT,
   ADD_NAME,
@@ -12,7 +9,6 @@ import {
 } from '../../utils/Constants/ActionTypes/NewTransactionReducerActionTypes';
 
 function NewTransaction() {
-  const state = useNewTransactionStateContext();
   const dispatch = useNewTransactionDispatchContext();
 
   const handleSubmit = (e) => {
