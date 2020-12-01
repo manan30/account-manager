@@ -3,6 +3,7 @@ import Input from '../../components/Input';
 import Select from '../../components/Select';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { isEmptyString } from '../../utils/Functions';
 
 function NewCreditor() {
   const { firestore } = useFirebaseContext();
@@ -13,8 +14,48 @@ function NewCreditor() {
     currency: ''
   });
 
+  const [formErrors, setFormErrors] = useState({
+    name: { error: false, content: '' },
+    amount: { error: false, content: '' },
+    currency: { error: false, content: '' }
+  });
+
+  const handleFormError = (key) => {
+    setFormErrors((prevState) => ({
+      ...prevState,
+      [key]: {
+        error: true,
+        content: 'Required Field'
+      }
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    let error = false;
+
+    if (isEmptyString(formState.name)) {
+      error = error || true;
+      handleFormError('name');
+    }
+
+    if (isEmptyString(formState.name)) {
+      error = error || true;
+      handleFormError('amount');
+    }
+
+    // if (formState.amount.error.content) {
+    //   error = error || true;
+    //   setFormState((prevState) => ({
+    //     ...prevState,
+    //     amount: {
+    //       value: prevState.amount.value,
+    //       error: { content: 'Required Field', status: true }
+    //     }
+    //   }));
+    // }
+
+    if (error) return;
   };
 
   const handleFormUpdate = useCallback(
@@ -24,14 +65,14 @@ function NewCreditor() {
   );
 
   useEffect(() => {
-    firestore
-      .collection('creditors')
-      .get()
-      .then((querySnapshot) => {
-        const data = querySnapshot.docs.map((doc) => doc.data());
-        console.log(data); // array of cities objects
-      })
-      .catch((err) => console.log(err.message));
+    // firestore
+    //   .collection('creditors')
+    //   .get()
+    //   .then((querySnapshot) => {
+    //     const data = querySnapshot.docs.map((doc) => doc.data());
+    //     console.log(data); // array of cities objects
+    //   })
+    //   .catch((err) => console.log(err.message));
   }, [firestore]);
 
   return (
@@ -42,8 +83,8 @@ function NewCreditor() {
           placeHolder='Name of person or entity'
           label='Name'
           onBlurUpdate={handleFormUpdate}
-          subContent='Required Field'
-          theme={INPUT_THEME_ERROR}
+          subContent={formErrors.name.error && formErrors.name.content}
+          theme={formErrors.name.error && INPUT_THEME_ERROR}
         />
         <div className='mt-6'>
           <Input
@@ -52,6 +93,8 @@ function NewCreditor() {
             placeHolder='$0.00'
             label='Amount'
             onBlurUpdate={handleFormUpdate}
+            subContent={formErrors.amount.error && formErrors.amount.content}
+            theme={formErrors.amount.error && INPUT_THEME_ERROR}
           />
         </div>
         <div className='mt-6'>
