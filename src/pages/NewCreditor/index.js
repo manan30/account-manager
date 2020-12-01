@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -11,10 +11,12 @@ import {
 import { isEmptyString } from '../../utils/Functions';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
 import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import Button from '../../components/Button';
 
 function NewCreditor() {
   const { firebase, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
+  const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
   const history = useHistory();
 
   const [formState, setFormState] = useState({
@@ -61,13 +63,31 @@ function NewCreditor() {
     if (error) return;
 
     try {
-      console.log({ firestore });
+      setIsCreditorBeingAdded(true);
+      const querySnapShot = await firestore.collection('creditors').get();
+      const creditors = querySnapShot.docs
+        .map((doc) => doc.data())
+        .map((doc) => doc.name);
+
+      if (creditors.includes(formState.name)) {
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: `Creditor ${formState.name} already exists`,
+            theme: NOTIFICATION_THEME_FAILURE
+          }
+        });
+        setResetForm(true);
+        setIsCreditorBeingAdded(false);
+        return;
+      }
+
       await firestore.collection('creditors').add({
         name: formState.name,
         amount: Number(formState.amount),
         currency: formState.currency,
         remaining_amount: Number(formState.amount),
-        created_at: firestore.Timestamp.now(),
+        created_at: firebase.firestore.Timestamp.now(),
         account_settled_on: null
       });
       notificationDispatch({
@@ -87,6 +107,7 @@ function NewCreditor() {
         }
       });
       setResetForm(true);
+      setIsCreditorBeingAdded(false);
       console.error({ err });
     }
   };
@@ -137,13 +158,11 @@ function NewCreditor() {
           />
         </div>
         <div className='mt-10'>
-          <button
-            type='submit'
-            className='w-full bg-indigo-600 rounded-lg p-2 text-gray-200 hover:shadow-lg'
-            onClick={handleSubmit}
-          >
-            Add New Creditor
-          </button>
+          <Button
+            buttonText='Add Creditor'
+            onClickHandler={handleSubmit}
+            loading={isCreditorBeingAdded}
+          />
         </div>
       </form>
     </div>
