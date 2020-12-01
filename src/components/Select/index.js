@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaChevronDown } from 'react-icons/fa';
+import cn from 'classnames';
 import Label from '../Label';
+import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 
 function Select({
   name,
   label,
   placeHolder,
   selectOptions,
-  onSelectValueChange
+  onSelectValueChange,
+  subContent,
+  theme
 }) {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
@@ -32,7 +36,14 @@ function Select({
   return (
     <div>
       <Label name={name} label={label}>
-        <div className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2 flex items-center text-base'>
+        <div
+          className={cn(
+            'border-solid border-2 rounded-lg p-2 w-full mt-2 flex items-center text-base',
+            theme && theme === INPUT_THEME_ERROR
+              ? 'border-red-500 text-red-500'
+              : 'border-gray-400'
+          )}
+        >
           <input
             id={name}
             name={name}
@@ -51,6 +62,16 @@ function Select({
           </button>
         </div>
       </Label>
+      {subContent && (
+        <div
+          className={cn(
+            'mt-1 text-sm',
+            theme && theme === INPUT_THEME_ERROR && 'text-red-600'
+          )}
+        >
+          {subContent}
+        </div>
+      )}
       {showOptions && (
         <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border'>
           {options.map((option, i) => {

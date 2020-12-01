@@ -44,6 +44,13 @@ function NewCreditor() {
       handleFormError('amount');
     }
 
+    if (isEmptyString(formState.currency)) {
+      error = error || true;
+      handleFormError('currency');
+    }
+
+    if (error) return;
+
     // if (formState.amount.error.content) {
     //   error = error || true;
     //   setFormState((prevState) => ({
@@ -54,8 +61,6 @@ function NewCreditor() {
     //     }
     //   }));
     // }
-
-    if (error) return;
   };
 
   const handleFormUpdate = useCallback(
@@ -105,6 +110,10 @@ function NewCreditor() {
             label='Currency'
             selectOptions={['USD', 'CAD', 'INR']}
             onSelectValueChange={handleFormUpdate}
+            subContent={
+              formErrors.currency.error && formErrors.currency.content
+            }
+            theme={formErrors.currency.error && INPUT_THEME_ERROR}
           />
         </div>
         <div className='mt-10'>
