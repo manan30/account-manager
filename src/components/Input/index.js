@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 import Label from '../Label';
+import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 
 function Input({
   type,
@@ -9,6 +11,8 @@ function Input({
   placeHolder,
   label,
   setFormState,
+  subContent,
+  theme,
   onBlurUpdate
 }) {
   const [inputValue, setInputValue] = useState('');
@@ -21,21 +25,38 @@ function Input({
   };
 
   return (
-    <Label name={name} label={label}>
-      <input
-        id={name}
-        type={type}
-        name={name}
-        value={inputValue}
-        required={required}
-        onChange={handleChange}
-        placeholder={placeHolder}
-        className='border-gray-400 border-solid border-2 rounded-lg p-2 w-full mt-2'
-        onBlur={() => {
-          if (onBlurUpdate) onBlurUpdate(inputValue, name);
-        }}
-      />
-    </Label>
+    <>
+      <Label name={name} label={label}>
+        <input
+          id={name}
+          type={type}
+          name={name}
+          value={inputValue}
+          required={required}
+          onChange={handleChange}
+          placeholder={placeHolder}
+          className={cn(
+            'border-solid border-2 rounded-lg p-2 w-full mt-2',
+            theme && theme === INPUT_THEME_ERROR
+              ? 'border-red-500 text-red-500'
+              : 'border-gray-400'
+          )}
+          onBlur={() => {
+            if (onBlurUpdate) onBlurUpdate(inputValue, name);
+          }}
+        />
+      </Label>
+      {subContent && (
+        <div
+          className={cn(
+            'mt-1 text-sm',
+            theme && theme === INPUT_THEME_ERROR && 'text-red-600'
+          )}
+        >
+          {subContent}
+        </div>
+      )}
+    </>
   );
 }
 

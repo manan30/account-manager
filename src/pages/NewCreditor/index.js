@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
+import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 
 function NewCreditor() {
   const { firestore } = useFirebaseContext();
@@ -41,6 +42,8 @@ function NewCreditor() {
           placeHolder='Name of person or entity'
           label='Name'
           onBlurUpdate={handleFormUpdate}
+          subContent='Required Field'
+          theme={INPUT_THEME_ERROR}
         />
         <div className='mt-6'>
           <Input
