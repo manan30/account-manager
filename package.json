@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "parcel:help": "parcel help",
+    "start:dev": "yarn clean && yarn start",
     "start": "parcel public/index.html --port 1741 --open",
     "build": "parcel build public/index.html --no-source-maps",
     "lint": "eslint 'src/**/*.js'",
