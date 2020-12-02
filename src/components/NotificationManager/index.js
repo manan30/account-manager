@@ -12,14 +12,14 @@ function NotificationManager() {
   const { notifications } = useNotificationStateContext();
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const timeout = setTimeout(() => {
       if (notifications && notifications.length) {
         const { id } = notifications[notifications.length - 1];
         dispatch({ type: REMOVE_NOTIFICATION, payload: id });
       }
     }, 3000);
     return () => {
-      clearInterval(interval);
+      clearTimeout(timeout);
     };
   }, [notifications, dispatch]);
 
