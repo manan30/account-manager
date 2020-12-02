@@ -9,8 +9,8 @@ function Button({ buttonText, onClickHandler, type, loading }) {
       // eslint-disable-next-line react/button-has-type
       type={type}
       className={cn(
-        'w-full rounded-lg p-2 text-gray-200',
-        !loading ? 'hover:shadow-lg bg-indigo-600' : 'bg-indigo-200'
+        'w-full rounded-lg p-2 text-gray-200 hover:shadow-lg bg-indigo-600',
+        loading && 'hover:shadow-none opacity-50 cursor-default'
       )}
       onClick={onClickHandler}
       disabled={loading}

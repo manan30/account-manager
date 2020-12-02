@@ -16,15 +16,22 @@ function Input({
   theme,
   onBlurUpdate,
   resetField,
-  valueFormatter
+  valueFormatter,
+  validator
 }) {
   const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState({ status: false, message: '' });
 
   const handleChange = (e) => {
     e.persist();
-    if (valueFormatter && !isEmptyString(inputValue))
-      setInputValue(valueFormatter.unFormat(e.target.value));
-    else setInputValue(e.target.value);
+    setInputValue(e.target.value);
+
+    if (validator && !isEmptyString(inputValue)) {
+    }
+
+    // if (valueFormatter && !isEmptyString(inputValue))
+    //   setInputValue(valueFormatter.unFormat(e.target.value));
+    // else setInputValue(e.target.value);
 
     if (setFormState)
       setFormState((prevState) => ({ ...prevState, [name]: e.target.value }));
@@ -36,6 +43,17 @@ function Input({
       if (onBlurUpdate) onBlurUpdate('', name);
     }
   }, [resetField, name, onBlurUpdate]);
+
+  useEffect(() => {
+    if (validator && !isEmptyString(inputValue)) {
+      const { testFailed, errorMessage } = validator(inputValue);
+      if (testFailed) {
+        setError({ error: true, message: errorMessage });
+      } else {
+        setError({ error: false, message: '' });
+      }
+    }
+  }, [inputValue, validator]);
 
   return (
     <>
@@ -53,8 +71,8 @@ function Input({
           onChange={handleChange}
           placeholder={placeHolder}
           className={cn(
-            'border-solid border-2 rounded-lg p-2 w-full mt-2',
-            theme && theme === INPUT_THEME_ERROR
+            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring focus:border-indigo-300',
+            (theme && theme === INPUT_THEME_ERROR) || error.status
               ? 'border-red-500 text-red-500'
               : 'border-gray-400'
           )}
@@ -63,16 +81,19 @@ function Input({
           }}
         />
       </Label>
-      {subContent && (
-        <div
-          className={cn(
-            'mt-1 text-sm',
-            theme && theme === INPUT_THEME_ERROR && 'text-red-600'
-          )}
-        >
-          {subContent}
-        </div>
-      )}
+      {subContent ||
+        (!isEmptyString(error.message) && (
+          <div
+            className={cn(
+              'mt-1 text-sm',
+              ((theme && theme === INPUT_THEME_ERROR) ||
+                !isEmptyString(error.message)) &&
+                'text-red-600'
+            )}
+          >
+            {subContent || !isEmptyString(error.message)}
+          </div>
+        ))}
     </>
   );
 }
@@ -91,7 +112,8 @@ Input.propTypes = {
   valueFormatter: PropTypes.shape({
     format: PropTypes.func,
     unFormat: PropTypes.func
-  })
+  }),
+  validator: PropTypes.func
 };
 
 Input.defaultProps = {
@@ -103,7 +125,8 @@ Input.defaultProps = {
   subContent: undefined,
   theme: '',
   resetField: undefined,
-  valueFormatter: undefined
+  valueFormatter: undefined,
+  validator: undefined
 };
 
 export default Input;

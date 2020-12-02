@@ -13,6 +13,7 @@ import { useNotificationDispatchContext } from '../../contexts/NotificationConte
 import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
 import Button from '../../components/Button';
 import { AmountFormatter } from '../../utils/Formatters';
+import { NumberValidator } from '../../utils/Validators';
 
 function NewCreditor() {
   const { firebase, firestore } = useFirebaseContext();
@@ -142,6 +143,7 @@ function NewCreditor() {
             theme={formErrors.amount.error && INPUT_THEME_ERROR}
             resetField={resetForm}
             valueFormatter={AmountFormatter}
+            validator={NumberValidator}
           />
         </div>
         <div className='mt-6'>

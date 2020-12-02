@@ -57,7 +57,7 @@ function Select({
             name={name}
             value={selectValue}
             placeholder={placeHolder}
-            className='mr-4 w-select-width flex-auto bg-white'
+            className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300'
             onChange={handleChange}
             onFocus={() => setShowOptions(true)}
             readOnly
@@ -88,11 +88,11 @@ function Select({
             return (
               <li
                 key={key}
-                className='hover:bg-indigo-300 px-2 py-1 mt-2 text-gray-800'
+                className='hover:bg-indigo-300 focus-within:bg-indigo-300 px-2 py-1 mt-2 text-gray-800'
               >
                 <button
                   type='button'
-                  className='w-full text-left'
+                  className='w-full text-left focus:outline-none'
                   onClick={() => {
                     setSelectValue(option);
                     setShowOptions(false);
