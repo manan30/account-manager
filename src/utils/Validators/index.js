@@ -5,4 +5,9 @@ export const NumberValidator = (value = '') => {
   };
 };
 
-export const NameValidator = (value = '') => {};
+export const NameValidator = (value = '') => {
+  return {
+    testFailed: !/^[a-zA-Z]+$/g.test(value),
+    errorMessage: 'Only alphabets are allowed'
+  };
+};
