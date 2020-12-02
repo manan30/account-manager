@@ -17,13 +17,18 @@ function Input({
   onBlurUpdate,
   resetField,
   valueFormatter,
-  validator
+  validator,
+  resetFormErrors
 }) {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState({ status: false, message: '' });
 
   const handleChange = (e) => {
     e.persist();
+
+    if (subContent && !isEmptyString(subContent) && resetFormErrors) {
+      resetFormErrors(name);
+    }
     const currentValue = valueFormatter
       ? valueFormatter.unFormat(e.target.value)
       : e.target.value;
@@ -116,8 +121,12 @@ Input.propTypes = {
   label: PropTypes.string.isRequired,
   setFormState: PropTypes.func,
   onBlurUpdate: PropTypes.func,
-  subContent: PropTypes.oneOf([PropTypes.string, PropTypes.element]),
-  theme: PropTypes.string,
+  subContent: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.elementType,
+    PropTypes.bool
+  ]),
+  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   resetField: PropTypes.bool,
   valueFormatter: PropTypes.shape({
     format: PropTypes.func,

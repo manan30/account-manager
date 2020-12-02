@@ -120,6 +120,15 @@ function NewCreditor() {
     [setFormState]
   );
 
+  const resetFormErrors = useCallback(
+    (name) =>
+      setFormErrors((prevState) => ({
+        ...prevState,
+        [name]: { error: false, content: '' }
+      })),
+    []
+  );
+
   return (
     <div className='flex justify-center w-full'>
       <form className='mb-8 w-1/3 mt-16'>
@@ -132,6 +141,7 @@ function NewCreditor() {
           theme={formErrors.name.error && INPUT_THEME_ERROR}
           resetField={resetForm}
           validator={NameValidator}
+          resetFormErrors={resetFormErrors}
         />
         <div className='mt-6'>
           <Input
@@ -145,6 +155,7 @@ function NewCreditor() {
             resetField={resetForm}
             valueFormatter={AmountFormatter}
             validator={NumberValidator}
+            resetFormErrors={resetFormErrors}
           />
         </div>
         <div className='mt-6'>
@@ -160,6 +171,7 @@ function NewCreditor() {
             }
             theme={formErrors.currency.error && INPUT_THEME_ERROR}
             resetField={resetForm}
+            resetFormErrors={resetFormErrors}
           />
         </div>
         <div className='mt-10'>

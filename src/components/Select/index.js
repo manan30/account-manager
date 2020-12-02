@@ -4,6 +4,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import cn from 'classnames';
 import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { isEmptyString } from '../../utils/Functions';
 
 function Select({
   name,
@@ -13,7 +14,8 @@ function Select({
   onSelectValueChange,
   subContent,
   theme,
-  resetField
+  resetField,
+  resetFormErrors
 }) {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
@@ -32,7 +34,8 @@ function Select({
 
   useEffect(() => {
     if (onSelectValueChange) onSelectValueChange(selectValue, name);
-  }, [selectValue, onSelectValueChange, name]);
+    if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
+  }, [selectValue, onSelectValueChange, name, resetFormErrors]);
 
   useEffect(() => {
     if (resetField) {
@@ -115,8 +118,12 @@ Select.propTypes = {
   placeHolder: PropTypes.string,
   selectOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelectValueChange: PropTypes.func,
-  subContent: PropTypes.oneOf([PropTypes.string, PropTypes.element]),
-  theme: PropTypes.string,
+  subContent: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.elementType,
+    PropTypes.bool
+  ]),
+  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   resetField: PropTypes.bool
 };
 
