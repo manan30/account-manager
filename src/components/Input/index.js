@@ -24,17 +24,27 @@ function Input({
 
   const handleChange = (e) => {
     e.persist();
-    setInputValue(e.target.value);
+    const currentValue = valueFormatter
+      ? valueFormatter.unFormat(e.target.value)
+      : e.target.value;
 
-    if (validator && !isEmptyString(inputValue)) {
+    if (validator && !isEmptyString(currentValue)) {
+      const { testFailed, errorMessage } = validator(currentValue);
+      if (testFailed) {
+        setError({ status: true, message: errorMessage });
+        return;
+      }
+      setError({ status: false, message: '' });
     }
+
+    setInputValue(currentValue);
 
     // if (valueFormatter && !isEmptyString(inputValue))
     //   setInputValue(valueFormatter.unFormat(e.target.value));
     // else setInputValue(e.target.value);
 
     if (setFormState)
-      setFormState((prevState) => ({ ...prevState, [name]: e.target.value }));
+      setFormState((prevState) => ({ ...prevState, [name]: currentValue }));
   };
 
   useEffect(() => {
@@ -71,7 +81,7 @@ function Input({
           onChange={handleChange}
           placeholder={placeHolder}
           className={cn(
-            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring focus:border-indigo-300',
+            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring',
             (theme && theme === INPUT_THEME_ERROR) || error.status
               ? 'border-red-500 text-red-500'
               : 'border-gray-400'
@@ -81,19 +91,19 @@ function Input({
           }}
         />
       </Label>
-      {subContent ||
-        (!isEmptyString(error.message) && (
-          <div
-            className={cn(
-              'mt-1 text-sm',
-              ((theme && theme === INPUT_THEME_ERROR) ||
-                !isEmptyString(error.message)) &&
-                'text-red-600'
-            )}
-          >
-            {subContent || !isEmptyString(error.message)}
-          </div>
-        ))}
+      {(subContent || !isEmptyString(error.message)) && (
+        <div
+          className={cn(
+            'mt-1 text-sm',
+            ((theme && theme === INPUT_THEME_ERROR) ||
+              !isEmptyString(error.message)) &&
+              'text-red-600'
+          )}
+        >
+          <div>{subContent}</div>
+          <div>{!isEmptyString(error.message) && error.message}</div>
+        </div>
+      )}
     </>
   );
 }
