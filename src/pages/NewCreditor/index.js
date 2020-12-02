@@ -52,7 +52,7 @@ function NewCreditor() {
       handleFormError('name');
     }
 
-    if (isEmptyString(formState.name)) {
+    if (isEmptyString(formState.amount)) {
       error = error || true;
       handleFormError('amount');
     }
@@ -69,9 +69,9 @@ function NewCreditor() {
       const querySnapShot = await firestore.collection('creditors').get();
       const creditors = querySnapShot.docs
         .map((doc) => doc.data())
-        .map((doc) => doc.name);
+        .map((doc) => doc.name.toLowerCase());
 
-      if (creditors.includes(formState.name)) {
+      if (creditors.includes(formState.name.toLowerCase())) {
         notificationDispatch({
           type: ADD_NOTIFICATION,
           payload: {
