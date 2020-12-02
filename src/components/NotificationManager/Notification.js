@@ -23,7 +23,7 @@ function Notification({ id, children, theme }) {
       )}
     >
       <div className='flex items-center'>
-        <div className='flex-auto'>{children}</div>
+        <div className='flex-auto text-sm'>{children}</div>
         <button
           type='button'
           onClick={() => dispatch({ type: REMOVE_NOTIFICATION, payload: id })}

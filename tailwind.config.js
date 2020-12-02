@@ -751,7 +751,7 @@ module.exports = {
     appearance: ['responsive'],
     backgroundAttachment: ['responsive'],
     backgroundClip: ['responsive'],
-    backgroundColor: ['responsive', 'hover', 'focus'],
+    backgroundColor: ['responsive', 'hover', 'focus', 'focus-within'],
     backgroundImage: ['responsive'],
     gradientColorStops: ['responsive', 'hover', 'focus'],
     backgroundOpacity: ['responsive', 'hover', 'focus'],

@@ -17,7 +17,7 @@ function NotificationManager() {
         const { id } = notifications[notifications.length - 1];
         dispatch({ type: REMOVE_NOTIFICATION, payload: id });
       }
-    }, 2000);
+    }, 3000);
     return () => {
       clearInterval(interval);
     };
