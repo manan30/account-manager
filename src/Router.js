@@ -12,6 +12,10 @@ const routes = [
   {
     path: '/new-creditor',
     component: React.lazy(() => import('./pages/NewCreditor'))
+  },
+  {
+    path: '/creditors',
+    component: React.lazy(() => import('./pages/Creditors'))
   }
 ];
 
