@@ -25,10 +25,6 @@ const NewTransactionProvider: React.FC<NewTransactionProviderProps> = ({
   );
 };
 
-NewTransactionProvider.propTypes = {
-  children: PropTypes.element.isRequired
-};
-
 export default NewTransactionProvider;
 
 export const useNewTransactionStateContext = () => {
