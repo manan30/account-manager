@@ -16,7 +16,7 @@ import { AmountFormatter } from '../../utils/Formatters';
 import { NameValidator, NumberValidator } from '../../utils/Validators';
 
 function NewCreditor() {
-  const { firebase, firestore } = useFirebaseContext();
+  const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
   const history = useHistory();
@@ -33,7 +33,7 @@ function NewCreditor() {
   });
   const [resetForm, setResetForm] = useState(false);
 
-  const handleFormError = (key) => {
+  const handleFormError = (key: string) => {
     setFormErrors((prevState) => ({
       ...prevState,
       [key]: {
@@ -43,7 +43,7 @@ function NewCreditor() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let error = false;
 
@@ -66,12 +66,12 @@ function NewCreditor() {
 
     try {
       setIsCreditorBeingAdded(true);
-      const querySnapShot = await firestore.collection('creditors').get();
-      const creditors = querySnapShot.docs
+      const querySnapShot = await firestore?.collection('creditors').get();
+      const creditors = querySnapShot?.docs
         .map((doc) => doc.data())
         .map((doc) => doc.name.toLowerCase());
 
-      if (creditors.includes(formState.name.toLowerCase())) {
+      if (creditors?.includes(formState.name.toLowerCase())) {
         notificationDispatch({
           type: ADD_NOTIFICATION,
           payload: {
@@ -84,12 +84,12 @@ function NewCreditor() {
         return;
       }
 
-      await firestore.collection('creditors').add({
+      await firestore?.collection('creditors').add({
         name: formState.name,
         amount: Number(formState.amount),
         currency: formState.currency,
         remaining_amount: Number(formState.amount),
-        created_at: firebase.firestore.Timestamp.now(),
+        created_at: firebaseApp?.firestore.Timestamp.now(),
         account_settled_on: null
       });
       notificationDispatch({
@@ -138,7 +138,7 @@ function NewCreditor() {
           label='Name'
           onBlurUpdate={handleFormUpdate}
           subContent={formErrors.name.error && formErrors.name.content}
-          theme={formErrors.name.error && INPUT_THEME_ERROR}
+          theme={formErrors.name.error ? INPUT_THEME_ERROR : ''}
           resetField={resetForm}
           validator={NameValidator}
           resetFormErrors={resetFormErrors}
@@ -151,7 +151,7 @@ function NewCreditor() {
             label='Amount'
             onBlurUpdate={handleFormUpdate}
             subContent={formErrors.amount.error && formErrors.amount.content}
-            theme={formErrors.amount.error && INPUT_THEME_ERROR}
+            theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             valueFormatter={AmountFormatter}
             validator={NumberValidator}
@@ -177,7 +177,7 @@ function NewCreditor() {
         <div className='mt-10'>
           <Button
             buttonText='Add Creditor'
-            onClickHandler={handleSubmit}
+            onClickHandler={() => handleSubmit}
             loading={isCreditorBeingAdded}
           />
         </div>

@@ -38,5 +38,5 @@ export interface NewTransactionAction extends Action {
 
 export interface NotificationAction extends Action {
   type: typeof ADD_NOTIFICATION | typeof REMOVE_NOTIFICATION;
-  payload: { id: number; content?: string; theme?: string };
+  payload: { id?: number; content?: string; theme?: string };
 }

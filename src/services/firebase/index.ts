@@ -16,11 +16,12 @@ const config = {
 };
 
 function FirebaseService() {
-  const firebaseApp = app.initializeApp(config);
+  app.initializeApp(config);
   const firestore = app.firestore();
   if (window.location.hostname === 'localhost')
     firestore.useEmulator('localhost', 8080);
-  return { firebaseApp, firestore };
+
+  return { firebaseApp: app, firestore };
 }
 
 export default FirebaseService;

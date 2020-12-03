@@ -1,6 +1,6 @@
 import app from 'firebase';
 
 export type FirebaseContextType = {
-  firebaseApp?: app.app.App;
+  firebaseApp?: typeof app;
   firestore?: app.firestore.Firestore;
 };

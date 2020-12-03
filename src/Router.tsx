@@ -4,10 +4,10 @@ import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
 
 const routes = [
-  { path: '/', component: React.lazy(() => import('./pages/Overview/index.tsx')) },
+  { path: '/', component: React.lazy(() => import('./pages/Overview')) },
   {
     path: '/new-transaction',
-    component: React.lazy(() => import('./pages/NewTransaction/withContext.js'))
+    component: React.lazy(() => import('./pages/NewTransaction/withContext'))
   },
   {
     path: '/new-creditor',
