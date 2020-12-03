@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { NewTransactionAction, NewTransactionState } from 'reducers/interfaces';
 import {
   ADD_AMOUNT,
   ADD_NAME,
@@ -9,16 +10,22 @@ const newTransactionInitialState = {
   transactionType: '',
   amount: 0,
   name: ''
-};
+} as NewTransactionState;
 
-const newTransactionReducer = (state, action) => {
+const newTransactionReducer = (
+  state: NewTransactionState,
+  action: NewTransactionAction
+) => {
   switch (action.type) {
     case ADD_TRANSACTION_TYPE:
-      return { ...state, transactionType: action.payload };
+      return {
+        ...state,
+        transactionType: action.payload.transactionType
+      } as NewTransactionState;
     case ADD_AMOUNT:
-      return { ...state, amount: action.payload };
+      return { ...state, amount: action.payload.amount } as NewTransactionState;
     case ADD_NAME:
-      return { ...state, name: action.payload };
+      return { ...state, name: action.payload.name } as NewTransactionState;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
