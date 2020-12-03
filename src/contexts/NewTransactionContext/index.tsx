@@ -1,11 +1,20 @@
-import React, { useContext } from 'react';
+import React, { Dispatch, useContext } from 'react';
 import PropTypes from 'prop-types';
 import useTransactionReducer from '../../reducers/NewTransactionReducer';
+import { NewTransactionAction, NewTransactionState } from 'reducers/interfaces';
 
-const NewTransactionStateContext = React.createContext();
-const NewTransactionDispatchContext = React.createContext();
+const NewTransactionStateContext = React.createContext<
+  NewTransactionState | undefined
+>(undefined);
+const NewTransactionDispatchContext = React.createContext<
+  Dispatch<NewTransactionAction> | undefined
+>(undefined);
 
-function NewTransactionProvider({ children }) {
+type NewTransactionProviderProps = { children: React.ReactNode };
+
+const NewTransactionProvider: React.FC<NewTransactionProviderProps> = ({
+  children
+}) => {
   const [state, dispatch] = useTransactionReducer();
   return (
     <NewTransactionStateContext.Provider value={state}>
@@ -14,7 +23,7 @@ function NewTransactionProvider({ children }) {
       </NewTransactionDispatchContext.Provider>
     </NewTransactionStateContext.Provider>
   );
-}
+};
 
 NewTransactionProvider.propTypes = {
   children: PropTypes.element.isRequired
