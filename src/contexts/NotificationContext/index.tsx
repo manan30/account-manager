@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import useNotificationReducer from '../../reducers/NotificationReducer';
 
 const NotificationStateContext = React.createContext();
@@ -15,13 +14,6 @@ function NotificationProvider({ children }) {
     </NotificationStateContext.Provider>
   );
 }
-
-NotificationProvider.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.element.isRequired),
-    PropTypes.element
-  ]).isRequired
-};
 
 export default NotificationProvider;
 
