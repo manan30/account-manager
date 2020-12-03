@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Loader from '../Loader';
 
-function Button({ buttonText, onClickHandler, type, loading }) {
+type ButtonProps = {
+  buttonText: string;
+  type?: 'submit' | 'reset' | 'button';
+  loading?: boolean;
+  onClickHandler: () => void;
+};
+
+const Button: React.FC<ButtonProps> = ({
+  buttonText,
+  onClickHandler,
+  type = 'button',
+  loading
+}) => {
   return (
     <button
       // eslint-disable-next-line react/button-has-type
@@ -24,18 +36,6 @@ function Button({ buttonText, onClickHandler, type, loading }) {
       )}
     </button>
   );
-}
-
-Button.propTypes = {
-  buttonText: PropTypes.string.isRequired,
-  onClickHandler: PropTypes.func.isRequired,
-  type: PropTypes.string,
-  loading: PropTypes.bool
-};
-
-Button.defaultProps = {
-  type: 'button',
-  loading: undefined
 };
 
 export default Button;
