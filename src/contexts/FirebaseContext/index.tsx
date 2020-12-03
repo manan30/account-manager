@@ -1,19 +1,21 @@
+import { FirebaseContextType } from 'contexts/interfaces';
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import FirebaseService from '../../services/firebase';
 
-const FirebaseContext = React.createContext();
+const FirebaseContext = React.createContext<FirebaseContextType | undefined>(
+  undefined
+);
 
-function FirebaseProvider({ children }) {
+type FirebaseProviderProps = {
+  children: React.ReactNode;
+};
+
+const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) => {
   return (
-    <FirebaseContext.Provider value={new FirebaseService()}>
+    <FirebaseContext.Provider value={FirebaseService()}>
       {children}
     </FirebaseContext.Provider>
   );
-}
-
-FirebaseProvider.propTypes = {
-  children: PropTypes.element.isRequired
 };
 
 export default FirebaseProvider;
