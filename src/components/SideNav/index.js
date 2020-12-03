@@ -6,7 +6,8 @@ const links = [
   { to: '/', linkText: 'Overview' },
   { to: '/accounts', linkText: 'Accounts' },
   { to: '/debt', linkText: 'Debt' },
-  { to: '/spending', linkText: 'Spending' }
+  { to: '/spending', linkText: 'Spending' },
+  { to: '/creditors', linkText: 'Creditors' }
 ];
 
 function SideNav() {

@@ -1,3 +1,4 @@
+// @flow
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseService from '../../services/firebase';
