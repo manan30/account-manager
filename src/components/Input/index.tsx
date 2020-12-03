@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
@@ -11,7 +10,7 @@ type InputProps = {
   name: string;
   placeHolder?: string;
   label: string;
-  setFormState?: () => void;
+  setFormState?: (name: string, value: string) => void;
   onBlurUpdate?: (value: string) => void;
   subContent?: React.ReactNode;
   theme?: string;
@@ -63,8 +62,7 @@ const Input: React.FC<InputProps> = ({
 
     setInputValue(currentValue);
 
-    if (setFormState)
-      setFormState((prevState) => ({ ...prevState, [name]: currentValue }));
+    if (setFormState) setFormState(name, currentValue);
   };
 
   useEffect(() => {

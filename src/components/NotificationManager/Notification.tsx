@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { IoIosClose } from 'react-icons/io';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
