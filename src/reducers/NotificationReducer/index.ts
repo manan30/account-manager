@@ -3,12 +3,20 @@ import {
   ADD_NOTIFICATION,
   REMOVE_NOTIFICATION
 } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import {
+  NotificationAction,
+  NotificationItem,
+  NotificationState
+} from '../interfaces';
 
 const notificationDefaultState = {
-  notifications: []
-};
+  notifications: [] as NotificationItem[]
+} as NotificationState;
 
-const notificationReducer = (state, action) => {
+const notificationReducer = (
+  state: NotificationState,
+  action: NotificationAction
+) => {
   switch (action.type) {
     case ADD_NOTIFICATION:
       return {
@@ -23,7 +31,7 @@ const notificationReducer = (state, action) => {
     case REMOVE_NOTIFICATION:
       return {
         notifications: state.notifications.filter(
-          (notification) => notification.id !== action.payload
+          (notification) => notification.id !== action.payload.id
         )
       };
     default:
