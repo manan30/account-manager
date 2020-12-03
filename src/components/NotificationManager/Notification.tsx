@@ -10,7 +10,13 @@ import {
   NOTIFICATION_THEME_WARNING
 } from '../../utils/Constants/ThemeConstants';
 
-function Notification({ id, children, theme }) {
+type NotificationProps = {
+  id: number;
+  children: React.ReactNode;
+  theme: string;
+};
+
+const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
   const dispatch = useNotificationDispatchContext();
 
   return (
@@ -33,13 +39,6 @@ function Notification({ id, children, theme }) {
       </div>
     </div>
   );
-}
-
-Notification.propTypes = {
-  id: PropTypes.number.isRequired,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
-    .isRequired,
-  theme: PropTypes.string.isRequired
 };
 
 export default Notification;

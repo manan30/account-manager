@@ -1,3 +1,8 @@
+import {
+  ADD_NOTIFICATION,
+  REMOVE_NOTIFICATION
+} from 'utils/Constants/ActionTypes/NotificationReducerActionTypes';
+
 export type NewTransactionState = {
   transactionType: string;
   amount: number;
@@ -6,6 +11,8 @@ export type NewTransactionState = {
 
 export type NotificationItem = {
   id: number;
+  content?: string;
+  theme?: string;
 };
 
 export type NotificationState = {
@@ -24,5 +31,6 @@ export interface NewTransactionAction extends Action {
 }
 
 export interface NotificationAction extends Action {
-  payload: { id: number; content: string; theme?: string };
+  type: typeof ADD_NOTIFICATION | typeof REMOVE_NOTIFICATION;
+  payload: { id: number; content?: string; theme?: string };
 }

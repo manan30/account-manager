@@ -15,7 +15,7 @@ function NotificationManager() {
     const timeout = setTimeout(() => {
       if (notifications && notifications.length) {
         const { id } = notifications[notifications.length - 1];
-        dispatch({ type: REMOVE_NOTIFICATION, payload: id });
+        dispatch({ type: REMOVE_NOTIFICATION, payload: { id } });
       }
     }, 3000);
     return () => {
