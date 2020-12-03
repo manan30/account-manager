@@ -12,15 +12,15 @@ type InputProps = {
   placeHolder?: string;
   label: string;
   setFormState?: () => void;
-  onBlurUpdate?: () => void;
+  onBlurUpdate?: (value: string) => void;
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
-  valueFormatter: {
+  valueFormatter?: {
     format: (value: string) => string;
     unFormat: (value: string) => string;
   };
-  validator: (value: string) => { testFailed: boolean; errorMessage: string };
+  validator?: (value: string) => { testFailed: boolean; errorMessage: string };
   resetFormErrors?: (name: string) => void;
 };
 
@@ -70,7 +70,7 @@ const Input: React.FC<InputProps> = ({
   useEffect(() => {
     if (resetField) {
       setInputValue('');
-      if (onBlurUpdate) onBlurUpdate('', name);
+      if (onBlurUpdate) onBlurUpdate('');
     }
   }, [resetField, name, onBlurUpdate]);
 
@@ -107,7 +107,7 @@ const Input: React.FC<InputProps> = ({
               : 'border-gray-400'
           )}
           onBlur={() => {
-            if (onBlurUpdate) onBlurUpdate(inputValue, name);
+            if (onBlurUpdate) onBlurUpdate(inputValue);
           }}
         />
       </Label>

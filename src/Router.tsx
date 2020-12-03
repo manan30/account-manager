@@ -4,7 +4,7 @@ import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
 
 const routes = [
-  { path: '/', component: React.lazy(() => import('./pages/Overview')) },
+  { path: '/', component: React.lazy(() => import('./pages/Overview/index.tsx')) },
   {
     path: '/new-transaction',
     component: React.lazy(() => import('./pages/NewTransaction/withContext.js'))
