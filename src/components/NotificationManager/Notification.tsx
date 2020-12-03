@@ -32,7 +32,9 @@ const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
         <div className='flex-auto text-sm'>{children}</div>
         <button
           type='button'
-          onClick={() => dispatch({ type: REMOVE_NOTIFICATION, payload: id })}
+          onClick={() =>
+            dispatch({ type: REMOVE_NOTIFICATION, payload: { id } })
+          }
         >
           <IoIosClose size={24} />
         </button>
