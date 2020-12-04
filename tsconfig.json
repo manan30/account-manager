@@ -1,29 +1,24 @@
 {
   "compilerOptions": {
-    /* Specify ECMAScript target version */
     "target": "ES6",
-    /* Specify module code generation */
-    "module": "esnext",
-    /* Specify library files to be included in the compilation. */
-    "lib": ["ESNext", "DOM"],
-    /* Specify JSX code generation */
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "jsx": "react",
-    /* Generate corresponding .map files */
-    "sourceMap": true,
-    /* Enable all strict type-checking options */
-    "strict": true,
-    /* Specify module resolution strategy */
-    "moduleResolution": "node",
-    /* Base directory to resolve non-absolute module names */
-    "baseUrl": "./src",
-    /* List of folders to include type definitions from */
-    "typeRoots": ["node_modules/@types"],
-    /* Raise error on expressions and declarations with an implied 'any' type. */
-    "noImplicitAny": true,
-    /* allow import React instead of import * as React */
+    "skipLibCheck": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    /*  Emit interop between CommonJS and ES modules */
-    "esModuleInterop": true
+    "strict": true,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "baseUrl": "./src",
+    "typeRoots": ["node_modules/@types"],
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
