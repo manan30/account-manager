@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -14,6 +14,7 @@ import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/Notification
 import Button from '../../components/Button';
 import { AmountFormatter } from '../../utils/Formatters';
 import { NameValidator, NumberValidator } from '../../utils/Validators';
+import { ICreditor } from 'models/Creditor';
 
 function NewCreditor() {
   const { firebaseApp, firestore } = useFirebaseContext();
@@ -71,7 +72,7 @@ function NewCreditor() {
       setIsCreditorBeingAdded(true);
       const querySnapShot = await firestore?.collection('creditors').get();
       const creditors = querySnapShot?.docs
-        .map((doc) => doc.data())
+        .map<ICreditor>((doc) => ({ id: doc.id, ...doc.data() } as ICreditor))
         .map((doc) => doc.name.toLowerCase());
 
       if (creditors?.includes(formState.name.toLowerCase())) {
@@ -90,10 +91,10 @@ function NewCreditor() {
       await firestore?.collection('creditors').add({
         name: formState.name.trim(),
         amount: Number(formState.amount.trim()),
-        currency: formState.currency,
-        remaining_amount: Number(formState.amount.trim()),
-        created_at: firebaseApp?.firestore.Timestamp.now(),
-        account_settled_on: null
+        currency: formState.currency.trim(),
+        remainingAmount: Number(formState.amount.trim()),
+        createdAt: firebaseApp?.firestore.Timestamp.now(),
+        accountSettledOn: null
       });
       notificationDispatch({
         type: ADD_NOTIFICATION,
