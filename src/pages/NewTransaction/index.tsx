@@ -11,7 +11,7 @@ import {
 function NewTransaction() {
   const dispatch = useNewTransactionDispatchContext();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
@@ -37,7 +37,10 @@ function NewTransaction() {
             placeHolder='$0.00'
             label='Amount'
             onBlurUpdate={(inputValue) =>
-              dispatch({ type: ADD_AMOUNT, payload: inputValue })
+              dispatch({
+                type: ADD_AMOUNT,
+                payload: { amount: Number(inputValue) }
+              })
             }
           />
         </div>
@@ -47,7 +50,7 @@ function NewTransaction() {
             placeHolder='Name of person or entity'
             label='Name'
             onBlurUpdate={(inputValue) =>
-              dispatch({ type: ADD_NAME, payload: inputValue })
+              dispatch({ type: ADD_NAME, payload: { name: inputValue } })
             }
           />
         </div>

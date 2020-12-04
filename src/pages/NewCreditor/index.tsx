@@ -14,9 +14,10 @@ import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/Notification
 import Button from '../../components/Button';
 import { AmountFormatter } from '../../utils/Formatters';
 import { NameValidator, NumberValidator } from '../../utils/Validators';
+import { ICreditor } from 'models/Creditor';
 
 function NewCreditor() {
-  const { firebase, firestore } = useFirebaseContext();
+  const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
   const history = useHistory();
@@ -33,7 +34,7 @@ function NewCreditor() {
   });
   const [resetForm, setResetForm] = useState(false);
 
-  const handleFormError = (key) => {
+  const handleFormError = (key: string) => {
     setFormErrors((prevState) => ({
       ...prevState,
       [key]: {
@@ -43,8 +44,11 @@ function NewCreditor() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
+    console.log({ e });
     let error = false;
 
     if (isEmptyString(formState.name)) {
@@ -66,12 +70,12 @@ function NewCreditor() {
 
     try {
       setIsCreditorBeingAdded(true);
-      const querySnapShot = await firestore.collection('creditors').get();
-      const creditors = querySnapShot.docs
-        .map((doc) => doc.data())
+      const querySnapShot = await firestore?.collection('creditors').get();
+      const creditors = querySnapShot?.docs
+        .map<ICreditor>((doc) => ({ id: doc.id, ...doc.data() } as ICreditor))
         .map((doc) => doc.name.toLowerCase());
 
-      if (creditors.includes(formState.name.toLowerCase())) {
+      if (creditors?.includes(formState.name.toLowerCase())) {
         notificationDispatch({
           type: ADD_NOTIFICATION,
           payload: {
@@ -84,13 +88,13 @@ function NewCreditor() {
         return;
       }
 
-      await firestore.collection('creditors').add({
-        name: formState.name,
-        amount: Number(formState.amount),
-        currency: formState.currency,
-        remaining_amount: Number(formState.amount),
-        created_at: firebase.firestore.Timestamp.now(),
-        account_settled_on: null
+      await firestore?.collection('creditors').add({
+        name: formState.name.trim(),
+        amount: Number(formState.amount.trim()),
+        currency: formState.currency.trim(),
+        remainingAmount: Number(formState.amount.trim()),
+        createdAt: firebaseApp?.firestore.Timestamp.now(),
+        accountSettledOn: null
       });
       notificationDispatch({
         type: ADD_NOTIFICATION,
@@ -115,7 +119,7 @@ function NewCreditor() {
   };
 
   const handleFormUpdate = useCallback(
-    (value, name) =>
+    (name: string, value: string) =>
       setFormState((prevState) => ({ ...prevState, [name]: value })),
     [setFormState]
   );
@@ -138,7 +142,7 @@ function NewCreditor() {
           label='Name'
           onBlurUpdate={handleFormUpdate}
           subContent={formErrors.name.error && formErrors.name.content}
-          theme={formErrors.name.error && INPUT_THEME_ERROR}
+          theme={formErrors.name.error ? INPUT_THEME_ERROR : ''}
           resetField={resetForm}
           validator={NameValidator}
           resetFormErrors={resetFormErrors}
@@ -151,7 +155,7 @@ function NewCreditor() {
             label='Amount'
             onBlurUpdate={handleFormUpdate}
             subContent={formErrors.amount.error && formErrors.amount.content}
-            theme={formErrors.amount.error && INPUT_THEME_ERROR}
+            theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             valueFormatter={AmountFormatter}
             validator={NumberValidator}
@@ -161,7 +165,6 @@ function NewCreditor() {
         <div className='mt-6'>
           <Select
             name='currency'
-            type='tel'
             placeHolder='USD, INR, etc'
             label='Currency'
             selectOptions={['USD', 'CAD', 'INR']}
@@ -169,7 +172,7 @@ function NewCreditor() {
             subContent={
               formErrors.currency.error && formErrors.currency.content
             }
-            theme={formErrors.currency.error && INPUT_THEME_ERROR}
+            theme={formErrors.currency.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
           />
@@ -177,7 +180,7 @@ function NewCreditor() {
         <div className='mt-10'>
           <Button
             buttonText='Add Creditor'
-            onClickHandler={handleSubmit}
+            onClickHandler={(e) => handleSubmit(e)}
             loading={isCreditorBeingAdded}
           />
         </div>

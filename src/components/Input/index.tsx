@@ -1,15 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
 
-function Input({
-  type,
-  required,
+type InputProps = {
+  type?: string;
+  required?: boolean;
+  name: string;
+  placeHolder?: string;
+  label: string;
+  setFormState?: (name: string, value: string) => void;
+  onBlurUpdate?: (name: string, value: string) => void;
+  subContent?: React.ReactNode;
+  theme?: string;
+  resetField?: boolean;
+  valueFormatter?: {
+    format: (value: string) => string;
+    unFormat: (value: string) => string;
+  };
+  validator?: (value: string) => { testFailed: boolean; errorMessage: string };
+  resetFormErrors?: (name: string) => void;
+};
+
+const Input: React.FC<InputProps> = ({
+  type = 'text',
+  required = true,
   name,
-  placeHolder,
+  placeHolder = '',
   label,
   setFormState,
   subContent,
@@ -19,14 +37,14 @@ function Input({
   valueFormatter,
   validator,
   resetFormErrors
-}) {
+}) => {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState({ status: false, message: '' });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
 
-    if (subContent && !isEmptyString(subContent) && resetFormErrors) {
+    if (subContent && !isEmptyString(subContent as string) && resetFormErrors) {
       resetFormErrors(name);
     }
     const currentValue = valueFormatter
@@ -44,18 +62,13 @@ function Input({
 
     setInputValue(currentValue);
 
-    // if (valueFormatter && !isEmptyString(inputValue))
-    //   setInputValue(valueFormatter.unFormat(e.target.value));
-    // else setInputValue(e.target.value);
-
-    if (setFormState)
-      setFormState((prevState) => ({ ...prevState, [name]: currentValue }));
+    if (setFormState) setFormState(name, currentValue);
   };
 
   useEffect(() => {
     if (resetField) {
       setInputValue('');
-      if (onBlurUpdate) onBlurUpdate('', name);
+      if (onBlurUpdate) onBlurUpdate(name, '');
     }
   }, [resetField, name, onBlurUpdate]);
 
@@ -63,9 +76,9 @@ function Input({
     if (validator && !isEmptyString(inputValue)) {
       const { testFailed, errorMessage } = validator(inputValue);
       if (testFailed) {
-        setError({ error: true, message: errorMessage });
+        setError({ status: true, message: errorMessage });
       } else {
-        setError({ error: false, message: '' });
+        setError({ status: false, message: '' });
       }
     }
   }, [inputValue, validator]);
@@ -92,7 +105,7 @@ function Input({
               : 'border-gray-400'
           )}
           onBlur={() => {
-            if (onBlurUpdate) onBlurUpdate(inputValue, name);
+            if (onBlurUpdate) onBlurUpdate(name, inputValue);
           }}
         />
       </Label>
@@ -111,41 +124,6 @@ function Input({
       )}
     </>
   );
-}
-
-Input.propTypes = {
-  type: PropTypes.string,
-  required: PropTypes.bool,
-  name: PropTypes.string.isRequired,
-  placeHolder: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  setFormState: PropTypes.func,
-  onBlurUpdate: PropTypes.func,
-  subContent: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.elementType,
-    PropTypes.bool
-  ]),
-  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  resetField: PropTypes.bool,
-  valueFormatter: PropTypes.shape({
-    format: PropTypes.func,
-    unFormat: PropTypes.func
-  }),
-  validator: PropTypes.func
-};
-
-Input.defaultProps = {
-  type: 'text',
-  required: true,
-  placeHolder: '',
-  setFormState: undefined,
-  onBlurUpdate: undefined,
-  subContent: undefined,
-  theme: '',
-  resetField: undefined,
-  valueFormatter: undefined,
-  validator: undefined
 };
 
 export default Input;

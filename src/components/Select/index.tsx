@@ -1,27 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { FaChevronDown } from 'react-icons/fa';
 import cn from 'classnames';
 import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
 
-function Select({
+type SelectProps = {
+  name: string;
+  label?: string;
+  placeHolder?: string;
+  selectOptions: string[];
+  onSelectValueChange?: (name: string, value: string) => void;
+  subContent?: React.ReactNode;
+  theme?: string;
+  resetField?: boolean;
+  resetFormErrors?: (name: string) => void;
+};
+
+const Select: React.FC<SelectProps> = ({
   name,
-  label,
-  placeHolder,
+  label = '',
+  placeHolder = 'Choose an option',
   selectOptions,
   onSelectValueChange,
   subContent,
-  theme,
+  theme = '',
   resetField,
   resetFormErrors
-}) {
+}) => {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [options, setOptions] = useState(selectOptions);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectValue(e.target.value);
     if (e.target.value === '') {
       setOptions(selectOptions);
@@ -33,14 +44,14 @@ function Select({
   };
 
   useEffect(() => {
-    if (onSelectValueChange) onSelectValueChange(selectValue, name);
+    if (onSelectValueChange) onSelectValueChange(name, selectValue);
     if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
   }, [selectValue, onSelectValueChange, name, resetFormErrors]);
 
   useEffect(() => {
     if (resetField) {
       setSelectValue('');
-      if (onSelectValueChange) onSelectValueChange('', name);
+      if (onSelectValueChange) onSelectValueChange(name, '');
     }
   }, [resetField, name, onSelectValueChange]);
 
@@ -110,30 +121,6 @@ function Select({
       )}
     </div>
   );
-}
-
-Select.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  placeHolder: PropTypes.string,
-  selectOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onSelectValueChange: PropTypes.func,
-  subContent: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.elementType,
-    PropTypes.bool
-  ]),
-  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  resetField: PropTypes.bool
-};
-
-Select.defaultProps = {
-  label: '',
-  placeHolder: '',
-  onSelectValueChange: undefined,
-  subContent: undefined,
-  theme: '',
-  resetField: undefined
 };
 
 export default Select;

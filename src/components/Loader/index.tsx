@@ -1,7 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function Loader({ size }) {
+type LoaderProps = {
+  size?: number;
+};
+
+const Loader: React.FC<LoaderProps> = ({ size = 24 }) => {
   return (
     <svg
       width={size}
@@ -19,14 +22,6 @@ function Loader({ size }) {
       </g>
     </svg>
   );
-}
-
-Loader.propTypes = {
-  size: PropTypes.number
-};
-
-Loader.defaultProps = {
-  size: 24
 };
 
 export default Loader;

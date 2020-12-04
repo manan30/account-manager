@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { IoIosClose } from 'react-icons/io';
 import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
@@ -10,7 +9,13 @@ import {
   NOTIFICATION_THEME_WARNING
 } from '../../utils/Constants/ThemeConstants';
 
-function Notification({ id, children, theme }) {
+type NotificationProps = {
+  id: number;
+  children: React.ReactNode;
+  theme: string;
+};
+
+const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
   const dispatch = useNotificationDispatchContext();
 
   return (
@@ -26,20 +31,15 @@ function Notification({ id, children, theme }) {
         <div className='flex-auto text-sm'>{children}</div>
         <button
           type='button'
-          onClick={() => dispatch({ type: REMOVE_NOTIFICATION, payload: id })}
+          onClick={() =>
+            dispatch({ type: REMOVE_NOTIFICATION, payload: { id } })
+          }
         >
           <IoIosClose size={24} />
         </button>
       </div>
     </div>
   );
-}
-
-Notification.propTypes = {
-  id: PropTypes.number.isRequired,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
-    .isRequired,
-  theme: PropTypes.string.isRequired
 };
 
 export default Notification;

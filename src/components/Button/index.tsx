@@ -1,12 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Loader from '../Loader';
 
-function Button({ buttonText, onClickHandler, type, loading }) {
+type ButtonProps = {
+  buttonText: string;
+  type?: 'submit' | 'reset' | 'button';
+  loading?: boolean;
+  onClickHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+};
+
+const Button: React.FC<ButtonProps> = ({
+  buttonText,
+  onClickHandler,
+  type = 'button',
+  loading
+}) => {
   return (
     <button
-      // eslint-disable-next-line react/button-has-type
       type={type}
       className={cn(
         'w-full rounded-lg p-2 text-gray-200 hover:shadow-lg bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 focus:shadow-lg',
@@ -24,18 +34,6 @@ function Button({ buttonText, onClickHandler, type, loading }) {
       )}
     </button>
   );
-}
-
-Button.propTypes = {
-  buttonText: PropTypes.string.isRequired,
-  onClickHandler: PropTypes.func.isRequired,
-  type: PropTypes.string,
-  loading: PropTypes.bool
-};
-
-Button.defaultProps = {
-  type: 'button',
-  loading: undefined
 };
 
 export default Button;
