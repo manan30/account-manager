@@ -21,7 +21,8 @@ function FirebaseService() {
   const firestore = app.firestore();
   if (window.location.hostname === 'localhost')
     firestore.useEmulator('localhost', 8080);
-  return { firebase: app, firestore };
+
+  return { firebaseApp: app, firestore };
 }
 
 export default FirebaseService;

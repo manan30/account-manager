@@ -1,11 +1,22 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { Dispatch, useContext } from 'react';
+import {
+  INotificationAction,
+  NotificationState
+} from '../../reducers/NotificationReducer/notificationReducer.interface';
 import useNotificationReducer from '../../reducers/NotificationReducer';
 
-const NotificationStateContext = React.createContext();
-const NotificationDispatchContext = React.createContext();
+const NotificationStateContext = React.createContext<
+  NotificationState | undefined
+>(undefined);
+const NotificationDispatchContext = React.createContext<
+  Dispatch<INotificationAction> | undefined
+>(undefined);
 
-function NotificationProvider({ children }) {
+type NotificationProviderProps = { children: React.ReactNode };
+
+const NotificationProvider: React.FC<NotificationProviderProps> = ({
+  children
+}) => {
   const [state, dispatch] = useNotificationReducer();
   return (
     <NotificationStateContext.Provider value={state}>
@@ -14,13 +25,6 @@ function NotificationProvider({ children }) {
       </NotificationDispatchContext.Provider>
     </NotificationStateContext.Provider>
   );
-}
-
-NotificationProvider.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.element.isRequired),
-    PropTypes.element
-  ]).isRequired
 };
 
 export default NotificationProvider;

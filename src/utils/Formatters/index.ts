@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export const AmountFormatter = {
   format: (value = '') => {
     if (Number.isNaN(Number(value))) {

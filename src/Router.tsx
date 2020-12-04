@@ -7,7 +7,7 @@ const routes = [
   { path: '/', component: React.lazy(() => import('./pages/Overview')) },
   {
     path: '/new-transaction',
-    component: React.lazy(() => import('./pages/NewTransaction/withContext.js'))
+    component: React.lazy(() => import('./pages/NewTransaction/withContext'))
   },
   {
     path: '/new-creditor',
@@ -19,7 +19,7 @@ const routes = [
   }
 ];
 
-function Router() {
+const Router = () => {
   return (
     <>
       <BrowserRouter>
@@ -45,6 +45,6 @@ function Router() {
       <NotificationManager />
     </>
   );
-}
+};
 
 export default Router;
