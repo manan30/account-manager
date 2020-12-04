@@ -1,12 +1,15 @@
 import React, { Dispatch, useContext } from 'react';
 import useTransactionReducer from '../../reducers/NewTransactionReducer';
-import { NewTransactionAction, NewTransactionState } from 'reducers/interfaces';
+import {
+  INewTransactionAction,
+  NewTransactionState
+} from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 
 const NewTransactionStateContext = React.createContext<
   NewTransactionState | undefined
 >(undefined);
 const NewTransactionDispatchContext = React.createContext<
-  Dispatch<NewTransactionAction> | undefined
+  Dispatch<INewTransactionAction> | undefined
 >(undefined);
 
 type NewTransactionProviderProps = { children: React.ReactNode };

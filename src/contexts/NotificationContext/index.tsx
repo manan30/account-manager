@@ -1,12 +1,15 @@
 import React, { Dispatch, useContext } from 'react';
-import { NotificationAction, NotificationState } from 'reducers/interfaces';
+import {
+  INotificationAction,
+  NotificationState
+} from '../../reducers/NotificationReducer/notificationReducer.interface';
 import useNotificationReducer from '../../reducers/NotificationReducer';
 
 const NotificationStateContext = React.createContext<
   NotificationState | undefined
 >(undefined);
 const NotificationDispatchContext = React.createContext<
-  Dispatch<NotificationAction> | undefined
+  Dispatch<INotificationAction> | undefined
 >(undefined);
 
 type NotificationProviderProps = { children: React.ReactNode };
