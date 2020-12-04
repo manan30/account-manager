@@ -11,7 +11,7 @@ type InputProps = {
   placeHolder?: string;
   label: string;
   setFormState?: (name: string, value: string) => void;
-  onBlurUpdate?: (value: string) => void;
+  onBlurUpdate?: (name: string, value: string) => void;
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
@@ -68,7 +68,7 @@ const Input: React.FC<InputProps> = ({
   useEffect(() => {
     if (resetField) {
       setInputValue('');
-      if (onBlurUpdate) onBlurUpdate('');
+      if (onBlurUpdate) onBlurUpdate(name, '');
     }
   }, [resetField, name, onBlurUpdate]);
 
@@ -105,7 +105,7 @@ const Input: React.FC<InputProps> = ({
               : 'border-gray-400'
           )}
           onBlur={() => {
-            if (onBlurUpdate) onBlurUpdate(inputValue);
+            if (onBlurUpdate) onBlurUpdate(name, inputValue);
           }}
         />
       </Label>

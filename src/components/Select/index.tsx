@@ -44,14 +44,14 @@ const Select: React.FC<SelectProps> = ({
   };
 
   useEffect(() => {
-    if (onSelectValueChange) onSelectValueChange(selectValue, name);
+    if (onSelectValueChange) onSelectValueChange(name, selectValue);
     if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
   }, [selectValue, onSelectValueChange, name, resetFormErrors]);
 
   useEffect(() => {
     if (resetField) {
       setSelectValue('');
-      if (onSelectValueChange) onSelectValueChange('', name);
+      if (onSelectValueChange) onSelectValueChange(name, '');
     }
   }, [resetField, name, onSelectValueChange]);
 

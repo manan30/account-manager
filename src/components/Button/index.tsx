@@ -6,7 +6,7 @@ type ButtonProps = {
   buttonText: string;
   type?: 'submit' | 'reset' | 'button';
   loading?: boolean;
-  onClickHandler: () => void;
+  onClickHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 };
 
 const Button: React.FC<ButtonProps> = ({

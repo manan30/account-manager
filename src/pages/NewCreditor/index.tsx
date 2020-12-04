@@ -43,8 +43,11 @@ function NewCreditor() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
+    console.log({ e });
     let error = false;
 
     if (isEmptyString(formState.name)) {
@@ -85,10 +88,10 @@ function NewCreditor() {
       }
 
       await firestore?.collection('creditors').add({
-        name: formState.name,
-        amount: Number(formState.amount),
+        name: formState.name.trim(),
+        amount: Number(formState.amount.trim()),
         currency: formState.currency,
-        remaining_amount: Number(formState.amount),
+        remaining_amount: Number(formState.amount.trim()),
         created_at: firebaseApp?.firestore.Timestamp.now(),
         account_settled_on: null
       });
@@ -115,7 +118,7 @@ function NewCreditor() {
   };
 
   const handleFormUpdate = useCallback(
-    (value, name) =>
+    (name: string, value: string) =>
       setFormState((prevState) => ({ ...prevState, [name]: value })),
     [setFormState]
   );
@@ -176,7 +179,7 @@ function NewCreditor() {
         <div className='mt-10'>
           <Button
             buttonText='Add Creditor'
-            onClickHandler={() => handleSubmit}
+            onClickHandler={(e) => handleSubmit(e)}
             loading={isCreditorBeingAdded}
           />
         </div>
