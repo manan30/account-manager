@@ -161,7 +161,6 @@ function NewCreditor() {
         <div className='mt-6'>
           <Select
             name='currency'
-            type='tel'
             placeHolder='USD, INR, etc'
             label='Currency'
             selectOptions={['USD', 'CAD', 'INR']}
@@ -169,7 +168,7 @@ function NewCreditor() {
             subContent={
               formErrors.currency.error && formErrors.currency.content
             }
-            theme={formErrors.currency.error && INPUT_THEME_ERROR}
+            theme={formErrors.currency.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
           />

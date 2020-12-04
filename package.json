@@ -15,7 +15,8 @@
     "format": "prettier --write 'src/**/*.{ts,tsx,css}'",
     "format:check": "prettier --check 'src/**/*.{ts,tsx,css}'",
     "firebase-firestore": "firebase emulators:start --import=./firestore-data --export-on-exit --only firestore",
-    "clean": "rm -rfd dist .cache"
+    "clean": "rm -rfd dist .cache",
+    "compile": "yarn tsc"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",

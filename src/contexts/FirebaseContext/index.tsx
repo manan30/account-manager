@@ -1,8 +1,8 @@
-import { FirebaseContextType } from 'contexts/interfaces';
 import React, { useContext } from 'react';
+import { IFirebaseContext } from './firebase.interface';
 import FirebaseService from '../../services/firebase';
 
-const FirebaseContext = React.createContext<FirebaseContextType | undefined>(
+const FirebaseContext = React.createContext<IFirebaseContext | undefined>(
   undefined
 );
 

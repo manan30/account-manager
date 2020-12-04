@@ -1,5 +1,8 @@
 import { useReducer } from 'react';
-import { NewTransactionAction, NewTransactionState } from 'reducers/interfaces';
+import {
+  INewTransactionAction,
+  NewTransactionState
+} from './newTransactionReducer.interface';
 import {
   ADD_AMOUNT,
   ADD_NAME,
@@ -14,7 +17,7 @@ const newTransactionInitialState = {
 
 const newTransactionReducer = (
   state: NewTransactionState,
-  action: NewTransactionAction
+  action: INewTransactionAction
 ) => {
   switch (action.type) {
     case ADD_TRANSACTION_TYPE:

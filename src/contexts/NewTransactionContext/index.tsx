@@ -1,5 +1,4 @@
 import React, { Dispatch, useContext } from 'react';
-import PropTypes from 'prop-types';
 import useTransactionReducer from '../../reducers/NewTransactionReducer';
 import { NewTransactionAction, NewTransactionState } from 'reducers/interfaces';
 
