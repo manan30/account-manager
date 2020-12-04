@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* Specify ECMAScript target version */
-    "target": "es5",
+    "target": "ES6",
     /* Specify module code generation */
     "module": "esnext",
     /* Specify library files to be included in the compilation. */

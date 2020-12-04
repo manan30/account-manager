@@ -17,7 +17,6 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      // eslint-disable-next-line react/button-has-type
       type={type}
       className={cn(
         'w-full rounded-lg p-2 text-gray-200 hover:shadow-lg bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 focus:shadow-lg',

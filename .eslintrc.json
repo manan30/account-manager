@@ -1,37 +1,44 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "react-hooks",
+    "jsx-a11y",
+    "@typescript-eslint",
+    "prettier"
+  ],
   "env": {
     "browser": true,
-    "es2021": true
+    "es6": true
   },
   "extends": [
+    "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "airbnb",
     "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended",
     "plugin:jsx-a11y/recommended",
-    "prettier/react",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
     "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "prettier/react"
   ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2020,
-    "sourceType": "module"
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
   "settings": {
     "react": {
       "version": "detect"
     }
   },
-  "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
-    "global-require": "off",
-    "import/no-extraneous-dependencies": "off",
-    "react/jsx-filename-extension": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "react/prop-types": "off"
   }
 }

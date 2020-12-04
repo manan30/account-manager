@@ -15,7 +15,7 @@ const routes = [
   }
 ];
 
-function Router() {
+const Router = () => {
   return (
     <>
       <BrowserRouter>
@@ -41,6 +41,6 @@ function Router() {
       <NotificationManager />
     </>
   );
-}
+};
 
 export default Router;
