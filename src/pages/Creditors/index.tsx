@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Table from '../../components/Table';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
 import { ICreditor } from '../../models/Creditor';
 
@@ -16,7 +17,11 @@ function Creditors() {
     })();
   }, [firestore]);
 
-  return <div />;
+  return (
+    <div>
+      <Table />
+    </div>
+  );
 }
 
 export default Creditors;
