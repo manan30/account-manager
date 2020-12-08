@@ -1,44 +1,11 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Column, useTable } from 'react-table';
 
-type Data = {
-  col1: string;
-  col2: string;
-};
+type TableProps<T extends Column, K> = { columns: T[]; data: K[] };
 
-const Table = () => {
-  const columns = React.useMemo<Column<Data>[]>(
-    () => [
-      {
-        Header: 'Column 1',
-        accessor: 'col1' // accessor is the "key" in the data
-      },
-      {
-        Header: 'Column 2',
-        accessor: 'col2'
-      }
-    ],
-    []
-  );
-
-  const data = React.useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World'
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks'
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want'
-      }
-    ],
-    []
-  );
-
+const Table: <T extends Column, K>(
+  p: PropsWithChildren<TableProps<T, K>>
+) => React.ReactElement = ({ columns, data }) => {
   const {
     getTableProps,
     getTableBodyProps,
