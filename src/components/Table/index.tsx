@@ -23,12 +23,16 @@ const Table: <T extends Column, K>(
   });
 
   return (
-    <table {...getTableProps()}>
+    <table {...getTableProps()} className='w-full rounded-sm'>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()} key={column.id}>
+              <th
+                {...column.getHeaderProps()}
+                key={column.id}
+                className='p-4 text-indigo-600'
+              >
                 {column.render('Header')}
               </th>
             ))}
@@ -42,7 +46,11 @@ const Table: <T extends Column, K>(
             <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell) => {
                 return (
-                  <td {...cell.getCellProps()} key={cell.column.id}>
+                  <td
+                    {...cell.getCellProps()}
+                    key={cell.column.id}
+                    className='border border-solid border-gray-500 p-4 text-center'
+                  >
                     {cell.render('Cell')}
                   </td>
                 );

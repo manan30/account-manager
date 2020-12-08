@@ -25,21 +25,23 @@ const Router = () => {
       <BrowserRouter>
         <div className='flex h-full w-full'>
           <SideNav />
-          <Suspense fallback={<div />}>
-            <Switch>
-              {routes.map((route, i) => {
-                const key = i;
-                return (
-                  <Route
-                    exact
-                    key={key}
-                    path={route.path}
-                    component={route.component}
-                  />
-                );
-              })}
-            </Switch>
-          </Suspense>
+          <div className='flex-auto'>
+            <Suspense fallback={<div />}>
+              <Switch>
+                {routes.map((route, i) => {
+                  const key = i;
+                  return (
+                    <Route
+                      exact
+                      key={key}
+                      path={route.path}
+                      component={route.component}
+                    />
+                  );
+                })}
+              </Switch>
+            </Suspense>
+          </div>
         </div>
       </BrowserRouter>
       <NotificationManager />

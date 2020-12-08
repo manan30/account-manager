@@ -35,8 +35,10 @@ function Creditors() {
   const tableData = useMemo(() => creditors, [creditors]);
 
   return (
-    <div>
-      <Table columns={tableColumns} data={tableData} />
+    <div className='px-12 pt-12 bg-gray-100 h-full'>
+      <div>
+        <Table columns={tableColumns} data={tableData} />
+      </div>
     </div>
   );
 }
