@@ -5,5 +5,6 @@ export interface ICreditor {
   currency: string;
   remainingAmount: number;
   createdAt: { seconds: number; nanoseconds: number };
+  // TODO: Add last updated at field
   accountSettledOn?: string;
 }

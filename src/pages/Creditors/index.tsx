@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Column } from 'react-table';
 import Table from '../../components/Table';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
 import { ICreditor } from '../../models/Creditor';
@@ -17,9 +18,25 @@ function Creditors() {
     })();
   }, [firestore]);
 
+  const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
+    () => [
+      {
+        Header: 'Name',
+        accessor: 'name'
+      },
+      { Header: 'Amount', accessor: 'amount' },
+      { Header: 'Currency', accessor: 'currency' },
+      { Header: 'Remaining Amount', accessor: 'remainingAmount' },
+      { Header: 'Account Settled Date', accessor: 'accountSettledOn' }
+    ],
+    []
+  );
+
+  const tableData = useMemo(() => creditors, [creditors]);
+
   return (
     <div>
-      <Table />
+      <Table columns={tableColumns} data={tableData} />
     </div>
   );
 }

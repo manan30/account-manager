@@ -14,22 +14,21 @@ const Table: <T extends Column, K>(
     prepareRow
   } = useTable({ columns, data });
 
+  console.log({
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow
+  });
+
   return (
-    <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+    <table {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps()}
-                key={column.id}
-                style={{
-                  borderBottom: 'solid 3px red',
-                  background: 'aliceblue',
-                  color: 'black',
-                  fontWeight: 'bold'
-                }}
-              >
+              <th {...column.getHeaderProps()} key={column.id}>
                 {column.render('Header')}
               </th>
             ))}
@@ -43,15 +42,7 @@ const Table: <T extends Column, K>(
             <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell) => {
                 return (
-                  <td
-                    {...cell.getCellProps()}
-                    key={cell.column.id}
-                    style={{
-                      padding: '10px',
-                      border: 'solid 1px gray',
-                      background: 'papayawhip'
-                    }}
-                  >
+                  <td {...cell.getCellProps()} key={cell.column.id}>
                     {cell.render('Cell')}
                   </td>
                 );
