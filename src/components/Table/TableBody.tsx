@@ -8,17 +8,24 @@ const TableBody: <T extends Column, K>(
   const { getTableBodyProps, rows, prepareRow } = useTable({ columns, data });
 
   return (
-    <tbody {...getTableBodyProps()}>
+    <tbody
+      {...getTableBodyProps()}
+      className='border border-opacity-50 border-solid border-gray-400 rounded-md'
+    >
       {rows.map((row) => {
         prepareRow(row);
         return (
-          <tr {...row.getRowProps()} key={row.id}>
+          <tr
+            {...row.getRowProps()}
+            key={row.id}
+            className='border-b border-opacity-50 border-solid border-gray-400'
+          >
             {row.cells.map((cell) => {
               return (
                 <td
                   {...cell.getCellProps()}
                   key={cell.column.id}
-                  className='border border-solid border-gray-500 p-4 text-center'
+                  className='text-center p-3'
                 >
                   {cell.render('Cell')}
                 </td>
