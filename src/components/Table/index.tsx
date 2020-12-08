@@ -24,7 +24,7 @@ const Table: <T extends Column, K>(
   });
 
   return (
-    <table {...getTableProps()} className='w-full rounded-sm'>
+    <table {...getTableProps()} className='w-full'>
       <TableHeader headerGroups={headerGroups} />
       <tbody {...getTableBodyProps()}>
         {rows.map((row) => {
