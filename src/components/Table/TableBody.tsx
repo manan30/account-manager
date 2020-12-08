@@ -25,7 +25,7 @@ const TableBody: <T extends Column, K>(
                 <td
                   {...cell.getCellProps()}
                   key={cell.column.id}
-                  className='text-center p-3'
+                  className='text-center p-3 text-sm'
                 >
                   {cell.render('Cell')}
                 </td>

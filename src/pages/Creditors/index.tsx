@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
+import Loader from '../../components/Loader';
 import Table from '../../components/Table';
 import { useFirebaseContext } from '../../contexts/FirebaseContext';
 import { ICreditor } from '../../models/Creditor';
@@ -24,12 +25,25 @@ function Creditors() {
     () => [
       {
         Header: 'Name',
-        accessor: 'name'
+        accessor: 'name',
+        Cell: ({ row }) => (
+          <Link
+            className='text-indigo-500 font-medium hover:underline'
+            to={`/creditors/${row.original.id}`}
+          >
+            {row.original.name}
+          </Link>
+        )
       },
       { Header: 'Remaining Amount', accessor: 'remainingAmount' },
       { Header: 'Currency', accessor: 'currency' },
       { Header: 'Credit Amount', accessor: 'amount' },
-      { Header: 'Account Settled Date', accessor: 'accountSettledOn' }
+      {
+        Header: 'Account Settled Date',
+        accessor: 'accountSettledOn',
+        Cell: ({ row }) =>
+          !row.original.accountSettledOn ? 'N/A' : row.original.accountSettledOn
+      }
     ],
     []
   );
@@ -44,7 +58,11 @@ function Creditors() {
         </Link>
       </div>
       <div>
-        <Table columns={tableColumns} data={tableData} />
+        {tableData.length > 0 ? (
+          <Table columns={tableColumns} data={tableData} />
+        ) : (
+          <Loader size={48} />
+        )}
       </div>
     </div>
   );
