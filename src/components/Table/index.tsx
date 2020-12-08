@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { Column, useTable } from 'react-table';
+import TableHeader from './TableHeader';
 
 type TableProps<T extends Column, K> = { columns: T[]; data: K[] };
 
@@ -24,21 +25,7 @@ const Table: <T extends Column, K>(
 
   return (
     <table {...getTableProps()} className='w-full rounded-sm'>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-            {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps()}
-                key={column.id}
-                className='p-4 text-indigo-600'
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
+      <TableHeader headerGroups={headerGroups} />
       <tbody {...getTableBodyProps()}>
         {rows.map((row) => {
           prepareRow(row);
