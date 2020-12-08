@@ -1,0 +1,34 @@
+import React, { PropsWithChildren } from 'react';
+import { Column, useTable } from 'react-table';
+import { TableProps } from './index';
+
+const TableBody: <T extends Column, K>(
+  p: PropsWithChildren<TableProps<T, K>>
+) => React.ReactElement = ({ columns, data }) => {
+  const { getTableBodyProps, rows, prepareRow } = useTable({ columns, data });
+
+  return (
+    <tbody {...getTableBodyProps()}>
+      {rows.map((row) => {
+        prepareRow(row);
+        return (
+          <tr {...row.getRowProps()} key={row.id}>
+            {row.cells.map((cell) => {
+              return (
+                <td
+                  {...cell.getCellProps()}
+                  key={cell.column.id}
+                  className='border border-solid border-gray-500 p-4 text-center'
+                >
+                  {cell.render('Cell')}
+                </td>
+              );
+            })}
+          </tr>
+        );
+      })}
+    </tbody>
+  );
+};
+
+export default TableBody;
