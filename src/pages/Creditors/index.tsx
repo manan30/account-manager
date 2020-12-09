@@ -1,13 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
+import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
 import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
+import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 
 function Creditors() {
+  const notificationDispatch = useNotificationDispatchContext();
   const {
     data: creditors,
     isLoading,
@@ -46,6 +50,18 @@ function Creditors() {
   );
 
   const tableData = useMemo(() => creditors, [creditors]);
+
+  useEffect(() => {
+    if (error)
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content:
+            'There was an error fetching data, please try again in some time',
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+  }, [error, notificationDispatch]);
 
   return (
     <div className='px-12 pt-12 bg-gray-100 h-full'>

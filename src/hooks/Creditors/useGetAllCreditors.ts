@@ -23,6 +23,7 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
   const fetchAllCreditors = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError(false);
       const creditorDBRef = firestore
         ?.collection('creditors')
         .orderBy('name')
@@ -41,6 +42,8 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
     } catch (err) {
       console.log(err);
       setError(true);
+      setFirstDoc(undefined);
+      setLastDoc(undefined);
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +52,7 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
   const nextPage = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError(false);
       const creditorDBRef = firestore
         ?.collection('creditors')
         .orderBy('name')
@@ -68,6 +72,8 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
     } catch (err) {
       console.log(err);
       setError(true);
+      setFirstDoc(undefined);
+      setLastDoc(undefined);
     } finally {
       setIsLoading(false);
     }
@@ -76,6 +82,7 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
   const prevPage = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError(false);
       const creditorDBRef = firestore
         ?.collection('creditors')
         .orderBy('name')
@@ -93,8 +100,10 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
       });
       setData(creditors);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setError(true);
+      setFirstDoc(undefined);
+      setLastDoc(undefined);
     } finally {
       setIsLoading(false);
     }
