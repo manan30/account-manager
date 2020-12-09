@@ -78,7 +78,7 @@ function NewCreditor() {
         notificationDispatch({
           type: ADD_NOTIFICATION,
           payload: {
-            content: `Creditor ${formState.name} already exists`,
+            content: `Creditor ${formState.name} already exists. To update the amount please create a new transaction`,
             theme: NOTIFICATION_THEME_FAILURE
           }
         });

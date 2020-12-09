@@ -1,25 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
-import { useFirebaseContext } from '../../contexts/FirebaseContext';
+import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 
 function Creditors() {
-  const { firestore } = useFirebaseContext();
-  const [creditors, setCreditors] = useState<ICreditor[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const querySnapshot = await firestore?.collection('creditors').get();
-      const data = querySnapshot?.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as ICreditor)
-      );
-      if (data) setCreditors(data);
-    })();
-  }, [firestore]);
+  const { data: creditors, isLoading, error } = useGetAllCreditors();
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -58,11 +47,8 @@ function Creditors() {
         </Link>
       </div>
       <div>
-        {tableData.length > 0 ? (
-          <Table columns={tableColumns} data={tableData} />
-        ) : (
-          <Loader size={48} />
-        )}
+        {isLoading && <Loader size={48} />}
+        {tableData && <Table columns={tableColumns} data={tableData} />}
       </div>
     </div>
   );

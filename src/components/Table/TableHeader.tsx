@@ -26,7 +26,7 @@ const TableHeader: <T extends Column, K>(
       </thead>
       <tbody>
         <tr>
-          <td className='h-4'></td>
+          <td className='h-3'></td>
         </tr>
       </tbody>
     </>

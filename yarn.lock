@@ -2549,6 +2549,11 @@ contains-path@^0.1.0:
   resolved "https://registry.yarnpkg.com/contains-path/-/contains-path-0.1.0.tgz"
   integrity sha1-/ozxhP9mcLa67wGp1IYaXL7EEgo=
 
+contexts@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/contexts/-/contexts-0.0.0.tgz#5d4dda761ce9a21845f24eb75b8010a31a4e4ec5"
+  integrity sha1-XU3adhzpohhF8k63W4AQoxpOTsU=
+
 convert-source-map@^1.5.1, convert-source-map@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.7.0.tgz"
@@ -4094,6 +4099,11 @@ hoist-non-react-statics@^3.1.0:
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
+
+hooks@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/hooks/-/hooks-0.3.2.tgz#a31f060c2026cea6cf1ca3eb178430e718e1c4a3"
+  integrity sha1-ox8GDCAmzqbPHKPrF4Qw5xjhxKM=
 
 hosted-git-info@^2.1.4:
   version "2.8.8"
