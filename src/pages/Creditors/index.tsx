@@ -8,7 +8,15 @@ import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 
 function Creditors() {
-  const { data: creditors, isLoading, error } = useGetAllCreditors();
+  const {
+    data: creditors,
+    isLoading,
+    error,
+    nextPage,
+    prevPage
+  } = useGetAllCreditors({
+    limit: 1
+  });
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -46,6 +54,8 @@ function Creditors() {
           <Button buttonText='Add New Creditor' />
         </Link>
       </div>
+      <button onClick={nextPage}>F</button>
+      <button onClick={prevPage}>P</button>
       <div>
         {isLoading && <Loader size={48} />}
         {tableData && <Table columns={tableColumns} data={tableData} />}
