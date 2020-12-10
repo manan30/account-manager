@@ -13,12 +13,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "typeRoots": ["node_modules/@types"],
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["src/**/*", "seeds/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
