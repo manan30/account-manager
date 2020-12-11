@@ -1,12 +1,12 @@
 import React, { Dispatch, useContext } from 'react';
 import {
   INotificationAction,
-  NotificationState
+  INotificationState
 } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import useNotificationReducer from '../../reducers/NotificationReducer';
 
 const NotificationStateContext = React.createContext<
-  NotificationState | undefined
+  INotificationState | undefined
 >(undefined);
 const NotificationDispatchContext = React.createContext<
   Dispatch<INotificationAction> | undefined

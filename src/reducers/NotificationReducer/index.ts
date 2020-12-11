@@ -6,15 +6,15 @@ import {
 import {
   INotificationAction,
   NotificationItem,
-  NotificationState
+  INotificationState
 } from './notificationReducer.interface';
 
 const notificationDefaultState = {
   notifications: [] as NotificationItem[]
-} as NotificationState;
+} as INotificationState;
 
 const notificationReducer = (
-  state: NotificationState,
+  state: INotificationState,
   action: INotificationAction
 ) => {
   switch (action.type) {

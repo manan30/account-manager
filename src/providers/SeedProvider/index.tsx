@@ -1,12 +1,12 @@
 import React, { Dispatch } from 'react';
 import {
   ISeedState,
-  ISeedDispatch
+  ISeedAction
 } from 'reducers/SeedReducer/seedReducer.interface';
 
 const SeedStateContext = React.createContext<ISeedState | undefined>(undefined);
 const SeedDispatchContext = React.createContext<
-  Dispatch<ISeedDispatch> | undefined
+  Dispatch<ISeedAction> | undefined
 >(undefined);
 
 type SeedProviderProps = {

@@ -2,11 +2,11 @@ import React, { Dispatch, useContext } from 'react';
 import useTransactionReducer from '../../reducers/NewTransactionReducer';
 import {
   INewTransactionAction,
-  NewTransactionState
+  INewTransactionState
 } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 
 const NewTransactionStateContext = React.createContext<
-  NewTransactionState | undefined
+  INewTransactionState | undefined
 >(undefined);
 const NewTransactionDispatchContext = React.createContext<
   Dispatch<INewTransactionAction> | undefined
