@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import {
   ADD_NOTIFICATION,
   REMOVE_NOTIFICATION
-} from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+} from './notificationReducer.interface';
 import {
   INotificationAction,
   NotificationItem,

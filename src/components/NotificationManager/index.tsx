@@ -3,9 +3,9 @@ import Notification from './Notification';
 import {
   useNotificationDispatchContext,
   useNotificationStateContext
-} from '../../contexts/NotificationContext';
+} from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
-import { REMOVE_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import { REMOVE_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 
 function NotificationManager() {
   const dispatch = useNotificationDispatchContext();
