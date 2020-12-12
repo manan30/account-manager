@@ -11,15 +11,15 @@ const Toggle = () => {
   };
 
   return (
-    <div className='h-4 w-12 rounded-lg bg-indigo-200 flex items-center shadow'>
+    <div className='h-4 w-12 rounded-lg bg-indigo-100 flex items-center shadow'>
       <button
         className={cn(
           'h-6 w-6 rounded-full bg-red-500',
           firstClick
             ? status
               ? 'transition transform translate-x-6 duration-500 ease-out bg-indigo-600'
-              : 'transition-transform transform translate-x-0 duration-500 ease-out bg-indigo-100'
-            : 'bg-indigo-100'
+              : 'transition-transform transform translate-x-0 duration-500 ease-out bg-indigo-200'
+            : 'bg-indigo-200'
         )}
         onClick={handleClick}
       ></button>
