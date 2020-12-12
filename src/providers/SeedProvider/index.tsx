@@ -1,4 +1,5 @@
 import React, { Dispatch } from 'react';
+import useSeedReducer from '../../reducers/SeedReducer';
 import {
   ISeedState,
   ISeedAction
@@ -14,9 +15,12 @@ type SeedProviderProps = {
 };
 
 const SeedProvider: React.FC<SeedProviderProps> = ({ children }) => {
+  const [state, dispatch] = useSeedReducer();
   return (
-    <SeedStateContext.Provider>
-      <SeedDispatchContext.Provider>{children}</SeedDispatchContext.Provider>
+    <SeedStateContext.Provider value={state}>
+      <SeedDispatchContext.Provider value={dispatch}>
+        {children}
+      </SeedDispatchContext.Provider>
     </SeedStateContext.Provider>
   );
 };
