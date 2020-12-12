@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useContext } from 'react';
 import useSeedReducer from '../../reducers/SeedReducer';
 import {
   ISeedState,
@@ -26,3 +26,21 @@ const SeedProvider: React.FC<SeedProviderProps> = ({ children }) => {
 };
 
 export default SeedProvider;
+
+export const useSeedState = () => {
+  const context = useContext(SeedStateContext);
+  if (context === undefined) {
+    throw new Error('useSeedState must be used within a SeedStateProvider');
+  }
+  return context;
+};
+
+export const useSeedDispatch = () => {
+  const context = useContext(SeedDispatchContext);
+  if (context === undefined) {
+    throw new Error(
+      'useSeedDispatch must be used within a SeedDispatchProvider'
+    );
+  }
+  return context;
+};

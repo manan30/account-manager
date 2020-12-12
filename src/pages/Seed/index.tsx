@@ -1,10 +1,28 @@
 import React from 'react';
 import Toggle from '../../components/Toggle';
 import Button from '../../components/Button';
+import { useSeedDispatch, useSeedState } from '../../providers/SeedProvider';
 
 const seedOptions = ['Everything', 'Creditors'];
 
 const Seed = () => {
+  const {
+    delete: { creditors: deleteCreditors, everything: deleteEverything },
+    insert: { creditors: insertCreditors, everything: insertEverything }
+  } = useSeedState();
+  const seedDispatch = useSeedDispatch();
+
+  const handleClick = () => {
+    if (
+      !deleteCreditors &&
+      !deleteEverything &&
+      !insertCreditors &&
+      !insertEverything
+    ) {
+      return;
+    }
+  };
+
   return (
     <div className='w-full flex justify-items-center items-center flex-col p-6'>
       <h1 className='text-indigo-600 font-bold text-5xl mt-8'>Seeder</h1>
@@ -49,12 +67,7 @@ const Seed = () => {
         </div>
       </div>
       <div className='w-1/4 mt-8'>
-        <Button
-          buttonText='Seed Data'
-          onClickHandler={() => {
-            console.log('seeded');
-          }}
-        />
+        <Button buttonText='Seed Data' onClickHandler={handleClick} />
       </div>
     </div>
   );
