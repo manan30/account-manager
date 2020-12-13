@@ -62,7 +62,15 @@ const Seed = () => {
                     {key[0].toUpperCase() + key.slice(1)}
                   </h2>
                   <div>
-                    <Toggle value={value} />
+                    <Toggle
+                      value={value}
+                      handleToggle={(state) => {
+                        seedDispatch({
+                          type: `ADD_${key.toUpperCase()}` as SeedActionType,
+                          payload: { status: state }
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               );

@@ -30,12 +30,6 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
         }, {} as ISeedState['deleteOptions'])
       } as ISeedState;
     case 'CLEAR_CREDITORS':
-      console.log(
-        action.payload.status,
-        Object.entries(state.deleteOptions).filter(
-          ([key]) => key !== 'creditors'
-        )
-      );
       return {
         ...state,
         deleteOptions: {
@@ -59,6 +53,49 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
           everything:
             action.payload.status &&
             Object.entries(state.deleteOptions)
+              .filter(([key]) => key !== 'everything' && key !== 'transactions')
+              .every((value) => value[1] === true)
+              ? true
+              : false
+        }
+      } as ISeedState;
+    case 'ADD_EVERYTHING':
+      return {
+        ...state,
+        insertOptions: Object.keys(state.insertOptions).reduce((acc, curr) => {
+          if (
+            curr === 'everything' ||
+            curr === 'creditors' ||
+            curr === 'transactions'
+          )
+            acc[curr] = action.payload.status;
+          return acc;
+        }, {} as ISeedState['insertOptions'])
+      } as ISeedState;
+    case 'ADD_CREDITORS':
+      return {
+        ...state,
+        insertOptions: {
+          ...state.insertOptions,
+          creditors: action.payload.status,
+          everything:
+            action.payload.status &&
+            Object.entries(state.insertOptions)
+              .filter(([key]) => key !== 'everything' && key !== 'creditors')
+              .every((value) => value[1] === true)
+              ? true
+              : false
+        }
+      } as ISeedState;
+    case 'ADD_TRANSACTIONS':
+      return {
+        ...state,
+        insertOptions: {
+          ...state.insertOptions,
+          transactions: action.payload.status,
+          everything:
+            action.payload.status &&
+            Object.entries(state.insertOptions)
               .filter(([key]) => key !== 'everything' && key !== 'transactions')
               .every((value) => value[1] === true)
               ? true
