@@ -1,4 +1,4 @@
-export enum SeedTypes {
+export enum SeedOptions {
   everything = 'everything',
   creditors = 'creditors',
   transactions = 'transactions'
@@ -6,9 +6,9 @@ export enum SeedTypes {
 
 export interface ISeedState {
   deleteOptions: {
-    [key in SeedTypes]: boolean;
+    [key in SeedOptions]: boolean;
   };
-  insertOptions: { [key in SeedTypes]: boolean };
+  insertOptions: { [key in SeedOptions]: boolean };
 }
 
 export type SeedActionType =
