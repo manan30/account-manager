@@ -7,11 +7,11 @@ import {
 } from './seedReducer.interface';
 
 const seedDefaultState: ISeedState = {
-  delete: {
+  deleteOptions: {
     everything: false,
     creditors: false
   },
-  insert: {
+  insertOptions: {
     everything: false,
     creditors: false
   }
@@ -22,12 +22,19 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
     case CLEAR_EVERYTHING:
       return {
         ...state,
-        delete: { ...state.delete, everything: true }
+        deleteOptions: Object.keys(state.deleteOptions).reduce((acc, curr) => {
+          if (curr === 'everything' || curr === 'creditors') acc[curr] = true;
+          return acc;
+        }, {} as ISeedState['deleteOptions'])
       } as ISeedState;
     case CLEAR_CREDITORS:
       return {
         ...state,
-        delete: { ...state.delete, creditors: true, everything: false }
+        deleteOptions: {
+          ...state.deleteOptions,
+          creditors: true,
+          everything: false
+        }
       } as ISeedState;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);

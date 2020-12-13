@@ -3,25 +3,24 @@ import Toggle from '../../components/Toggle';
 import Button from '../../components/Button';
 import { useSeedDispatch, useSeedState } from '../../providers/SeedProvider';
 
-const seedOptions = ['Everything', 'Creditors'];
-
 const Seed = () => {
-  const {
-    delete: { creditors: deleteCreditors, everything: deleteEverything },
-    insert: { creditors: insertCreditors, everything: insertEverything }
-  } = useSeedState();
+  const { insertOptions, deleteOptions } = useSeedState();
   const seedDispatch = useSeedDispatch();
 
   const handleClick = () => {
-    if (
-      !deleteCreditors &&
-      !deleteEverything &&
-      !insertCreditors &&
-      !insertEverything
-    ) {
-      return;
-    }
+    // if (
+    //   !deleteCreditors &&
+    //   !deleteEverything &&
+    //   !insertCreditors &&
+    //   !insertEverything
+    // ) {
+    //   return;
+    // }
   };
+
+  // useEffect(() => {
+  //   console.log({ deleteOptions });
+  // }, [deleteOptions]);
 
   return (
     <div className='w-full flex justify-items-center items-center flex-col p-6'>
@@ -32,14 +31,23 @@ const Seed = () => {
             Delete
           </h1>
           <div className='flex flex-col px-10'>
-            {seedOptions.map((option) => {
+            {Object.entries(deleteOptions).map(([key, value]) => {
+              console.log({ value });
               return (
-                <div className='flex items-center mt-4' key={option}>
+                <div className='flex items-center mt-4' key={key}>
                   <h2 className='text-red-500 font-medium text-xl flex-auto'>
-                    {option}
+                    {key[0].toUpperCase() + key.slice(1)}
                   </h2>
                   <div>
-                    <Toggle />
+                    <Toggle
+                      value={value}
+                      handleToggle={(state) => {
+                        seedDispatch({
+                          type: `CLEAR_EVERYTHING`,
+                          payload: { status: state }
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               );
@@ -51,14 +59,14 @@ const Seed = () => {
             Insert
           </h1>
           <div className='flex flex-col px-10'>
-            {seedOptions.map((option) => {
+            {Object.entries(insertOptions).map(([key, value]) => {
               return (
-                <div className='flex items-center mt-4' key={option}>
+                <div className='flex items-center mt-4' key={key}>
                   <h2 className='text-green-500 font-medium text-xl flex-auto'>
-                    {option}
+                    {key[0].toUpperCase() + key.slice(1)}
                   </h2>
                   <div>
-                    <Toggle />
+                    <Toggle value={value} />
                   </div>
                 </div>
               );

@@ -53,6 +53,7 @@
     "components": "0.1.0",
     "dotenv": "8.2.0",
     "firebase": "8.1.1",
+    "pages": "0.0.16",
     "prop-types": "15.7.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
