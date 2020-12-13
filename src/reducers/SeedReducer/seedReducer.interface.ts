@@ -5,16 +5,10 @@ export enum SeedOptions {
 }
 
 export interface ISeedState {
-  deleteOptions: {
-    [key in SeedOptions]?: boolean;
-  };
-  insertOptions: { [key in SeedOptions]?: boolean };
+  seedOptions: { [key in SeedOptions]?: boolean };
 }
 
 export type SeedActionType =
-  | 'CLEAR_EVERYTHING'
-  | 'CLEAR_CREDITORS'
-  | 'CLEAR_TRANSACTIONS'
   | 'ADD_EVERYTHING'
   | 'ADD_CREDITORS'
   | 'ADD_TRANSACTIONS';
