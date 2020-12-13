@@ -2,6 +2,7 @@ import React from 'react';
 import Toggle from '../../components/Toggle';
 import Button from '../../components/Button';
 import { useSeedDispatch, useSeedState } from '../../providers/SeedProvider';
+import { SeedActionType } from '../../reducers/SeedReducer/seedReducer.interface';
 
 const Seed = () => {
   const { insertOptions, deleteOptions } = useSeedState();
@@ -17,10 +18,6 @@ const Seed = () => {
     //   return;
     // }
   };
-
-  // useEffect(() => {
-  //   console.log({ deleteOptions });
-  // }, [deleteOptions]);
 
   return (
     <div className='w-full flex justify-items-center items-center flex-col p-6'>
@@ -42,7 +39,7 @@ const Seed = () => {
                       value={value}
                       handleToggle={(state) => {
                         seedDispatch({
-                          type: `CLEAR_EVERYTHING`,
+                          type: `CLEAR_${key.toUpperCase()}` as SeedActionType,
                           payload: { status: state }
                         });
                       }}
