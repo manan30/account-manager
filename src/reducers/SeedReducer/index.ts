@@ -4,13 +4,13 @@ import { ISeedAction, ISeedState } from './seedReducer.interface';
 const seedDefaultState: ISeedState = {
   deleteOptions: {
     everything: false,
-    creditors: false,
-    transactions: false
+    creditors: false
+    // transactions: false
   },
   insertOptions: {
     everything: false,
-    creditors: false,
-    transactions: false
+    creditors: false
+    // transactions: false
   }
 };
 

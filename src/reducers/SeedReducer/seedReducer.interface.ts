@@ -6,9 +6,9 @@ export enum SeedOptions {
 
 export interface ISeedState {
   deleteOptions: {
-    [key in SeedOptions]: boolean;
+    [key in SeedOptions]?: boolean;
   };
-  insertOptions: { [key in SeedOptions]: boolean };
+  insertOptions: { [key in SeedOptions]?: boolean };
 }
 
 export type SeedActionType =
