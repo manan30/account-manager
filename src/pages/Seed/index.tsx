@@ -32,7 +32,6 @@ const Seed = () => {
           </h1>
           <div className='flex flex-col px-10'>
             {Object.entries(deleteOptions).map(([key, value]) => {
-              console.log({ value });
               return (
                 <div className='flex items-center mt-4' key={key}>
                   <h2 className='text-red-500 font-medium text-xl flex-auto'>

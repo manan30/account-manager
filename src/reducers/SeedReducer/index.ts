@@ -3,17 +3,20 @@ import {
   ISeedAction,
   ISeedState,
   CLEAR_EVERYTHING,
-  CLEAR_CREDITORS
+  CLEAR_CREDITORS,
+  CLEAR_TRANSACTIONS
 } from './seedReducer.interface';
 
 const seedDefaultState: ISeedState = {
   deleteOptions: {
     everything: false,
-    creditors: false
+    creditors: false,
+    transactions: false
   },
   insertOptions: {
     everything: false,
-    creditors: false
+    creditors: false,
+    transactions: false
   }
 };
 
@@ -23,7 +26,12 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
       return {
         ...state,
         deleteOptions: Object.keys(state.deleteOptions).reduce((acc, curr) => {
-          if (curr === 'everything' || curr === 'creditors') acc[curr] = true;
+          if (
+            curr === 'everything' ||
+            curr === 'creditors' ||
+            curr === 'transactions'
+          )
+            acc[curr] = action.payload.status;
           return acc;
         }, {} as ISeedState['deleteOptions'])
       } as ISeedState;
@@ -33,6 +41,15 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
         deleteOptions: {
           ...state.deleteOptions,
           creditors: true,
+          everything: false
+        }
+      } as ISeedState;
+    case CLEAR_TRANSACTIONS:
+      return {
+        ...state,
+        deleteOptions: {
+          ...state.deleteOptions,
+          transactions: true,
           everything: false
         }
       } as ISeedState;
