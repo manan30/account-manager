@@ -1,22 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Toggle from '../../components/Toggle';
 import Button from '../../components/Button';
 import { useSeedDispatch, useSeedState } from '../../providers/SeedProvider';
 import { SeedActionType } from '../../reducers/SeedReducer/seedReducer.interface';
+import { deleteEverything } from '../../services/seed/seed';
 
 const Seed = () => {
   const { insertOptions, deleteOptions } = useSeedState();
   const seedDispatch = useSeedDispatch();
 
-  const handleClick = () => {
-    // if (
-    //   !deleteCreditors &&
-    //   !deleteEverything &&
-    //   !insertCreditors &&
-    //   !insertEverything
-    // ) {
-    //   return;
-    // }
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async () => {
+    try {
+      setLoading(true);
+      if (
+        !deleteOptions.everything &&
+        !deleteOptions.creditors &&
+        !insertOptions.everything &&
+        !insertOptions.creditors
+      ) {
+        return;
+      }
+
+      if (deleteOptions.everything) {
+        await deleteEverything();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -79,7 +93,11 @@ const Seed = () => {
         </div>
       </div>
       <div className='w-1/4 mt-8'>
-        <Button buttonText='Seed Data' onClickHandler={handleClick} />
+        <Button
+          buttonText='Seed Data'
+          onClickHandler={handleClick}
+          loading={loading}
+        />
       </div>
     </div>
   );

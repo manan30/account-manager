@@ -2,7 +2,7 @@ import React from 'react';
 import SeedProvider from '../../providers/SeedProvider';
 import Seed from './index';
 
-const NewTransactionWithProvider = () => {
+const SeedWithProvider = () => {
   return (
     <SeedProvider>
       <Seed />
@@ -10,4 +10,4 @@ const NewTransactionWithProvider = () => {
   );
 };
 
-export default NewTransactionWithProvider;
+export default SeedWithProvider;
