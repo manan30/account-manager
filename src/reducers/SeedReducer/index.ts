@@ -1,11 +1,5 @@
 import { useReducer } from 'react';
-import {
-  ISeedAction,
-  ISeedState,
-  CLEAR_EVERYTHING,
-  CLEAR_CREDITORS,
-  CLEAR_TRANSACTIONS
-} from './seedReducer.interface';
+import { ISeedAction, ISeedState } from './seedReducer.interface';
 
 const seedDefaultState: ISeedState = {
   deleteOptions: {
@@ -22,7 +16,7 @@ const seedDefaultState: ISeedState = {
 
 const seedReducer = (state: ISeedState, action: ISeedAction) => {
   switch (action.type) {
-    case CLEAR_EVERYTHING:
+    case 'CLEAR_EVERYTHING':
       return {
         ...state,
         deleteOptions: Object.keys(state.deleteOptions).reduce((acc, curr) => {
@@ -35,22 +29,40 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
           return acc;
         }, {} as ISeedState['deleteOptions'])
       } as ISeedState;
-    case CLEAR_CREDITORS:
+    case 'CLEAR_CREDITORS':
+      console.log(
+        action.payload.status,
+        Object.entries(state.deleteOptions).filter(
+          ([key]) => key !== 'creditors'
+        )
+      );
       return {
         ...state,
         deleteOptions: {
           ...state.deleteOptions,
-          creditors: true,
-          everything: false
+          creditors: action.payload.status,
+          everything:
+            action.payload.status &&
+            Object.entries(state.deleteOptions)
+              .filter(([key]) => key !== 'everything' && key !== 'creditors')
+              .every((value) => value[1] === true)
+              ? true
+              : false
         }
       } as ISeedState;
-    case CLEAR_TRANSACTIONS:
+    case 'CLEAR_TRANSACTIONS':
       return {
         ...state,
         deleteOptions: {
           ...state.deleteOptions,
-          transactions: true,
-          everything: false
+          transactions: action.payload.status,
+          everything:
+            action.payload.status &&
+            Object.entries(state.deleteOptions)
+              .filter(([key]) => key !== 'everything' && key !== 'transactions')
+              .every((value) => value[1] === true)
+              ? true
+              : false
         }
       } as ISeedState;
     default:
