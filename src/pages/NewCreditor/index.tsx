@@ -48,7 +48,6 @@ function NewCreditor() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    console.log({ e });
     let error = false;
 
     if (isEmptyString(formState.name)) {

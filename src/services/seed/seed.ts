@@ -18,3 +18,5 @@ const deleteCollection = async (collectionName: string) => {
 export const deleteEverything = async () => {
   await deleteCollection('creditors');
 };
+
+export const seedCreditors = async () => {};
