@@ -11,9 +11,10 @@ export interface ISeedState {
 export type SeedActionType =
   | 'ADD_EVERYTHING'
   | 'ADD_CREDITORS'
-  | 'ADD_TRANSACTIONS';
+  | 'ADD_TRANSACTIONS'
+  | 'RESET';
 
 export interface ISeedAction {
   type: SeedActionType;
-  payload: { status: boolean };
+  payload?: { status: boolean };
 }

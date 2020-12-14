@@ -3,11 +3,15 @@ import Toggle from '../../components/Toggle';
 import Button from '../../components/Button';
 import { useSeedDispatch, useSeedState } from '../../providers/SeedProvider';
 import { SeedActionType } from '../../reducers/SeedReducer/seedReducer.interface';
-import { seedEverything } from '../../services/seed/seed';
+import { seedCreditors, seedEverything } from '../../services/seed/seed';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
+import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
 
 const Seed = () => {
   const { seedOptions } = useSeedState();
   const seedDispatch = useSeedDispatch();
+  const notificationDispatch = useNotificationDispatchContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +24,19 @@ const Seed = () => {
 
       if (seedOptions.everything) {
         await seedEverything();
+      } else if (seedOptions.creditors) {
+        await seedCreditors();
       }
+
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content: 'Firestore seeding completed',
+          theme: NOTIFICATION_THEME_SUCCESS
+        }
+      });
+
+      seedDispatch({ type: 'RESET' });
     } catch (e) {
       console.error(e);
     } finally {

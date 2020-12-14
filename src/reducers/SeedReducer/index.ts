@@ -53,6 +53,8 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
               : false
         }
       } as ISeedState;
+    case 'RESET':
+      return { ...seedDefaultState };
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
