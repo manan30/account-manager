@@ -4,10 +4,10 @@ import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
-import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
-import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 
 function Creditors() {
@@ -19,7 +19,7 @@ function Creditors() {
     nextPage,
     prevPage
   } = useGetAllCreditors({
-    limit: 1
+    limit: 20
   });
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(

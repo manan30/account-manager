@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from 'models/Creditor';
-import { useFirebaseContext } from '../../contexts/FirebaseContext';
+import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types';
 
 type useGetAllCreditorsParams = {
