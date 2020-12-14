@@ -74,8 +74,6 @@ function NewCreditor() {
         .map<ICreditor>((doc) => ({ id: doc.id, ...doc.data() } as ICreditor))
         .map((doc) => doc.name.toLowerCase());
 
-      console.log({ creditors });
-
       if (creditors?.includes(formState.name.toLowerCase())) {
         notificationDispatch({
           type: ADD_NOTIFICATION,
