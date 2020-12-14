@@ -21,7 +21,7 @@ const generateFakeCreditor = (): ICreditor => {
   };
 };
 
-export const seedCreditors = async (documentCount = 3) => {
+export const seedCreditors = async (documentCount = 10) => {
   const batch = firestore.batch();
 
   for (let i = 0; i < documentCount; i += 1) {
@@ -32,15 +32,6 @@ export const seedCreditors = async (documentCount = 3) => {
   }
 
   await batch.commit();
-
-  // await firestore?.collection('creditors').add({
-  //   name: faker.name.findName(),
-  //   amount: amount,
-  //   currency: faker.finance.currencyCode(),
-  //   remainingAmount: amount,
-  //   createdAt: firebaseApp?.firestore.Timestamp.now(),
-  //   accountSettledOn: null
-  // });
 };
 
 export const seedEverything = async (creditorsCount?: number) => {
