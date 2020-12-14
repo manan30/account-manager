@@ -19,7 +19,7 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
             curr === 'creditors' ||
             curr === 'transactions'
           )
-            acc[curr] = action.payload.status;
+            acc[curr] = action?.payload?.status;
           return acc;
         }, {} as ISeedState['seedOptions'])
       } as ISeedState;
@@ -28,9 +28,9 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
         ...state,
         seedOptions: {
           ...state.seedOptions,
-          creditors: action.payload.status,
+          creditors: action?.payload?.status,
           everything:
-            action.payload.status &&
+            action?.payload?.status &&
             Object.entries(state.seedOptions)
               .filter(([key]) => key !== 'everything' && key !== 'creditors')
               .every((value) => value[1] === true)
@@ -43,9 +43,9 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
         ...state,
         seedOptions: {
           ...state.seedOptions,
-          transactions: action.payload.status,
+          transactions: action?.payload?.status,
           everything:
-            action.payload.status &&
+            action?.payload?.status &&
             Object.entries(state.seedOptions)
               .filter(([key]) => key !== 'everything' && key !== 'transactions')
               .every((value) => value[1] === true)
