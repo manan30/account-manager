@@ -1,11 +1,13 @@
 import React from 'react';
-import NewTransactionProvider from '../../contexts/NewTransactionContext';
+import NewTransactionProvider from '../../providers/NewTransactionProvider';
 import NewTransaction from './index';
 
-export default () => {
+const NewTransactionWithProvider = () => {
   return (
     <NewTransactionProvider>
       <NewTransaction />
     </NewTransactionProvider>
   );
 };
+
+export default NewTransactionWithProvider;

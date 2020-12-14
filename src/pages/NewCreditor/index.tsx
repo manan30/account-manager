@@ -2,15 +2,15 @@ import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import { useFirebaseContext } from '../../contexts/FirebaseContext';
+import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
   INPUT_THEME_ERROR,
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
-import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
-import { ADD_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import Button from '../../components/Button';
 import { AmountFormatter } from '../../utils/Formatters';
 import { NameValidator, NumberValidator } from '../../utils/Validators';
@@ -48,7 +48,6 @@ function NewCreditor() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    console.log({ e });
     let error = false;
 
     if (isEmptyString(formState.name)) {

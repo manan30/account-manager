@@ -1,7 +1,7 @@
 import React from 'react';
 import AppRouter from './Router';
-import FirebaseProvider from './contexts/FirebaseContext';
-import NotificationProvider from './contexts/NotificationContext';
+import FirebaseProvider from './providers/FirebaseProvider';
+import NotificationProvider from './providers/NotificationProvider';
 
 function App() {
   return (

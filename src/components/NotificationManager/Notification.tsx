@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import React from 'react';
 import { IoIosClose } from 'react-icons/io';
-import { useNotificationDispatchContext } from '../../contexts/NotificationContext';
-import { REMOVE_NOTIFICATION } from '../../utils/Constants/ActionTypes/NotificationReducerActionTypes';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { REMOVE_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import {
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS,
