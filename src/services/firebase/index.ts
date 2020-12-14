@@ -19,8 +19,9 @@ function FirebaseService() {
   if (!app.apps.length) {
     app.initializeApp(config);
   } else {
-    app.app(); // if already initialized, use that one
+    app.app();
   }
+
   const firestore = app.firestore();
   if (window.location.hostname === 'localhost')
     firestore.useEmulator('localhost', 8080);
