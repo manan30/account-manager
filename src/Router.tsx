@@ -4,11 +4,16 @@ import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
 import Loader from './components/Loader';
 
-const routes = [
+type RouteType = {
+  path: string;
+  component: React.LazyExoticComponent<() => JSX.Element>;
+};
+
+const routes: RouteType[] = [
   { path: '/', component: React.lazy(() => import('./pages/Overview')) },
   {
     path: '/new-transaction',
-    component: React.lazy(() => import('./pages/NewTransaction/withContext'))
+    component: React.lazy(() => import('./pages/NewTransaction/withProvider'))
   },
   {
     path: '/new-creditor',
@@ -17,8 +22,12 @@ const routes = [
   {
     path: '/creditors',
     component: React.lazy(() => import('./pages/Creditors'))
+  },
+  process.env.NODE_ENV !== 'production' && {
+    path: '/seed',
+    component: React.lazy(() => import('./pages/Seed/withProvider'))
   }
-];
+].filter(Boolean) as RouteType[];
 
 const Router = () => {
   return (

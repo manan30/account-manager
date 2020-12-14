@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import { useNewTransactionDispatchContext } from '../../contexts/NewTransactionContext';
+import { useNewTransactionDispatchContext } from '../../providers/NewTransactionProvider';
 import {
   ADD_AMOUNT,
   ADD_NAME,
   ADD_TRANSACTION_TYPE
-} from '../../utils/Constants/ActionTypes/NewTransactionReducerActionTypes';
+} from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 
 function NewTransaction() {
   const dispatch = useNewTransactionDispatchContext();

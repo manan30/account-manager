@@ -17,7 +17,12 @@ const config = {
 };
 
 function FirebaseService() {
-  app.initializeApp(config);
+  if (!app.apps.length) {
+    app.initializeApp(config);
+  } else {
+    app.app();
+  }
+
   const firestore = app.firestore();
   if (window.location.hostname === 'localhost')
     firestore.useEmulator('localhost', 8080);
