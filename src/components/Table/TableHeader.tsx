@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Column, useTable } from 'react-table';
+import { Column, useSortBy, useTable } from 'react-table';
 import { TableProps } from '.';
 
 const TableHeader: <T extends Column, K>(
@@ -16,7 +16,7 @@ const TableHeader: <T extends Column, K>(
               <th
                 {...column.getHeaderProps()}
                 key={column.id}
-                className='p-4 text-indigo-600'
+                className='p-3 text-indigo-600 text-left'
               >
                 {column.render('Header')}
               </th>

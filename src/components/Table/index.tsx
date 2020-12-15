@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Column, useTable } from 'react-table';
+import { Column, useSortBy, useTable } from 'react-table';
 import PaginationControl from '../PaginationControl';
 import TableBody from './TableBody';
 import TableHeader from './TableHeader';
@@ -13,7 +13,7 @@ export type TableProps<T extends Column, K> = {
 const Table: <T extends Column, K>(
   p: PropsWithChildren<TableProps<T, K>>
 ) => React.ReactElement = ({ columns, data, paginate = true }) => {
-  const { getTableProps } = useTable({ columns, data });
+  const { getTableProps } = useTable({ columns, data }, useSortBy);
 
   return (
     <>

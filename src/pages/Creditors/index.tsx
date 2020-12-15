@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Column } from 'react-table';
+import { Column, useTable } from 'react-table';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
@@ -9,6 +9,7 @@ import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
@@ -19,13 +20,23 @@ function Creditors() {
     nextPage,
     prevPage
   } = useGetAllCreditors({
-    limit: 20
+    limit: 10
   });
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
       {
-        Header: 'Name',
+        Header: ({ column }) => (
+          <div className='flex' {...column.getHeaderProps()}>
+            <div>Name</div>
+            <button className='ml-auto'>
+              <FaSortAlphaUp />
+            </button>
+            <button className='ml-auto'>
+              <FaSortAlphaDown />
+            </button>
+          </div>
+        ),
         accessor: 'name',
         Cell: ({ row }) => (
           <Link
