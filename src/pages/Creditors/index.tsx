@@ -9,12 +9,9 @@ import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import {
-  FaSortAlphaDown,
-  FaSortAlphaUp,
-  FaSortNumericDown,
-  FaSortNumericUp
-} from 'react-icons/fa';
+import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
+
+import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
@@ -67,9 +64,9 @@ function Creditors() {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <FaSortNumericUp />
+                    <ImSortAmountDesc />
                   ) : (
-                    <FaSortNumericDown />
+                    <ImSortAmountAsc />
                   )
                 ) : (
                   ''
@@ -81,7 +78,27 @@ function Creditors() {
         accessor: 'remainingAmount'
       },
       { Header: 'Currency', accessor: 'currency', disableSortBy: true },
-      { Header: 'Credit Amount', accessor: 'amount' },
+      {
+        Header: ({ column }) => {
+          return (
+            <div className='flex items-center'>
+              <div>Credit Amount</div>
+              <div className='ml-auto'>
+                {column.isSorted ? (
+                  column.isSortedDesc ? (
+                    <ImSortAmountDesc />
+                  ) : (
+                    <ImSortAmountAsc />
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
+            </div>
+          );
+        },
+        accessor: 'amount'
+      },
       {
         Header: 'Account Settled Date',
         accessor: 'accountSettledOn',
