@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Column, useTable } from 'react-table';
+import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
@@ -9,7 +9,12 @@ import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
+import {
+  FaSortAlphaDown,
+  FaSortAlphaUp,
+  FaSortNumericDown,
+  FaSortNumericUp
+} from 'react-icons/fa';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
@@ -26,17 +31,24 @@ function Creditors() {
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
       {
-        Header: ({ column }) => (
-          <div className='flex' {...column.getHeaderProps()}>
-            <div>Name</div>
-            <button className='ml-auto'>
-              <FaSortAlphaUp />
-            </button>
-            <button className='ml-auto'>
-              <FaSortAlphaDown />
-            </button>
-          </div>
-        ),
+        Header: ({ column }) => {
+          return (
+            <div className='flex items-center'>
+              <div>Name</div>
+              <div className='ml-auto'>
+                {column.isSorted ? (
+                  column.isSortedDesc ? (
+                    <FaSortAlphaUp />
+                  ) : (
+                    <FaSortAlphaDown />
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
+            </div>
+          );
+        },
         accessor: 'name',
         Cell: ({ row }) => (
           <Link
@@ -47,8 +59,28 @@ function Creditors() {
           </Link>
         )
       },
-      { Header: 'Remaining Amount', accessor: 'remainingAmount' },
-      { Header: 'Currency', accessor: 'currency' },
+      {
+        Header: ({ column }) => {
+          return (
+            <div className='flex items-center'>
+              <div>Remaining Amount</div>
+              <div className='ml-auto'>
+                {column.isSorted ? (
+                  column.isSortedDesc ? (
+                    <FaSortNumericUp />
+                  ) : (
+                    <FaSortNumericDown />
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
+            </div>
+          );
+        },
+        accessor: 'remainingAmount'
+      },
+      { Header: 'Currency', accessor: 'currency', disableSortBy: true },
       { Header: 'Credit Amount', accessor: 'amount' },
       {
         Header: 'Account Settled Date',
