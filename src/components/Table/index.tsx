@@ -24,7 +24,7 @@ const Table: <T extends Column, K>(
   return (
     <>
       <table {...getTableProps()} className='w-full'>
-        <>
+        {/* <>
           <thead className='shadow rounded-md'>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
@@ -45,8 +45,8 @@ const Table: <T extends Column, K>(
               <td className='h-3'></td>
             </tr>
           </tbody>
-        </>
-        {/* <TableHeader columns={columns} data={data} /> */}
+        </> */}
+        <TableHeader headerGroups={headerGroups} />
         {/* <TableBody columns={columns} data={data} /> */}
         <tbody
           {...getTableBodyProps()}

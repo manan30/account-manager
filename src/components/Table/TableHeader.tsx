@@ -1,12 +1,12 @@
 import React, { PropsWithChildren } from 'react';
-import { Column, useSortBy, useTable } from 'react-table';
+import { Column, HeaderGroup, useSortBy, useTable } from 'react-table';
 import { TableProps } from '.';
 
-const TableHeader: <T extends Column, K>(
-  p: PropsWithChildren<TableProps<T, K>>
-) => React.ReactElement = ({ columns, data }) => {
-  const { headerGroups } = useTable({ columns, data });
+type TableHeaderProps = {
+  headerGroups: HeaderGroup[];
+};
 
+const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
   return (
     <>
       <thead className='shadow rounded-md'>
