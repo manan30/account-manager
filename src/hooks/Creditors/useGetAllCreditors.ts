@@ -12,7 +12,7 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
   const [data, setData] = useState<ICreditor[] | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [totalDocs, setTotalDocs] = useState<number | undefined>();
+  // const [totalDocs, setTotalDocs] = useState<number | undefined>();
   const [firstDoc, setFirstDoc] = useState<
     QueryDocumentSnapshot<DocumentData> | undefined
   >();

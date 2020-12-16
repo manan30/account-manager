@@ -1,4 +1,3 @@
-import Button from 'components/Button';
 import React from 'react';
 import { FaChevronCircleLeft, FaChevronCircleRight } from 'react-icons/fa';
 

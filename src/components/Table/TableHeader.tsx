@@ -1,6 +1,5 @@
-import React, { PropsWithChildren } from 'react';
-import { Column, HeaderGroup, useSortBy, useTable } from 'react-table';
-import { TableProps } from '.';
+import React from 'react';
+import { HeaderGroup } from 'react-table';
 
 type TableHeaderProps = {
   headerGroups: HeaderGroup[];
