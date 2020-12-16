@@ -47,8 +47,12 @@ const Table: <T extends Column, K>(
           </tbody>
         </> */}
         <TableHeader headerGroups={headerGroups} />
-        {/* <TableBody columns={columns} data={data} /> */}
-        <tbody
+        <TableBody
+          getTableBodyProps={getTableBodyProps}
+          rows={rows}
+          prepareRow={prepareRow}
+        />
+        {/* <tbody
           {...getTableBodyProps()}
           className='border border-opacity-50 border-solid border-gray-400 rounded-md'
         >
@@ -74,7 +78,7 @@ const Table: <T extends Column, K>(
               </tr>
             );
           })}
-        </tbody>
+        </tbody> */}
       </table>
       {paginate && (
         <div className='w-full flex justify-end shadow rounded-md p-2 mt-4'>

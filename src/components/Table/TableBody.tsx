@@ -1,12 +1,21 @@
 import React, { PropsWithChildren } from 'react';
-import { Column, useTable } from 'react-table';
-import { TableProps } from './index';
+import {
+  TableBodyPropGetter,
+  TableBodyProps as ReactTableBodyProps,
+  Row
+} from 'react-table';
 
-const TableBody: <T extends Column, K>(
-  p: PropsWithChildren<TableProps<T, K>>
-) => React.ReactElement = ({ columns, data }) => {
-  const { getTableBodyProps, rows, prepareRow } = useTable({ columns, data });
+type TableBodyProps<D extends Record<string, unknown>> = {
+  getTableBodyProps: (
+    propGetter?: TableBodyPropGetter<D>
+  ) => ReactTableBodyProps;
+  rows: Row<D>[];
+  prepareRow: (row: Row<D>) => void;
+};
 
+const TableBody: <T extends Record<string, unknown>>(
+  p: PropsWithChildren<TableBodyProps<T>>
+) => React.ReactElement = ({ getTableBodyProps, rows, prepareRow }) => {
   return (
     <tbody
       {...getTableBodyProps()}
