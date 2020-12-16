@@ -5,7 +5,7 @@ import { TableProps } from '.';
 const TableHeader: <T extends Column, K>(
   p: PropsWithChildren<TableProps<T, K>>
 ) => React.ReactElement = ({ columns, data }) => {
-  const { headerGroups } = useTable({ columns, data });
+  const { headerGroups } = useTable({ columns, data }, useSortBy);
 
   return (
     <>
