@@ -100,6 +100,20 @@ function Creditors() {
         accessor: 'amount'
       },
       {
+        Header: 'Account Settled',
+        accessor: 'remainingAmount',
+        Cell: ({ row }) =>
+          row.original.remainingAmount === 0 ? (
+            <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>
+              Settled
+            </span>
+          ) : (
+            <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>
+              Not Settled
+            </span>
+          )
+      },
+      {
         Header: 'Account Settled Date',
         accessor: 'accountSettledOn',
         Cell: ({ row }) =>
@@ -124,18 +138,26 @@ function Creditors() {
   }, [error, notificationDispatch]);
 
   return (
-    <div className='px-12 pt-12 pb-8 bg-gray-100 h-full overflow-y-auto'>
-      <div className='flex justify-end mb-8'>
+    <div className='py-8 bg-gray-100 h-full'>
+      <div className='flex justify-end mb-8 mr-8 sm:mr-6 lg:mr-8'>
         <Link to='/new-creditor'>
           <Button buttonText='Add New Creditor' />
         </Link>
       </div>
-      <button onClick={nextPage}>F</button>
-      <button onClick={prevPage}>P</button>
-      <div>
-        {isLoading && <Loader size={48} />}
-        {tableData && <Table columns={tableColumns} data={tableData} />}
-      </div>
+      {/* <button onClick={nextPage}>F</button>
+      <button onClick={prevPage}>P</button> */}
+      {isLoading && <Loader size={48} />}
+      {tableData && (
+        <div className='max-w-6xl mx-auto sm:px-6 lg:px-8'>
+          <div className='flex flex-col'>
+            <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
+              <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
+                <Table columns={tableColumns} data={tableData} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

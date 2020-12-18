@@ -22,7 +22,7 @@ const Table: <T extends Column, K>(
   } = useTable({ columns, data }, useSortBy);
 
   return (
-    <>
+    <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
       <table
         {...getTableProps()}
         className='min-w-full divide-y divide-gray-200'
@@ -34,12 +34,12 @@ const Table: <T extends Column, K>(
           prepareRow={prepareRow}
         />
       </table>
-      {paginate && (
+      {/* {paginate && (
         <div className='w-full flex justify-end shadow rounded-md p-2 mt-4'>
           <PaginationControl startPage={1} currentPage={1} endPage={10} />
         </div>
-      )}
-    </>
+      )} */}
+    </div>
   );
 };
 
