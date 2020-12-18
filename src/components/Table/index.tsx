@@ -23,7 +23,10 @@ const Table: <T extends Column, K>(
 
   return (
     <>
-      <table {...getTableProps()} className='w-full'>
+      <table
+        {...getTableProps()}
+        className='min-w-full divide-y divide-gray-200'
+      >
         <TableHeader headerGroups={headerGroups} />
         <TableBody
           getTableBodyProps={getTableBodyProps}

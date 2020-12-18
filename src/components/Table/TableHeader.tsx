@@ -8,14 +8,14 @@ type TableHeaderProps = {
 const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
   return (
     <>
-      <thead className='shadow rounded-md'>
+      <thead className='bg-gray-300'>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column) => (
               <th
                 {...column.getHeaderProps(column.getSortByToggleProps())}
                 key={column.id}
-                className='p-3 text-indigo-600 text-left'
+                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700'
               >
                 {column.render('Header')}
               </th>
@@ -23,11 +23,6 @@ const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
           </tr>
         ))}
       </thead>
-      <tbody>
-        <tr>
-          <td className='h-3'></td>
-        </tr>
-      </tbody>
     </>
   );
 };
