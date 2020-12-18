@@ -124,7 +124,7 @@ function Creditors() {
   }, [error, notificationDispatch]);
 
   return (
-    <div className='px-12 pt-12 bg-gray-100 h-full'>
+    <div className='px-12 pt-12 pb-8 bg-gray-100 h-full overflow-y-auto'>
       <div className='flex justify-end mb-8'>
         <Link to='/new-creditor'>
           <Button buttonText='Add New Creditor' />
