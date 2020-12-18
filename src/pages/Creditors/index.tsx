@@ -49,7 +49,7 @@ function Creditors() {
         accessor: 'name',
         Cell: ({ row }) => (
           <Link
-            className='text-indigo-500 font-medium hover:underline'
+            className='text-indigo-500 font-medium hover:text-indigo-700'
             to={`/creditors/${row.original.id}`}
           >
             {row.original.name}

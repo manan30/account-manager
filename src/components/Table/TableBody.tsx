@@ -19,22 +19,18 @@ const TableBody: <T extends Record<string, unknown>>(
   return (
     <tbody
       {...getTableBodyProps()}
-      className='border border-opacity-50 border-solid border-gray-400 rounded-md'
+      className='bg-white divide-y divide-gray-200'
     >
       {rows.map((row) => {
         prepareRow(row);
         return (
-          <tr
-            {...row.getRowProps()}
-            key={row.id}
-            className='border-b border-opacity-50 border-solid border-gray-400'
-          >
+          <tr {...row.getRowProps()} key={row.id}>
             {row.cells.map((cell) => {
               return (
                 <td
                   {...cell.getCellProps()}
                   key={cell.column.id}
-                  className='p-3 text-sm'
+                  className='px-6 py-4 whitespace-no-wrap text-sm'
                 >
                   {cell.render('Cell')}
                 </td>
