@@ -12,6 +12,7 @@ import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
+import PaginationControl from '../../components/PaginationControl';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
@@ -149,6 +150,9 @@ function Creditors() {
       {tableData && (
         <div className='mb-6'>
           <Table columns={tableColumns} data={tableData} paginate />
+          {/* <div className='w-full flex justify-end p-2 shadow rounded-b-lg'>
+            <PaginationControl startPage={1} currentPage={1} endPage={10} />
+          </div> */}
         </div>
       )}
     </div>

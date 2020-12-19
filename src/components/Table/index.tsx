@@ -35,8 +35,14 @@ const Table: <T extends Column, K>(
         />
       </table>
       {paginate && (
+        // TODO: Prevent this from scrolling
         <div className='w-full flex justify-end p-2'>
-          <PaginationControl startPage={1} currentPage={1} endPage={10} />
+          <PaginationControl
+            startCount={1}
+            endCount={10}
+            currentPage={0}
+            total={20}
+          />
         </div>
       )}
     </div>

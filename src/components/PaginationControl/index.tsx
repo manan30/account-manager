@@ -1,32 +1,35 @@
 import React from 'react';
-import { FaChevronCircleLeft, FaChevronCircleRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import cn from 'classnames';
 
 type PaginationControlProps = {
-  startPage: number;
-  endPage: number;
+  startCount: number;
+  endCount: number;
   currentPage: number;
+  total: number;
 };
 
 const PaginationControl: React.FC<PaginationControlProps> = ({
-  startPage,
-  endPage,
-  currentPage
+  startCount,
+  endCount,
+  currentPage,
+  total
 }) => {
   return (
-    <div className='flex items-center mr-4'>
-      {currentPage !== 1 && (
-        <button>
-          <FaChevronCircleLeft />
-        </button>
-      )}
-      <div className='mr-2'>{startPage}</div>
-      <div className='mr-2'>of</div>
-      <div className='mr-2'>{endPage}</div>
-      {currentPage !== endPage && (
-        <button>
-          <FaChevronCircleRight />
-        </button>
-      )}
+    <div className='flex items-center mr-4 text-gray-800'>
+      <div className='mr-6 text-sm font-light'>
+        {startCount} - {endCount} of {total}
+      </div>
+      <button
+        className={cn('mr-6', startCount === 1 && 'text-gray-400 disabled')}
+      >
+        <FaChevronLeft />
+      </button>
+      <button
+        className={cn('mr-6', endCount === total && 'text-gray-400 disabled')}
+      >
+        <FaChevronRight />
+      </button>
     </div>
   );
 };
