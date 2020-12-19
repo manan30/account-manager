@@ -22,7 +22,7 @@ const Table: <T extends Column, K>(
   } = useTable({ columns, data }, useSortBy);
 
   return (
-    <div className='shadow overflow-y-hidden overflow-x-auto border-b border-gray-200 sm:rounded-lg'>
+    <div className='shadow overflow-y-hidden overflow-x-auto border-b border-gray-200 rounded-lg'>
       <table
         {...getTableProps()}
         className='min-w-full divide-y divide-gray-200'

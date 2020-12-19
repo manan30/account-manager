@@ -111,7 +111,8 @@ function Creditors() {
             <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-200 text-red-800'>
               Not Settled
             </span>
-          )
+          ),
+        disableSortBy: true
       },
       {
         Header: 'Account Settled Date',
@@ -145,15 +146,7 @@ function Creditors() {
         </Link>
       </div>
       {isLoading && <Loader size={48} />}
-      {tableData && (
-        <div className='mb-8 -my-2 w-1/2'>
-          {/* <div className='flex flex-col h-full overflow-hidden'> */}
-          {/* <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'> */}
-          <Table columns={tableColumns} data={tableData} />
-          {/* </div> */}
-          {/* </div> */}
-        </div>
-      )}
+      {tableData && <Table columns={tableColumns} data={tableData} />}
     </div>
   );
 }

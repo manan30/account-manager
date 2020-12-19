@@ -35,7 +35,7 @@ const Router = () => {
       <BrowserRouter>
         <div className='flex h-full w-full'>
           <SideNav />
-          <div className='flex-auto'>
+          <div className='w-3/4'>
             <Suspense fallback={<Loader size={48} />}>
               <Switch>
                 {routes.map((route, i) => {
