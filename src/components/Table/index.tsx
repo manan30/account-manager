@@ -34,11 +34,11 @@ const Table: <T extends Column, K>(
           prepareRow={prepareRow}
         />
       </table>
-      {/* {paginate && (
-        <div className='w-full flex justify-end shadow rounded-md p-2 mt-4'>
+      {paginate && (
+        <div className='w-full flex justify-end p-2'>
           <PaginationControl startPage={1} currentPage={1} endPage={10} />
         </div>
-      )} */}
+      )}
     </div>
   );
 };

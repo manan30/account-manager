@@ -146,7 +146,11 @@ function Creditors() {
         </Link>
       </div>
       {isLoading && <Loader size={48} />}
-      {tableData && <Table columns={tableColumns} data={tableData} />}
+      {tableData && (
+        <div className='mb-6'>
+          <Table columns={tableColumns} data={tableData} paginate />
+        </div>
+      )}
     </div>
   );
 }
