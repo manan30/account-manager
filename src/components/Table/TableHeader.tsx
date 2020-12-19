@@ -10,7 +10,10 @@ const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
     <>
       <thead className='bg-gray-300'>
         {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+          <tr
+            {...headerGroup.getHeaderGroupProps()}
+            key='creditors-table-header'
+          >
             {headerGroup.headers.map((column) => (
               <th
                 {...column.getHeaderProps(column.getSortByToggleProps())}

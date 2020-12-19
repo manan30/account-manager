@@ -16,17 +16,20 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
   total
 }) => {
   return (
-    <div className='flex items-center mr-4 text-gray-800'>
+    <div className='flex items-center text-gray-800'>
       <div className='mr-6 text-sm font-light'>
         {startCount} - {endCount} of {total}
       </div>
       <button
-        className={cn('mr-6', startCount === 1 && 'text-gray-400 disabled')}
+        className={cn('mr-6', startCount === 1 && 'opacity-25 cursor-default')}
       >
         <FaChevronLeft />
       </button>
       <button
-        className={cn('mr-6', endCount === total && 'text-gray-400 disabled')}
+        className={cn(
+          'mr-6',
+          endCount === total && 'opacity-25 cursor-default'
+        )}
       >
         <FaChevronRight />
       </button>
