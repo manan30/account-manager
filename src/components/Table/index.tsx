@@ -35,7 +35,7 @@ const Table: <T extends Column, K>(
 
   return (
     <div className='shadow border-b border-gray-200 rounded-lg overflow-auto'>
-      <div className='overflow-auto'>
+      <div className='overflow-auto max-h-table'>
         <table
           {...getTableProps()}
           className='min-w-full divide-y divide-gray-200 sticky top-0'
