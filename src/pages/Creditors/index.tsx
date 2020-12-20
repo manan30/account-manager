@@ -132,20 +132,6 @@ function Creditors() {
       });
   }, [error, notificationDispatch]);
 
-  // const currencyBreakdowns = useMemo(() => {
-  //   const breakdown = [];
-  //   const map = new Map<string, number>();
-  //   if (creditors) {
-  //     creditors.forEach((creditor) => {
-  //       const key = creditor.currency;
-  //       const amount = creditor.amount;
-  //       map.set(key, (map.get(key) as number) + amount || amount);
-  //     });
-  //   }
-  //   breakdown.push(...[...map.entries()].sort((a, b) => b[1] - a[1]));
-  //   return breakdown.slice(0, 3);
-  // }, [creditors]);
-
   const topRemainingCreditors = useMemo(() => {
     const remaining = [];
     if (creditors) {
@@ -188,10 +174,9 @@ function Creditors() {
             <span className='text-gray-800'>
               <ul>
                 {topRemainingCreditors.map((cb) => (
+                  // TODO: Add correct amount formatter support
                   <li key={generateRandomKey()} className='mb-2'>
-                    {cb.name} -{' '}
-                    {AmountFormatter.format(`${cb.remainingAmount}`)}{' '}
-                    {cb.currency}
+                    {cb.name} - {cb.remainingAmount} {cb.currency}
                   </li>
                 ))}
               </ul>
