@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
 import cn from 'classnames';
 
 type PaginationControlProps = {
@@ -26,6 +27,16 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
       </div>
       <button
         className={cn(
+          'mr-3',
+          !isThereAPreviousPage && 'opacity-25 cursor-default'
+        )}
+        onClick={previousPage}
+        disabled={!isThereAPreviousPage}
+      >
+        <CgPushChevronLeft size={24} />
+      </button>
+      <button
+        className={cn(
           'mr-6',
           !isThereAPreviousPage && 'opacity-25 cursor-default'
         )}
@@ -35,11 +46,18 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         <FaChevronLeft />
       </button>
       <button
-        className={cn('mr-6', !isThereANextPage && 'opacity-25 cursor-default')}
+        className={cn('mr-3', !isThereANextPage && 'opacity-25 cursor-default')}
         onClick={nextPage}
         disabled={!isThereANextPage}
       >
         <FaChevronRight />
+      </button>
+      <button
+        className={cn('mr-6', !isThereANextPage && 'opacity-25 cursor-default')}
+        onClick={nextPage}
+        disabled={!isThereANextPage}
+      >
+        <CgPushChevronRight size={24} />
       </button>
     </div>
   );
