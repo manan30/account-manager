@@ -356,7 +356,7 @@ module.exports = {
     maxHeight: {
       full: '100%',
       screen: '100vh',
-      table: '20rem'
+      table: '40rem'
     },
     maxWidth: (theme, { breakpoints }) => ({
       none: 'none',
