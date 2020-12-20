@@ -14,7 +14,7 @@ import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificatio
 import Button from '../../components/Button';
 import { AmountFormatter } from '../../utils/Formatters';
 import { NameValidator, NumberValidator } from '../../utils/Validators';
-import { ICreditor } from 'models/Creditor';
+import { ICreditor } from '../../models/Creditor';
 
 function NewCreditor() {
   const { firebaseApp, firestore } = useFirebaseContext();
@@ -78,7 +78,7 @@ function NewCreditor() {
         notificationDispatch({
           type: ADD_NOTIFICATION,
           payload: {
-            content: `Creditor ${formState.name} already exists`,
+            content: `Creditor ${formState.name} already exists. To update the amount please create a new transaction`,
             theme: NOTIFICATION_THEME_FAILURE
           }
         });
@@ -92,8 +92,10 @@ function NewCreditor() {
         amount: Number(formState.amount.trim()),
         currency: formState.currency.trim(),
         remainingAmount: Number(formState.amount.trim()),
+        accountSettledOn: null,
+        accountSettled: false,
         createdAt: firebaseApp?.firestore.Timestamp.now(),
-        accountSettledOn: null
+        updatedAt: firebaseApp?.firestore.Timestamp.now()
       });
       notificationDispatch({
         type: ADD_NOTIFICATION,

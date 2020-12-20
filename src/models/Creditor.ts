@@ -4,6 +4,8 @@ export interface ICreditor {
   amount: number;
   currency: string;
   remainingAmount: number;
-  createdAt: { seconds: number; nanoseconds: number };
   accountSettledOn?: string | null;
+  accountSettled: boolean;
+  createdAt: { seconds: number; nanoseconds: number };
+  updatedAt: { seconds: number; nanoseconds: number };
 }

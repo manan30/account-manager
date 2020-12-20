@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
+import Loader from './components/Loader';
 
 type RouteType = {
   path: string;
@@ -18,6 +19,10 @@ const routes: RouteType[] = [
     path: '/new-creditor',
     component: React.lazy(() => import('./pages/NewCreditor'))
   },
+  {
+    path: '/creditors',
+    component: React.lazy(() => import('./pages/Creditors'))
+  },
   process.env.NODE_ENV !== 'production' && {
     path: '/seed',
     component: React.lazy(() => import('./pages/Seed/withProvider'))
@@ -30,21 +35,23 @@ const Router = () => {
       <BrowserRouter>
         <div className='flex h-full w-full'>
           <SideNav />
-          <Suspense fallback={<div />}>
-            <Switch>
-              {routes.map((route, i) => {
-                const key = i;
-                return (
-                  <Route
-                    exact
-                    key={key}
-                    path={route.path}
-                    component={route.component}
-                  />
-                );
-              })}
-            </Switch>
-          </Suspense>
+          <div className='w-3/4'>
+            <Suspense fallback={<Loader size={48} />}>
+              <Switch>
+                {routes.map((route, i) => {
+                  const key = i;
+                  return (
+                    <Route
+                      exact
+                      key={key}
+                      path={route.path}
+                      component={route.component}
+                    />
+                  );
+                })}
+              </Switch>
+            </Suspense>
+          </div>
         </div>
       </BrowserRouter>
       <NotificationManager />

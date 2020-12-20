@@ -17,7 +17,9 @@ const generateFakeCreditor = (): ICreditor => {
     currency,
     createdAt,
     remainingAmount: amount,
-    accountSettledOn
+    accountSettledOn,
+    accountSettled: false,
+    updatedAt: createdAt
   };
 };
 

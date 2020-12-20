@@ -1,3 +1,4 @@
+// @flow
 import React, { useContext } from 'react';
 import { IFirebaseContext } from './firebase.interface';
 import FirebaseService from '../../services/firebase';

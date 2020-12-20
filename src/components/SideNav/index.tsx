@@ -6,14 +6,15 @@ const links = [
   { to: '/', linkText: 'Overview' },
   { to: '/accounts', linkText: 'Accounts' },
   { to: '/debt', linkText: 'Debt' },
-  { to: '/spending', linkText: 'Spending' }
+  { to: '/spending', linkText: 'Spending' },
+  { to: '/creditors', linkText: 'Creditors' }
 ];
 
 function SideNav() {
   const { pathname } = useLocation();
 
   return (
-    <div className='bg-gray-300 px-8 flex flex-col'>
+    <div className='bg-gray-300 px-8 flex flex-col md:flex-shrink-0 lg:flex-shrink-0 xl:flex-shrink-0 w-1/4'>
       <h2 className='text-3xl mt-6 text-gray-800'>Account Manager</h2>
       <nav className='flex flex-col flex-auto'>
         {links.map((link, i) => {
