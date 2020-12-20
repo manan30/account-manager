@@ -5,14 +5,13 @@ import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
-import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
+import useGetAllCreditors from '../../hooks/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import PaginationControl from '../../components/PaginationControl';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
@@ -149,10 +148,13 @@ function Creditors() {
       {isLoading && <Loader size={48} />}
       {tableData && (
         <div className='mb-6'>
-          <Table columns={tableColumns} data={tableData} paginate />
-          {/* <div className='w-full flex justify-end p-2 shadow rounded-b-lg'>
-            <PaginationControl startPage={1} currentPage={1} endPage={10} />
-          </div> */}
+          <Table
+            columns={tableColumns}
+            data={tableData}
+            nextPage={nextPage}
+            prevPage={prevPage}
+            paginate
+          />
         </div>
       )}
     </div>

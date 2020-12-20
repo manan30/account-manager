@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Column, useSortBy, useTable } from 'react-table';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import PaginationControl from '../PaginationControl';
 import TableBody from './TableBody';
 import TableHeader from './TableHeader';
@@ -15,11 +15,24 @@ const Table: <T extends Column, K>(
 ) => React.ReactElement = ({ columns, data, paginate = true }) => {
   const {
     headerGroups,
-    rows,
+    page,
     getTableProps,
     getTableBodyProps,
-    prepareRow
-  } = useTable({ columns, data }, useSortBy);
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize }
+  } = useTable(
+    { columns, data, initialState: { pageIndex: 0, pageSize: 2 } },
+    useSortBy,
+    usePagination
+  );
 
   return (
     <div className='shadow overflow-y-hidden overflow-x-auto border-b border-gray-200 rounded-lg'>
@@ -30,7 +43,7 @@ const Table: <T extends Column, K>(
         <TableHeader headerGroups={headerGroups} />
         <TableBody
           getTableBodyProps={getTableBodyProps}
-          rows={rows}
+          rows={page}
           prepareRow={prepareRow}
         />
       </table>
@@ -38,10 +51,12 @@ const Table: <T extends Column, K>(
         // TODO: Prevent this from scrolling
         <div className='w-full flex justify-end p-2'>
           <PaginationControl
-            startCount={1}
-            endCount={10}
-            currentPage={0}
-            total={20}
+            previousPage={previousPage}
+            isThereAPreviousPage={canPreviousPage}
+            nextPage={nextPage}
+            isThereANextPage={canNextPage}
+            start={pageIndex + 1}
+            end={pageOptions.length}
           />
         </div>
       )}

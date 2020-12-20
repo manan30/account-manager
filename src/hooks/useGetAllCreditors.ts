@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from 'models/Creditor';
-import { useFirebaseContext } from '../../providers/FirebaseProvider';
+import { useFirebaseContext } from '../providers/FirebaseProvider';
 import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types';
 
 type useGetAllCreditorsParams = {
@@ -24,10 +24,8 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
     try {
       setIsLoading(true);
       setError(false);
-      const creditorDBRef = firestore
-        ?.collection('creditors')
-        .orderBy('name')
-        .limit(limit);
+      const creditorDBRef = firestore?.collection('creditors').orderBy('name');
+      // .limit(limit);
 
       const queryDocs = await creditorDBRef?.get();
       setFirstDoc(queryDocs?.docs[0]);
@@ -47,7 +45,7 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
     } finally {
       setIsLoading(false);
     }
-  }, [firestore, limit]);
+  }, [firestore]);
 
   const nextPage = useCallback(async () => {
     try {
@@ -60,8 +58,11 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
         .limit(limit);
 
       const queryDocs = await creditorDBRef?.get();
-      setFirstDoc(queryDocs?.docs[0]);
-      setLastDoc(queryDocs?.docs[queryDocs.docs.length - 1]);
+      // console.log({ queryDocs });
+      if (queryDocs && queryDocs?.size > 0) {
+        setFirstDoc(queryDocs?.docs[0]);
+        setLastDoc(queryDocs?.docs[queryDocs.docs.length - 1]);
+      }
       const creditors = queryDocs?.docs.map((doc) => {
         return {
           id: doc.id,
@@ -90,8 +91,11 @@ const useGetAllCreditors = ({ limit = 10 }: useGetAllCreditorsParams) => {
         .limitToLast(limit);
 
       const queryDocs = await creditorDBRef?.get();
-      setFirstDoc(queryDocs?.docs[0]);
-      setLastDoc(queryDocs?.docs[queryDocs.docs.length - 1]);
+      console.log({ queryDocs });
+      if (queryDocs && queryDocs?.size > 0) {
+        setFirstDoc(queryDocs?.docs[0]);
+        setLastDoc(queryDocs?.docs[queryDocs.docs.length - 1]);
+      }
       const creditors = queryDocs?.docs.map((doc) => {
         return {
           id: doc.id,
