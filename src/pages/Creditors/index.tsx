@@ -12,6 +12,7 @@ import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import { AmountFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 
 function Creditors() {
@@ -188,7 +189,9 @@ function Creditors() {
               <ul>
                 {topRemainingCreditors.map((cb) => (
                   <li key={generateRandomKey()} className='mb-2'>
-                    {cb.name} - {cb.remainingAmount} {cb.currency}
+                    {cb.name} -{' '}
+                    {AmountFormatter.format(`${cb.remainingAmount}`)}{' '}
+                    {cb.currency}
                   </li>
                 ))}
               </ul>
