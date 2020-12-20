@@ -15,15 +15,7 @@ import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
-  const {
-    data: creditors,
-    isLoading,
-    error,
-    nextPage,
-    prevPage
-  } = useGetAllCreditors({
-    limit: 10
-  });
+  const { data: creditors, isLoading, error } = useGetAllCreditors();
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -148,13 +140,7 @@ function Creditors() {
       {isLoading && <Loader size={48} />}
       {tableData && (
         <div className='mb-6'>
-          <Table
-            columns={tableColumns}
-            data={tableData}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            paginate
-          />
+          <Table columns={tableColumns} data={tableData} paginate />
         </div>
       )}
     </div>

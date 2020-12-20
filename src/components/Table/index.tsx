@@ -26,10 +26,9 @@ const Table: <T extends Column, K>(
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex }
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 2 } },
+    { columns, data, initialState: { pageIndex: 0, pageSize: 50 } },
     useSortBy,
     usePagination
   );
@@ -57,6 +56,8 @@ const Table: <T extends Column, K>(
             isThereANextPage={canNextPage}
             start={pageIndex + 1}
             end={pageOptions.length}
+            gotoPage={gotoPage}
+            lastPage={pageCount - 1}
           />
         </div>
       )}

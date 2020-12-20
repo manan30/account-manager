@@ -10,6 +10,8 @@ type PaginationControlProps = {
   nextPage: () => void;
   start: number;
   end: number;
+  gotoPage: (updater: ((pageIndex: number) => number) | number) => void;
+  lastPage: number;
 };
 
 const PaginationControl: React.FC<PaginationControlProps> = ({
@@ -18,7 +20,9 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
   nextPage,
   isThereANextPage,
   start,
-  end
+  end,
+  gotoPage,
+  lastPage
 }) => {
   return (
     <div className='flex items-center text-gray-800'>
@@ -30,7 +34,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
           'mr-3',
           !isThereAPreviousPage && 'opacity-25 cursor-default'
         )}
-        onClick={previousPage}
+        onClick={() => gotoPage(0)}
         disabled={!isThereAPreviousPage}
       >
         <CgPushChevronLeft size={24} />
@@ -54,7 +58,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
       </button>
       <button
         className={cn('mr-6', !isThereANextPage && 'opacity-25 cursor-default')}
-        onClick={nextPage}
+        onClick={() => gotoPage(lastPage)}
         disabled={!isThereANextPage}
       >
         <CgPushChevronRight size={24} />
