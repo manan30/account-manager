@@ -28,26 +28,27 @@ const Table: <T extends Column, K>(
     previousPage,
     state: { pageIndex }
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 50 } },
+    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } },
     useSortBy,
     usePagination
   );
 
   return (
-    <div className='shadow overflow-y-hidden overflow-x-auto border-b border-gray-200 rounded-lg'>
-      <table
-        {...getTableProps()}
-        className='min-w-full divide-y divide-gray-200'
-      >
-        <TableHeader headerGroups={headerGroups} />
-        <TableBody
-          getTableBodyProps={getTableBodyProps}
-          rows={page}
-          prepareRow={prepareRow}
-        />
-      </table>
+    <div className='shadow border-b border-gray-200 rounded-lg overflow-auto'>
+      <div className='overflow-auto'>
+        <table
+          {...getTableProps()}
+          className='min-w-full divide-y divide-gray-200 sticky top-0'
+        >
+          <TableHeader headerGroups={headerGroups} />
+          <TableBody
+            getTableBodyProps={getTableBodyProps}
+            rows={page}
+            prepareRow={prepareRow}
+          />
+        </table>
+      </div>
       {paginate && (
-        // TODO: Prevent this from scrolling
         <div className='w-full flex justify-end p-2'>
           <PaginationControl
             previousPage={previousPage}

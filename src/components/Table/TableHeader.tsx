@@ -7,26 +7,21 @@ type TableHeaderProps = {
 
 const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
   return (
-    <>
-      <thead className='bg-gray-300'>
-        {headerGroups.map((headerGroup) => (
-          <tr
-            {...headerGroup.getHeaderGroupProps()}
-            key='creditors-table-header'
-          >
-            {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                key={column.id}
-                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700'
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-    </>
+    <thead className=''>
+      {headerGroups.map((headerGroup) => (
+        <tr {...headerGroup.getHeaderGroupProps()} key='creditors-table-header'>
+          {headerGroup.headers.map((column) => (
+            <th
+              {...column.getHeaderProps(column.getSortByToggleProps())}
+              key={column.id}
+              className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 sticky top-0 bg-gray-300'
+            >
+              {column.render('Header')}
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
   );
 };
 

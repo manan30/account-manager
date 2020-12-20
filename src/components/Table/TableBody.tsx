@@ -19,7 +19,7 @@ const TableBody: <T extends Record<string, unknown>>(
   return (
     <tbody
       {...getTableBodyProps()}
-      className='bg-white divide-y divide-gray-200'
+      className='bg-white divide-y divide-gray-200 h-64 overflow-y-auto'
     >
       {rows.map((row) => {
         prepareRow(row);
