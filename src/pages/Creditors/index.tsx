@@ -1,17 +1,18 @@
 import React, { useEffect, useMemo } from 'react';
+import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
+import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
+import Card from '../../components/Card';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import useGetAllCreditors from '../../hooks/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
-
-import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
+import { generateRandomKey } from '../../utils/Functions';
 
 function Creditors() {
   const notificationDispatch = useNotificationDispatchContext();
@@ -130,12 +131,89 @@ function Creditors() {
       });
   }, [error, notificationDispatch]);
 
+  const currencyBreakdowns = useMemo(() => {
+    const breakdown = [];
+    const map = new Map<string, number>();
+    if (creditors) {
+      creditors.forEach((creditor) => {
+        const key = creditor.currency;
+        const amount = creditor.amount;
+        map.set(key, (map.get(key) as number) + amount || amount);
+      });
+    }
+    breakdown.push(...[...map.entries()].sort((a, b) => b[1] - a[1]));
+    return breakdown.slice(0, 3);
+  }, [creditors]);
+
+  const topRemainingCreditors = useMemo(() => {
+    const remaining = [];
+    if (creditors) {
+      remaining.push(
+        ...creditors.map((creditor) => ({
+          name: creditor.name,
+          remainingAmount: creditor.remainingAmount
+        }))
+      );
+    }
+    return remaining
+      .sort((a, b) => b.remainingAmount - a.remainingAmount)
+      .slice(0, 3);
+  }, [creditors]);
+
   return (
     <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
       <div className='flex justify-end mb-8'>
         <Link to='/new-creditor'>
           <Button buttonText='Add New Creditor' />
         </Link>
+      </div>
+      <div className='grid grid-cols-3 gap-4 mb-8'>
+        <Card className='p-4 bg-indigo-200'>
+          <div className='flex flex-col'>
+            <span className='text-gray-800 font-medium text-lg mb-2'>
+              Total Creditors
+            </span>
+            <span className='text-gray-800 font-extrabold text-5xl tracking-wider'>
+              {creditors?.length}
+            </span>
+          </div>
+        </Card>
+        <Card className='p-4 bg-indigo-200'>
+          <div className='flex flex-col'>
+            <span className='text-gray-800 font-medium text-lg mb-2'>
+              {`Top ${currencyBreakdowns.length} Currency Breakdowns`}
+            </span>
+            <span className='text-gray-800 font-extrabold tracking-wider'>
+              <ul>
+                {currencyBreakdowns.map((cb) => (
+                  <li key={generateRandomKey()}>
+                    <div>
+                      {cb[0]} - {cb[1]}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </span>
+          </div>
+        </Card>
+        <Card className='p-4 bg-indigo-200'>
+          <div className='flex flex-col'>
+            <span className='text-gray-800 font-medium text-lg mb-2'>
+              {`Top ${topRemainingCreditors.length} Remaining Creditors`}
+            </span>
+            <span className='text-gray-800 font-bold'>
+              <ul>
+                {topRemainingCreditors.map((cb) => (
+                  <li key={generateRandomKey()}>
+                    <div>
+                      {cb.name} - {cb.remainingAmount}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </span>
+          </div>
+        </Card>
       </div>
       {isLoading && <Loader size={48} />}
       {tableData && (
