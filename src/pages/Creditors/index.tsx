@@ -131,19 +131,19 @@ function Creditors() {
       });
   }, [error, notificationDispatch]);
 
-  const currencyBreakdowns = useMemo(() => {
-    const breakdown = [];
-    const map = new Map<string, number>();
-    if (creditors) {
-      creditors.forEach((creditor) => {
-        const key = creditor.currency;
-        const amount = creditor.amount;
-        map.set(key, (map.get(key) as number) + amount || amount);
-      });
-    }
-    breakdown.push(...[...map.entries()].sort((a, b) => b[1] - a[1]));
-    return breakdown.slice(0, 3);
-  }, [creditors]);
+  // const currencyBreakdowns = useMemo(() => {
+  //   const breakdown = [];
+  //   const map = new Map<string, number>();
+  //   if (creditors) {
+  //     creditors.forEach((creditor) => {
+  //       const key = creditor.currency;
+  //       const amount = creditor.amount;
+  //       map.set(key, (map.get(key) as number) + amount || amount);
+  //     });
+  //   }
+  //   breakdown.push(...[...map.entries()].sort((a, b) => b[1] - a[1]));
+  //   return breakdown.slice(0, 3);
+  // }, [creditors]);
 
   const topRemainingCreditors = useMemo(() => {
     const remaining = [];
@@ -151,7 +151,8 @@ function Creditors() {
       remaining.push(
         ...creditors.map((creditor) => ({
           name: creditor.name,
-          remainingAmount: creditor.remainingAmount
+          remainingAmount: creditor.remainingAmount,
+          currency: creditor.currency
         }))
       );
     }
@@ -181,33 +182,13 @@ function Creditors() {
         <Card className='p-4 bg-indigo-200'>
           <div className='flex flex-col'>
             <span className='text-gray-800 font-medium text-lg mb-2'>
-              {`Top ${currencyBreakdowns.length} Currency Breakdowns`}
-            </span>
-            <span className='text-gray-800 font-extrabold tracking-wider'>
-              <ul>
-                {currencyBreakdowns.map((cb) => (
-                  <li key={generateRandomKey()}>
-                    <div>
-                      {cb[0]} - {cb[1]}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </span>
-          </div>
-        </Card>
-        <Card className='p-4 bg-indigo-200'>
-          <div className='flex flex-col'>
-            <span className='text-gray-800 font-medium text-lg mb-2'>
               {`Top ${topRemainingCreditors.length} Remaining Creditors`}
             </span>
-            <span className='text-gray-800 font-bold'>
+            <span className='text-gray-800'>
               <ul>
                 {topRemainingCreditors.map((cb) => (
-                  <li key={generateRandomKey()}>
-                    <div>
-                      {cb.name} - {cb.remainingAmount}
-                    </div>
+                  <li key={generateRandomKey()} className='mb-2'>
+                    {cb.name} - {cb.remainingAmount} {cb.currency}
                   </li>
                 ))}
               </ul>
