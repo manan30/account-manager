@@ -1,9 +1,5 @@
-// @flow
-import dotenv from 'dotenv';
 import app from 'firebase/app';
 import 'firebase/firestore';
-
-dotenv.config();
 
 const config = {
   apiKey: process.env.PROD_API_KEY,
