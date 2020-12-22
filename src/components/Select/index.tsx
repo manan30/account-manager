@@ -44,10 +44,8 @@ const Select: React.FC<SelectProps> = ({
   };
 
   useEffect(() => {
-    if (onSelectValueChange && !isEmptyString(selectValue))
-      onSelectValueChange(name, selectValue);
     if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
-  }, [selectValue, onSelectValueChange, name, resetFormErrors]);
+  }, [selectValue, name, resetFormErrors]);
 
   useEffect(() => {
     if (resetField) {
@@ -70,10 +68,10 @@ const Select: React.FC<SelectProps> = ({
           <input
             id={name}
             name={name}
-            value={selectValue}
+            defaultValue={selectValue}
             placeholder={placeHolder}
             className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300'
-            onChange={handleChange}
+            // onChange={handleChange}
             onFocus={() => setShowOptions(true)}
             readOnly
           />
@@ -111,6 +109,7 @@ const Select: React.FC<SelectProps> = ({
                   onClick={() => {
                     setSelectValue(option);
                     setShowOptions(false);
+                    if (onSelectValueChange) onSelectValueChange(name, option);
                   }}
                 >
                   {option}

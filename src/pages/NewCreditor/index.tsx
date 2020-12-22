@@ -104,7 +104,7 @@ function NewCreditor() {
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
-      history.push('/creditors');
+      history.push('/creditor');
     } catch (err) {
       notificationDispatch({
         type: ADD_NOTIFICATION,

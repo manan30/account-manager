@@ -44,7 +44,7 @@ function Creditors() {
         Cell: ({ row }) => (
           <Link
             className='text-indigo-500 font-medium hover:text-indigo-700'
-            to={`/creditors/${row.original.id}`}
+            to={`/creditor/${row.original.id}`}
           >
             {row.original.name}
           </Link>
