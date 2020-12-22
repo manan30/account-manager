@@ -71,7 +71,6 @@ const Select: React.FC<SelectProps> = ({
             defaultValue={selectValue}
             placeholder={placeHolder}
             className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300'
-            // onChange={handleChange}
             onFocus={() => setShowOptions(true)}
             readOnly
           />
@@ -95,7 +94,7 @@ const Select: React.FC<SelectProps> = ({
         </div>
       )}
       {showOptions && (
-        <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border'>
+        <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border overflow-y-auto max-h-select'>
           {options.map((option, i) => {
             const key = i;
             return (

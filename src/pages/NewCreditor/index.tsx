@@ -183,6 +183,7 @@ function NewCreditor() {
             buttonText='Add Creditor'
             onClickHandler={(e) => handleSubmit(e)}
             loading={isCreditorBeingAdded}
+            type='submit'
           />
         </div>
       </form>

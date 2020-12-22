@@ -11,7 +11,8 @@ export interface INewTransactionState {
 export type NewTransactionActionType =
   | 'ADD_TRANSACTION_TYPE'
   | 'ADD_AMOUNT'
-  | 'ADD_TRANSACTION_ENTITY';
+  | 'ADD_TRANSACTION_ENTITY'
+  | 'ADD_TRANSACTION_DATE';
 
 export interface INewTransactionAction {
   type: NewTransactionActionType;

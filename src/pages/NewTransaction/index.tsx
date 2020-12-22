@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import useGetAllCreditors from '../../hooks/useGetAllCreditors';
@@ -6,18 +7,17 @@ import {
   useNewTransactionDispatchContext,
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
-import {
-  ADD_AMOUNT,
-  ADD_NAME,
-  NewTransactionActionType
-} from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
+import { NewTransactionActionType } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 
 function NewTransaction() {
   const { transactionType } = useNewTransactionStateContext();
-  const dispatch = useNewTransactionDispatchContext();
   const { data: creditors } = useGetAllCreditors();
+  const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
+  const dispatch = useNewTransactionDispatchContext();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
   };
 
@@ -32,7 +32,7 @@ function NewTransaction() {
 
   return (
     <div className='flex justify-center w-full'>
-      <form className='my-8 w-1/3' onSubmit={handleSubmit}>
+      <form className='mb-8 w-1/3 mt-16'>
         <Select
           name='transaction-type'
           label='Transaction Type'
@@ -44,15 +44,17 @@ function NewTransaction() {
         />
         {(transactionType === 'Credit' || transactionType === 'Debit') &&
           creditors && (
-            <Select
-              name='transaction-entity'
-              label='Select a Creditor'
-              placeHolder='Creditor Name'
-              selectOptions={creditors.map(({ name }) => name)}
-              onSelectValueChange={(_, value) =>
-                handleSelectChange('ADD_TRANSACTION_ENTITY', value)
-              }
-            />
+            <div className='mt-6'>
+              <Select
+                name='transaction-entity'
+                label='Select a Creditor'
+                placeHolder='Creditor Name'
+                selectOptions={creditors.map(({ name }) => name)}
+                onSelectValueChange={(_, value) =>
+                  handleSelectChange('ADD_TRANSACTION_ENTITY', value)
+                }
+              />
+            </div>
           )}
         <div className='mt-6'>
           <Input
@@ -62,7 +64,7 @@ function NewTransaction() {
             label='Amount'
             onBlurUpdate={(inputValue) =>
               dispatch({
-                type: ADD_AMOUNT,
+                type: 'ADD_AMOUNT',
                 payload: { amount: Number(inputValue) }
               })
             }
@@ -70,12 +72,23 @@ function NewTransaction() {
         </div>
         <div className='mt-6'>
           <Input
-            name='name'
-            placeHolder='Name of person or entity'
-            label='Name'
+            name='transaction-date'
+            placeHolder='MM/DD/YYYY'
+            label='Transaction Date'
             onBlurUpdate={(inputValue) =>
-              dispatch({ type: ADD_NAME, payload: { name: inputValue } })
+              dispatch({
+                type: 'ADD_TRANSACTION_ENTITY',
+                payload: { name: inputValue }
+              })
             }
+          />
+        </div>
+        <div className='mt-10'>
+          <Button
+            buttonText='Add Creditor'
+            onClickHandler={(e) => handleSubmit(e)}
+            loading={isTransactionBeingAdded}
+            type='submit'
           />
         </div>
       </form>
