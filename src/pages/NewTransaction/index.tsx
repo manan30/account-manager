@@ -8,6 +8,12 @@ import {
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
 import { NewTransactionActionType } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
+import { SelectOption } from '../../components/Select';
+
+const transactionTypeDropdownOptions: SelectOption[] = [
+  { label: 'credit', value: 'Credit' },
+  { label: 'debit', value: 'Debit' }
+];
 
 function NewTransaction() {
   const { transactionType } = useNewTransactionStateContext();
@@ -37,9 +43,9 @@ function NewTransaction() {
           name='transaction-type'
           label='Transaction Type'
           placeHolder='Eg. Credit, Debit'
-          selectOptions={['Credit', 'Debit']}
-          onSelectValueChange={(_, value) =>
-            handleSelectChange('ADD_TRANSACTION_TYPE', value)
+          selectOptions={transactionTypeDropdownOptions}
+          onSelectValueChange={(_, option) =>
+            handleSelectChange('ADD_TRANSACTION_TYPE', option.value)
           }
         />
         {(transactionType === 'Credit' || transactionType === 'Debit') &&
@@ -49,9 +55,14 @@ function NewTransaction() {
                 name='transaction-entity'
                 label='Select a Creditor'
                 placeHolder='Creditor Name'
-                selectOptions={creditors.map(({ name }) => name)}
-                onSelectValueChange={(_, value) =>
-                  handleSelectChange('ADD_TRANSACTION_ENTITY', value)
+                selectOptions={
+                  creditors.map(({ id, name }) => ({
+                    label: id,
+                    value: name
+                  })) as SelectOption[]
+                }
+                onSelectValueChange={(_, option) =>
+                  handleSelectChange('ADD_TRANSACTION_ENTITY', option.label)
                 }
               />
             </div>
@@ -71,6 +82,7 @@ function NewTransaction() {
           />
         </div>
         <div className='mt-6'>
+          {/* TODO: Validate date input and create date picker UI */}
           <Input
             name='transaction-date'
             placeHolder='MM/DD/YYYY'

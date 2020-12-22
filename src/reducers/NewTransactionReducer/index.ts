@@ -3,11 +3,6 @@ import {
   INewTransactionAction,
   INewTransactionState
 } from './newTransactionReducer.interface';
-import {
-  ADD_AMOUNT,
-  ADD_NAME,
-  ADD_TRANSACTION_TYPE
-} from './newTransactionReducer.interface';
 
 const newTransactionInitialState = {
   transactionType: '',
@@ -20,17 +15,17 @@ const newTransactionReducer = (
   action: INewTransactionAction
 ) => {
   switch (action.type) {
-    case ADD_TRANSACTION_TYPE:
+    case 'ADD_TRANSACTION_TYPE':
       return {
         ...state,
         transactionType: action.payload.transactionType
       } as INewTransactionState;
-    case ADD_AMOUNT:
+    case 'ADD_AMOUNT':
       return {
         ...state,
         amount: action.payload.amount
       } as INewTransactionState;
-    case ADD_NAME:
+    case 'ADD_TRANSACTION_ENTITY':
       return { ...state, name: action.payload.name } as INewTransactionState;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);

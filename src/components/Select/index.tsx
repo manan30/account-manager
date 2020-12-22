@@ -5,12 +5,14 @@ import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
 
+export type SelectOption = { label: string; value: string };
+
 type SelectProps = {
   name: string;
   label?: string;
   placeHolder?: string;
-  selectOptions: string[];
-  onSelectValueChange?: (name: string, value: string) => void;
+  selectOptions: SelectOption[];
+  onSelectValueChange?: (name: string, value: SelectOption) => void;
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
@@ -32,16 +34,16 @@ const Select: React.FC<SelectProps> = ({
   const [showOptions, setShowOptions] = useState(false);
   const [options, setOptions] = useState(selectOptions);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectValue(e.target.value);
-    if (e.target.value === '') {
-      setOptions(selectOptions);
-    } else {
-      setOptions(
-        selectOptions.filter((item) => item.startsWith(e.target.value))
-      );
-    }
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSelectValue(e.target.value);
+  //   if (e.target.value === '') {
+  //     setOptions(selectOptions);
+  //   } else {
+  //     setOptions(
+  //       selectOptions.filter((item) => item.startsWith(e.target.value))
+  //     );
+  //   }
+  // };
 
   useEffect(() => {
     if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
@@ -50,7 +52,8 @@ const Select: React.FC<SelectProps> = ({
   useEffect(() => {
     if (resetField) {
       setSelectValue('');
-      if (onSelectValueChange) onSelectValueChange(name, '');
+      if (onSelectValueChange)
+        onSelectValueChange(name, { label: '', value: '' });
     }
   }, [resetField, name, onSelectValueChange]);
 
@@ -106,12 +109,12 @@ const Select: React.FC<SelectProps> = ({
                   type='button'
                   className='w-full text-left focus:outline-none'
                   onClick={() => {
-                    setSelectValue(option);
+                    setSelectValue(option.value);
                     setShowOptions(false);
                     if (onSelectValueChange) onSelectValueChange(name, option);
                   }}
                 >
-                  {option}
+                  {option.value}
                 </button>
               </li>
             );
