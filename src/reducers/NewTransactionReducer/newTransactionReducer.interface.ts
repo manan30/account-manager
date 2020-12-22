@@ -8,8 +8,13 @@ export interface INewTransactionState {
   name: string;
 }
 
+export type NewTransactionActionType =
+  | 'ADD_TRANSACTION_TYPE'
+  | 'ADD_AMOUNT'
+  | 'ADD_TRANSACTION_ENTITY';
+
 export interface INewTransactionAction {
-  type: typeof ADD_TRANSACTION_TYPE | typeof ADD_AMOUNT | typeof ADD_NAME;
+  type: NewTransactionActionType;
   payload: {
     transactionType?: string;
     amount?: number;

@@ -1,22 +1,32 @@
 import React, { useCallback } from 'react';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import { useNewTransactionDispatchContext } from '../../providers/NewTransactionProvider';
+import useGetAllCreditors from '../../hooks/useGetAllCreditors';
+import {
+  useNewTransactionDispatchContext,
+  useNewTransactionStateContext
+} from '../../providers/NewTransactionProvider';
 import {
   ADD_AMOUNT,
   ADD_NAME,
-  ADD_TRANSACTION_TYPE
+  NewTransactionActionType
 } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 
 function NewTransaction() {
+  const { transactionType } = useNewTransactionStateContext();
   const dispatch = useNewTransactionDispatchContext();
+  const { data: creditors } = useGetAllCreditors();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
   const handleSelectChange = useCallback(
-    (value) => dispatch({ type: ADD_TRANSACTION_TYPE, payload: value }),
+    (type: NewTransactionActionType, value: string) =>
+      dispatch({
+        type,
+        payload: { transactionType: value }
+      }),
     [dispatch]
   );
 
@@ -27,9 +37,23 @@ function NewTransaction() {
           name='transaction-type'
           label='Transaction Type'
           placeHolder='Eg. Credit, Debit'
-          selectOptions={['Credit', 'Debit', 'Creditor', 'Spending']}
-          onSelectValueChange={handleSelectChange}
+          selectOptions={['Credit', 'Debit']}
+          onSelectValueChange={(_, value) =>
+            handleSelectChange('ADD_TRANSACTION_TYPE', value)
+          }
         />
+        {(transactionType === 'Credit' || transactionType === 'Debit') &&
+          creditors && (
+            <Select
+              name='transaction-entity'
+              label='Select a Creditor'
+              placeHolder='Creditor Name'
+              selectOptions={creditors.map(({ name }) => name)}
+              onSelectValueChange={(_, value) =>
+                handleSelectChange('ADD_TRANSACTION_ENTITY', value)
+              }
+            />
+          )}
         <div className='mt-6'>
           <Input
             name='amount'
