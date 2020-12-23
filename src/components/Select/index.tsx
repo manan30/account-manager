@@ -45,17 +45,17 @@ const Select: React.FC<SelectProps> = ({
   //   }
   // };
 
-  useEffect(() => {
-    if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
-  }, [selectValue, name, resetFormErrors]);
+  // useEffect(() => {
+  //   if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
+  // }, [selectValue, name, resetFormErrors]);
 
-  useEffect(() => {
-    if (resetField) {
-      setSelectValue('');
-      if (onSelectValueChange)
-        onSelectValueChange(name, { label: '', value: '' });
-    }
-  }, [resetField, name, onSelectValueChange]);
+  // useEffect(() => {
+  //   if (resetField) {
+  //     setSelectValue('');
+  //     // if (onSelectValueChange)
+  //     //   onSelectValueChange(name, { label: '', value: '' });
+  //   }
+  // }, [resetField, name, onSelectValueChange]);
 
   return (
     <div>

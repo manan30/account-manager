@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Input from '../../components/Input';
-import Select from '../../components/Select';
+import Select, { SelectOption } from '../../components/Select';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
   INPUT_THEME_ERROR,
@@ -16,7 +16,13 @@ import { AmountFormatter } from '../../utils/Formatters';
 import { NameValidator, NumberValidator } from '../../utils/Validators';
 import { ICreditor } from '../../models/Creditor';
 
-function NewCreditor() {
+const currencyDropdownOptions: SelectOption[] = [
+  { label: 'usd', value: 'USD' },
+  { label: 'cad', value: 'CAD' },
+  { label: 'inr', value: 'INR' }
+];
+
+const NewCreditor = () => {
   const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
@@ -167,8 +173,10 @@ function NewCreditor() {
             name='currency'
             placeHolder='USD, INR, etc'
             label='Currency'
-            selectOptions={['USD', 'CAD', 'INR']}
-            onSelectValueChange={handleFormUpdate}
+            selectOptions={currencyDropdownOptions}
+            onSelectValueChange={(name, option) =>
+              handleFormUpdate(name, option.value)
+            }
             subContent={
               formErrors.currency.error && formErrors.currency.content
             }
@@ -188,6 +196,6 @@ function NewCreditor() {
       </form>
     </div>
   );
-}
+};
 
 export default NewCreditor;
