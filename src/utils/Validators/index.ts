@@ -1,6 +1,6 @@
 export const NumberValidator = (value = '') => {
   return {
-    testFailed: /\D/g.test(value),
+    testFailed: /^\D{0,4}(\.\D{0,2})?$/g.test(value),
     errorMessage: 'Only digits are allowed'
   };
 };

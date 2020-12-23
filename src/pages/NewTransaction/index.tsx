@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { NewTransactionActionType } from 'reducers/NewTransactionReducer/newTransactionReducer.interface';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select, { SelectOption } from '../../components/Select';
@@ -9,11 +8,13 @@ import {
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { NewTransactionActionType } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 import {
   INPUT_THEME_ERROR,
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { isEmptyString } from '../../utils/Functions';
 import { NumberValidator } from '../../utils/Validators';
 import CreditorsSelect from './CreditorsSelect';
@@ -168,13 +169,14 @@ const NewTransaction = () => {
           <Input
             name='amount'
             type='tel'
-            placeHolder='$0.00'
+            placeHolder='0.00'
             label='Amount'
             subContent={formErrors.amount.error && formErrors.amount.content}
             theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
             validator={NumberValidator}
+            valueFormatter={NumberWithCommasFormatter}
             onBlurUpdate={handleInputChange('ADD_TRANSACTION_AMOUNT')}
           />
         </div>
