@@ -6,7 +6,7 @@ import {
 
 const newTransactionInitialState = {
   type: '',
-  amount: 0,
+  amount: '',
   entity: '',
   date: ''
 } as INewTransactionState;

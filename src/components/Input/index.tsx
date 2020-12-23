@@ -99,7 +99,7 @@ const Input: React.FC<InputProps> = ({
           onChange={handleChange}
           placeholder={placeHolder}
           className={cn(
-            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring',
+            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring text-sm',
             (theme && theme === INPUT_THEME_ERROR) || error.status
               ? 'border-red-500 text-red-500'
               : 'border-gray-400'

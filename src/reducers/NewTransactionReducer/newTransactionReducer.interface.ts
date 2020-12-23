@@ -1,6 +1,6 @@
 export interface INewTransactionState {
   type: string;
-  amount: number;
+  amount: string;
   entity: string;
   date: string;
 }
@@ -15,7 +15,7 @@ export interface INewTransactionAction {
   type: NewTransactionActionType;
   payload: {
     type?: string;
-    amount?: number;
+    amount?: string;
     entity?: string;
     date?: string;
   };

@@ -16,12 +16,7 @@ const transactionTypeDropdownOptions: SelectOption[] = [
 ];
 
 function NewTransaction() {
-  const {
-    transactionType,
-    amount,
-    entity,
-    transactionDate
-  } = useNewTransactionStateContext();
+  const { type, entity, amount, date } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
   const dispatch = useNewTransactionDispatchContext();
 
@@ -58,27 +53,24 @@ function NewTransaction() {
     e.preventDefault();
     let error = false;
 
-    if (isEmptyString(transactionType)) {
+    if (isEmptyString(type)) {
       error = error || true;
       handleFormError('type');
     }
 
-    if (isEmptyString(`${amount}`)) {
+    if ((type === 'Credit' || type === 'Debit') && isEmptyString(entity)) {
+      error = error || true;
+      handleFormError('entity');
+    }
+
+    if (isEmptyString(amount)) {
       error = error || true;
       handleFormError('amount');
     }
 
-    if (isEmptyString(transactionDate)) {
+    if (isEmptyString(date)) {
       error = error || true;
       handleFormError('date');
-    }
-
-    if (
-      transactionType === 'Credit' ||
-      (transactionType === 'Debit' && isEmptyString(entity))
-    ) {
-      error = error || true;
-      handleFormError('entity');
     }
 
     if (error) return;
@@ -88,7 +80,7 @@ function NewTransaction() {
     <div className='flex justify-center w-full'>
       <form className='mb-8 w-1/3 mt-16'>
         <Select
-          name='transaction-type'
+          name='type'
           label='Transaction Type'
           placeHolder='Eg. Credit, Debit'
           selectOptions={transactionTypeDropdownOptions}
@@ -99,7 +91,7 @@ function NewTransaction() {
           onSelectValueChange={(_, option) =>
             dispatch({
               type: 'ADD_TRANSACTION_TYPE',
-              payload: { transactionType: option.value }
+              payload: { type: option.value }
             })
           }
         />
@@ -124,8 +116,8 @@ function NewTransaction() {
             resetFormErrors={resetFormErrors}
             onBlurUpdate={(_, value) =>
               dispatch({
-                type: 'ADD_AMOUNT',
-                payload: { amount: Number(value) }
+                type: 'ADD_TRANSACTION_AMOUNT',
+                payload: { amount: value }
               })
             }
           />
@@ -133,17 +125,17 @@ function NewTransaction() {
         <div className='mt-6'>
           {/* TODO: Validate date input and create date picker UI */}
           <Input
-            name='transaction-date'
+            name='date'
             placeHolder='MM/DD/YYYY'
             label='Transaction Date'
             subContent={formErrors.date.error && formErrors.date.content}
             theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
-            resetFormErrors={resetFormErrors('date')}
+            resetFormErrors={resetFormErrors}
             onBlurUpdate={(_, value) =>
               dispatch({
                 type: 'ADD_TRANSACTION_DATE',
-                payload: { transactionDate: value }
+                payload: { date: value }
               })
             }
           />
