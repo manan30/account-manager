@@ -130,6 +130,12 @@ const NewCreditor = () => {
     []
   );
 
+  const handleSelectChange = useCallback(
+    (name: string, option: SelectOption) =>
+      setFormState((prevState) => ({ ...prevState, [name]: option.value })),
+    []
+  );
+
   const resetFormErrors = useCallback(
     (name: string) =>
       setFormErrors((prevState) => ({
@@ -174,9 +180,7 @@ const NewCreditor = () => {
             placeHolder='USD, INR, etc'
             label='Currency'
             selectOptions={currencyDropdownOptions}
-            onSelectValueChange={(name, option) =>
-              handleFormUpdate(name, option.value)
-            }
+            onSelectValueChange={handleSelectChange}
             subContent={
               formErrors.currency.error && formErrors.currency.content
             }
