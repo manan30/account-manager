@@ -22,7 +22,6 @@ const Seed = () => {
   const handleClick = async () => {
     try {
       setLoading(true);
-      console.log({ seedOptions });
       if (
         !seedOptions.everything &&
         !seedOptions.creditors &&
