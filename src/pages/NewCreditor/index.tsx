@@ -126,7 +126,7 @@ function NewCreditor() {
   );
 
   const resetFormErrors = useCallback(
-    (name) =>
+    (name: string) =>
       setFormErrors((prevState) => ({
         ...prevState,
         [name]: { error: false, content: '' }

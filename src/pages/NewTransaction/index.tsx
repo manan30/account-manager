@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -8,6 +8,7 @@ import {
 } from '../../providers/NewTransactionProvider';
 import { SelectOption } from '../../components/Select';
 import CreditorsSelect from './CreditorsSelect';
+import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 
 const transactionTypeDropdownOptions: SelectOption[] = [
   { label: 'credit', value: 'Credit' },
@@ -18,6 +19,32 @@ function NewTransaction() {
   const { transactionType } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
   const dispatch = useNewTransactionDispatchContext();
+
+  const [formErrors, setFormErrors] = useState({
+    amount: { error: false, content: '' },
+    type: { error: false, content: '' },
+    date: { error: false, content: '' }
+  });
+  const [resetForm, setResetForm] = useState(false);
+
+  const handleFormError = (key: string) => {
+    setFormErrors((prevState) => ({
+      ...prevState,
+      [key]: {
+        error: true,
+        content: 'Required Field'
+      }
+    }));
+  };
+
+  const resetFormErrors = useCallback(
+    (name: string) =>
+      setFormErrors((prevState) => ({
+        ...prevState,
+        [name]: { error: false, content: '' }
+      })),
+    []
+  );
 
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -33,6 +60,10 @@ function NewTransaction() {
           label='Transaction Type'
           placeHolder='Eg. Credit, Debit'
           selectOptions={transactionTypeDropdownOptions}
+          subContent={formErrors.type.error && formErrors.type.content}
+          theme={formErrors.type.error ? INPUT_THEME_ERROR : ''}
+          resetField={resetForm}
+          resetFormErrors={resetFormErrors}
           onSelectValueChange={(_, option) =>
             dispatch({
               type: 'ADD_TRANSACTION_TYPE',
