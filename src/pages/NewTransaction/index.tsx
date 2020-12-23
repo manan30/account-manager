@@ -1,14 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import Select from '../../components/Select';
+import Select, { SelectOption } from '../../components/Select';
 import {
   useNewTransactionDispatchContext,
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
-import { SelectOption } from '../../components/Select';
-import CreditorsSelect from './CreditorsSelect';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { isEmptyString } from '../../utils/Functions';
+import CreditorsSelect from './CreditorsSelect';
 
 const transactionTypeDropdownOptions: SelectOption[] = [
   { label: 'credit', value: 'Credit' },
@@ -16,13 +16,19 @@ const transactionTypeDropdownOptions: SelectOption[] = [
 ];
 
 function NewTransaction() {
-  const { transactionType } = useNewTransactionStateContext();
+  const {
+    transactionType,
+    amount,
+    entity,
+    transactionDate
+  } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
   const dispatch = useNewTransactionDispatchContext();
 
   const [formErrors, setFormErrors] = useState({
-    amount: { error: false, content: '' },
     type: { error: false, content: '' },
+    entity: { error: false, content: '' },
+    amount: { error: false, content: '' },
     date: { error: false, content: '' }
   });
   const [resetForm, setResetForm] = useState(false);
@@ -50,6 +56,32 @@ function NewTransaction() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    let error = false;
+
+    if (isEmptyString(transactionType)) {
+      error = error || true;
+      handleFormError('type');
+    }
+
+    if (isEmptyString(`${amount}`)) {
+      error = error || true;
+      handleFormError('amount');
+    }
+
+    if (isEmptyString(transactionDate)) {
+      error = error || true;
+      handleFormError('date');
+    }
+
+    if (
+      transactionType === 'Credit' ||
+      (transactionType === 'Debit' && isEmptyString(entity))
+    ) {
+      error = error || true;
+      handleFormError('entity');
+    }
+
+    if (error) return;
   };
 
   return (
@@ -71,17 +103,25 @@ function NewTransaction() {
             })
           }
         />
-        {(transactionType === 'Credit' || transactionType === 'Debit') && (
+        {/* {(transactionType === 'Credit' || transactionType === 'Debit') && (
           <div className='mt-6'>
-            <CreditorsSelect />
+            <CreditorsSelect
+              formError={formErrors.entity}
+              resetForm={resetForm}
+              resetFormError={resetFormErrors}
+            />
           </div>
-        )}
+        )} */}
         <div className='mt-6'>
           <Input
             name='amount'
             type='tel'
             placeHolder='$0.00'
             label='Amount'
+            subContent={formErrors.amount.error && formErrors.amount.content}
+            theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
+            resetField={resetForm}
+            resetFormErrors={resetFormErrors}
             onBlurUpdate={(_, value) =>
               dispatch({
                 type: 'ADD_AMOUNT',
@@ -96,6 +136,10 @@ function NewTransaction() {
             name='transaction-date'
             placeHolder='MM/DD/YYYY'
             label='Transaction Date'
+            subContent={formErrors.date.error && formErrors.date.content}
+            theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
+            resetField={resetForm}
+            resetFormErrors={resetFormErrors('date')}
             onBlurUpdate={(_, value) =>
               dispatch({
                 type: 'ADD_TRANSACTION_DATE',
