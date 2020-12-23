@@ -21,7 +21,7 @@ const transactionTypeDropdownOptions: SelectOption[] = [
   { label: 'debit', value: 'Debit' }
 ];
 
-function NewTransaction() {
+const NewTransaction = () => {
   const { type, entity, amount, date } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
   const { firestore, firebaseApp } = useFirebaseContext();
@@ -192,6 +192,6 @@ function NewTransaction() {
       </form>
     </div>
   );
-}
+};
 
 export default NewTransaction;

@@ -12,10 +12,9 @@ import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { AmountFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 
-function Creditors() {
+const Creditors = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: creditors, isLoading, error } = useGetAllCreditors();
 
@@ -192,6 +191,6 @@ function Creditors() {
       )}
     </div>
   );
-}
+};
 
 export default Creditors;

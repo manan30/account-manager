@@ -7,11 +7,11 @@ const links = [
   // { to: '/accounts', linkText: 'Accounts' },
   // { to: '/debt', linkText: 'Debt' },
   // { to: '/spending', linkText: 'Spending' },
-  { to: '/creditor', linkText: 'Creditors' },
+  { to: '/creditors', linkText: 'Creditors' },
   { to: '/transaction', linkText: 'Transactions' }
 ];
 
-function SideNav() {
+const SideNav = () => {
   const { pathname } = useLocation();
 
   return (
@@ -43,6 +43,6 @@ function SideNav() {
       </Link>
     </div>
   );
-}
+};
 
 export default SideNav;

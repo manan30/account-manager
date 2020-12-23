@@ -28,8 +28,8 @@ export const seedCreditors = async (documentCount = 10) => {
 
   for (let i = 0; i < documentCount; i += 1) {
     const creditor = generateFakeCreditor();
-    const id = firestore.collection('creditors').doc().id;
-    const docRef = firestore.collection('creditors').doc(id);
+    const id = firestore.collection('creditor').doc().id;
+    const docRef = firestore.collection('creditor').doc(id);
     batch.set(docRef, creditor);
   }
 

@@ -91,7 +91,7 @@ const NewCreditor = () => {
         return;
       }
 
-      await firestore?.collection('creditors').add({
+      await firestore?.collection('creditor').add({
         name: formState.name.trim(),
         amount: Number(formState.amount.trim()),
         currency: formState.currency.trim(),

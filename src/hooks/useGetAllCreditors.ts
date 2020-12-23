@@ -13,7 +13,7 @@ const useGetAllCreditors = () => {
       setIsLoading(true);
       setError(false);
       const creditorDBRef = firestore
-        ?.collection('creditors')
+        ?.collection('creditor')
         .orderBy('createdAt', 'desc');
 
       const queryDocs = await creditorDBRef?.get();
