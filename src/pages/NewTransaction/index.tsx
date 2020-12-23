@@ -2,11 +2,17 @@ import React, { useCallback, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select, { SelectOption } from '../../components/Select';
+import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
   useNewTransactionDispatchContext,
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
-import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import {
+  INPUT_THEME_ERROR,
+  NOTIFICATION_THEME_FAILURE,
+  NOTIFICATION_THEME_SUCCESS
+} from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
 import CreditorsSelect from './CreditorsSelect';
 
@@ -18,7 +24,9 @@ const transactionTypeDropdownOptions: SelectOption[] = [
 function NewTransaction() {
   const { type, entity, amount, date } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
-  const dispatch = useNewTransactionDispatchContext();
+  const { firestore, firebaseApp } = useFirebaseContext();
+  const newTransactionDispatch = useNewTransactionDispatchContext();
+  const notificationDispatch = useNotificationDispatchContext();
 
   const [formErrors, setFormErrors] = useState({
     type: { error: false, content: '' },
@@ -74,6 +82,39 @@ function NewTransaction() {
     }
 
     if (error) return;
+
+    try {
+      setIsTransactionBeingAdded(true);
+
+      await firestore?.collection('transaction').add({
+        transactionType: type.trim(),
+        transactionEntity: entity.trim(),
+        amount: Number(amount.trim()),
+        transactionDate: firebaseApp?.firestore.Timestamp.fromDate(
+          new Date(date)
+        ),
+        createdAt: firebaseApp?.firestore.Timestamp.now()
+      });
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: 'New Transaction Added',
+          theme: NOTIFICATION_THEME_SUCCESS
+        }
+      });
+    } catch (err) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: 'Error occurred while adding new transaction',
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+      console.error({ err });
+    } finally {
+      setResetForm(true);
+      setIsTransactionBeingAdded(false);
+    }
   };
 
   return (
@@ -89,7 +130,7 @@ function NewTransaction() {
           resetField={resetForm}
           resetFormErrors={resetFormErrors}
           onSelectValueChange={(_, option) =>
-            dispatch({
+            newTransactionDispatch({
               type: 'ADD_TRANSACTION_TYPE',
               payload: { type: option.value }
             })
@@ -115,7 +156,7 @@ function NewTransaction() {
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
             onBlurUpdate={(_, value) =>
-              dispatch({
+              newTransactionDispatch({
                 type: 'ADD_TRANSACTION_AMOUNT',
                 payload: { amount: value }
               })
@@ -133,7 +174,7 @@ function NewTransaction() {
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
             onBlurUpdate={(_, value) =>
-              dispatch({
+              newTransactionDispatch({
                 type: 'ADD_TRANSACTION_DATE',
                 payload: { date: value }
               })

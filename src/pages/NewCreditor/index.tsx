@@ -69,7 +69,7 @@ function NewCreditor() {
 
     try {
       setIsCreditorBeingAdded(true);
-      const querySnapShot = await firestore?.collection('creditors').get();
+      const querySnapShot = await firestore?.collection('creditor').get();
       const creditors = querySnapShot?.docs
         .map<ICreditor>((doc) => ({ id: doc.id, ...doc.data() } as ICreditor))
         .map((doc) => doc.name.toLowerCase());
@@ -102,7 +102,7 @@ function NewCreditor() {
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
-      history.push('/creditor');
+      // history.push('/creditor');
     } catch (err) {
       notificationDispatch({
         type: ADD_NOTIFICATION,
