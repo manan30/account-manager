@@ -127,7 +127,7 @@ const NewCreditor = () => {
   const handleFormUpdate = useCallback(
     (name: string, value: string) =>
       setFormState((prevState) => ({ ...prevState, [name]: value })),
-    [setFormState]
+    []
   );
 
   const resetFormErrors = useCallback(
