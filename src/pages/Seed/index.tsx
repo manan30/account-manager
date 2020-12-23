@@ -3,7 +3,11 @@ import Toggle from '../../components/Toggle';
 import Button from '../../components/Button';
 import { useSeedDispatch, useSeedState } from '../../providers/SeedProvider';
 import { SeedActionType } from '../../reducers/SeedReducer/seedReducer.interface';
-import { seedCreditors, seedEverything } from '../../services/seed/seed';
+import {
+  seedCreditors,
+  seedEverything,
+  seedTransactions
+} from '../../services/seed/seed';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
@@ -18,6 +22,7 @@ const Seed = () => {
   const handleClick = async () => {
     try {
       setLoading(true);
+      console.log({ seedOptions });
       if (
         !seedOptions.everything &&
         !seedOptions.creditors &&
@@ -31,7 +36,7 @@ const Seed = () => {
       } else if (seedOptions.creditors) {
         await seedCreditors();
       } else if (seedOptions.transactions) {
-        await seedTransaction();
+        await seedTransactions();
       }
 
       notificationDispatch({
