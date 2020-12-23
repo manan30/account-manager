@@ -95,7 +95,7 @@ function NewTransaction() {
             })
           }
         />
-        {/* {(transactionType === 'Credit' || transactionType === 'Debit') && (
+        {(type === 'Credit' || type === 'Debit') && (
           <div className='mt-6'>
             <CreditorsSelect
               formError={formErrors.entity}
@@ -103,7 +103,7 @@ function NewTransaction() {
               resetFormError={resetFormErrors}
             />
           </div>
-        )} */}
+        )}
         <div className='mt-6'>
           <Input
             name='amount'

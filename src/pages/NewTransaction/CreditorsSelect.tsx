@@ -23,13 +23,13 @@ const CreditorsSelect: React.FC<CreditorsSelectProps> = ({
 
   return creditors ? (
     <Select
-      name='transaction-entity'
+      name='entity'
       label='Select a Creditor'
       placeHolder='Creditor Name'
-      // subContent={formError.error && formError.content}
-      // theme={formError.error ? INPUT_THEME_ERROR : ''}
-      // resetField={resetForm}
-      // resetFormErrors={() => resetFormError('entity')}
+      subContent={formError.error && formError.content}
+      theme={formError.error ? INPUT_THEME_ERROR : ''}
+      resetField={resetForm}
+      resetFormErrors={resetFormError}
       selectOptions={
         creditors.map(({ id, name }) => ({
           label: id,

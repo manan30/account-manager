@@ -82,8 +82,6 @@ function NewCreditor() {
             theme: NOTIFICATION_THEME_FAILURE
           }
         });
-        setResetForm(true);
-        setIsCreditorBeingAdded(false);
         return;
       }
 
@@ -113,9 +111,10 @@ function NewCreditor() {
           theme: NOTIFICATION_THEME_FAILURE
         }
       });
+      console.error({ err });
+    } finally {
       setResetForm(true);
       setIsCreditorBeingAdded(false);
-      console.error({ err });
     }
   };
 
