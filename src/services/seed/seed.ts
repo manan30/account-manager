@@ -36,6 +36,23 @@ export const seedCreditors = async (documentCount = 10) => {
   await batch.commit();
 };
 
-export const seedEverything = async (creditorsCount?: number) => {
+export const seedTransactions = async (documentCount = 10) => {
+  const batch = firestore.batch();
+
+  for (let i = 0; i < documentCount; i += 1) {
+    const creditor = generateFakeCreditor();
+    const id = firestore.collection('creditor').doc().id;
+    const docRef = firestore.collection('creditor').doc(id);
+    batch.set(docRef, creditor);
+  }
+
+  await batch.commit();
+};
+
+export const seedEverything = async (
+  creditorsCount?: number,
+  transactionsCount?: number
+) => {
   await seedCreditors(creditorsCount);
+  await seedTransactions(transactionsCount);
 };

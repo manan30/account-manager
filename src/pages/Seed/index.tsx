@@ -18,7 +18,11 @@ const Seed = () => {
   const handleClick = async () => {
     try {
       setLoading(true);
-      if (!seedOptions.everything && !seedOptions.creditors) {
+      if (
+        !seedOptions.everything &&
+        !seedOptions.creditors &&
+        !seedOptions.transactions
+      ) {
         return;
       }
 
@@ -26,6 +30,8 @@ const Seed = () => {
         await seedEverything();
       } else if (seedOptions.creditors) {
         await seedCreditors();
+      } else if (seedOptions.transactions) {
+        await seedTransaction();
       }
 
       notificationDispatch({

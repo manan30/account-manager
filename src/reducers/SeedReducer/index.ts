@@ -4,7 +4,8 @@ import { ISeedAction, ISeedState } from './seedReducer.interface';
 const seedDefaultState: ISeedState = {
   seedOptions: {
     everything: false,
-    creditors: false
+    creditors: false,
+    transactions: false
   }
 };
 
