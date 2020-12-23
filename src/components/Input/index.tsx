@@ -47,6 +47,7 @@ const Input: React.FC<InputProps> = ({
     if (subContent && !isEmptyString(subContent as string) && resetFormErrors) {
       resetFormErrors(name);
     }
+
     const currentValue = valueFormatter
       ? valueFormatter.unFormat(e.target.value)
       : e.target.value;

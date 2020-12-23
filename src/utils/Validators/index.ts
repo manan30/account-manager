@@ -1,6 +1,7 @@
-export const NumberValidator = (value = '') => {
+export const AmountValidator = (value = '') => {
+  // TODO: Get 1000.55 format to work
   return {
-    testFailed: /^\D{0,4}(\.\D{0,2})?$/g.test(value),
+    testFailed: /\D/g.test(value),
     errorMessage: 'Only digits are allowed'
   };
 };

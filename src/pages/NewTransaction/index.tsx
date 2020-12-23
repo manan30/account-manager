@@ -16,7 +16,7 @@ import {
 } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { isEmptyString } from '../../utils/Functions';
-import { NumberValidator } from '../../utils/Validators';
+import { AmountValidator } from '../../utils/Validators';
 import CreditorsSelect from './CreditorsSelect';
 
 const transactionTypeDropdownOptions: SelectOption[] = [
@@ -175,7 +175,7 @@ const NewTransaction = () => {
             theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
-            validator={NumberValidator}
+            validator={AmountValidator}
             valueFormatter={NumberWithCommasFormatter}
             onBlurUpdate={handleInputChange('ADD_TRANSACTION_AMOUNT')}
           />
