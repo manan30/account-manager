@@ -55,6 +55,7 @@ const NewCreditor = () => {
   ) => {
     e.preventDefault();
     let error = false;
+    setResetForm(false);
 
     if (isEmptyString(formState.name)) {
       error = error || true;
@@ -108,7 +109,7 @@ const NewCreditor = () => {
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
-      // history.push('/creditor');
+      history.push('/creditor');
     } catch (err) {
       notificationDispatch({
         type: ADD_NOTIFICATION,
