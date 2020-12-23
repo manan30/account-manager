@@ -27,15 +27,6 @@ function NewTransaction() {
     e.preventDefault();
   };
 
-  const handleSelectChange = useCallback(
-    (type: NewTransactionActionType, value: string) =>
-      dispatch({
-        type,
-        payload: { transactionType: value }
-      }),
-    [dispatch]
-  );
-
   return (
     <div className='flex justify-center w-full'>
       <form className='mb-8 w-1/3 mt-16'>
@@ -45,7 +36,10 @@ function NewTransaction() {
           placeHolder='Eg. Credit, Debit'
           selectOptions={transactionTypeDropdownOptions}
           onSelectValueChange={(_, option) =>
-            handleSelectChange('ADD_TRANSACTION_TYPE', option.value)
+            dispatch({
+              type: 'ADD_TRANSACTION_TYPE',
+              payload: { transactionType: option.value }
+            })
           }
         />
         {(transactionType === 'Credit' || transactionType === 'Debit') &&
@@ -62,7 +56,10 @@ function NewTransaction() {
                   })) as SelectOption[]
                 }
                 onSelectValueChange={(_, option) =>
-                  handleSelectChange('ADD_TRANSACTION_ENTITY', option.label)
+                  dispatch({
+                    type: 'ADD_TRANSACTION_ENTITY',
+                    payload: { entity: option.label }
+                  })
                 }
               />
             </div>
@@ -73,10 +70,10 @@ function NewTransaction() {
             type='tel'
             placeHolder='$0.00'
             label='Amount'
-            onBlurUpdate={(inputValue) =>
+            onBlurUpdate={(_, value) =>
               dispatch({
                 type: 'ADD_AMOUNT',
-                payload: { amount: Number(inputValue) }
+                payload: { amount: Number(value) }
               })
             }
           />
@@ -87,10 +84,10 @@ function NewTransaction() {
             name='transaction-date'
             placeHolder='MM/DD/YYYY'
             label='Transaction Date'
-            onBlurUpdate={(inputValue) =>
+            onBlurUpdate={(_, value) =>
               dispatch({
-                type: 'ADD_TRANSACTION_ENTITY',
-                payload: { name: inputValue }
+                type: 'ADD_TRANSACTION_DATE',
+                payload: { transactionDate: value }
               })
             }
           />

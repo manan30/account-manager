@@ -7,7 +7,8 @@ import {
 const newTransactionInitialState = {
   transactionType: '',
   amount: 0,
-  name: ''
+  entity: '',
+  transactionDate: ''
 } as INewTransactionState;
 
 const newTransactionReducer = (
@@ -26,7 +27,15 @@ const newTransactionReducer = (
         amount: action.payload.amount
       } as INewTransactionState;
     case 'ADD_TRANSACTION_ENTITY':
-      return { ...state, name: action.payload.name } as INewTransactionState;
+      return {
+        ...state,
+        entity: action.payload.entity
+      } as INewTransactionState;
+    case 'ADD_TRANSACTION_DATE':
+      return {
+        ...state,
+        transactionDate: action.payload.transactionDate
+      } as INewTransactionState;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }

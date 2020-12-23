@@ -5,7 +5,8 @@ export const ADD_NAME = 'ADD_NAME';
 export interface INewTransactionState {
   transactionType: string;
   amount: number;
-  name: string;
+  entity: string;
+  transactionDate: string;
 }
 
 export type NewTransactionActionType =
@@ -19,6 +20,7 @@ export interface INewTransactionAction {
   payload: {
     transactionType?: string;
     amount?: number;
-    name?: string;
+    entity?: string;
+    transactionDate?: string;
   };
 }
