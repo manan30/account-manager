@@ -1,14 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import useGetAllCreditors from '../../hooks/useGetAllCreditors';
 import {
   useNewTransactionDispatchContext,
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
-import { NewTransactionActionType } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 import { SelectOption } from '../../components/Select';
+import CreditorsSelect from './CreditorsSelect';
 
 const transactionTypeDropdownOptions: SelectOption[] = [
   { label: 'credit', value: 'Credit' },
@@ -17,7 +16,6 @@ const transactionTypeDropdownOptions: SelectOption[] = [
 
 function NewTransaction() {
   const { transactionType } = useNewTransactionStateContext();
-  const { data: creditors } = useGetAllCreditors();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
   const dispatch = useNewTransactionDispatchContext();
 
@@ -42,28 +40,11 @@ function NewTransaction() {
             })
           }
         />
-        {(transactionType === 'Credit' || transactionType === 'Debit') &&
-          creditors && (
-            <div className='mt-6'>
-              <Select
-                name='transaction-entity'
-                label='Select a Creditor'
-                placeHolder='Creditor Name'
-                selectOptions={
-                  creditors.map(({ id, name }) => ({
-                    label: id,
-                    value: name
-                  })) as SelectOption[]
-                }
-                onSelectValueChange={(_, option) =>
-                  dispatch({
-                    type: 'ADD_TRANSACTION_ENTITY',
-                    payload: { entity: option.label }
-                  })
-                }
-              />
-            </div>
-          )}
+        {(transactionType === 'Credit' || transactionType === 'Debit') && (
+          <div className='mt-6'>
+            <CreditorsSelect />
+          </div>
+        )}
         <div className='mt-6'>
           <Input
             name='amount'
@@ -94,7 +75,7 @@ function NewTransaction() {
         </div>
         <div className='mt-10'>
           <Button
-            buttonText='Add Creditor'
+            buttonText='Add Transaction'
             onClickHandler={(e) => handleSubmit(e)}
             loading={isTransactionBeingAdded}
             type='submit'

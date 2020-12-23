@@ -6178,6 +6178,11 @@ protobufjs@^6.8.6:
     "@types/node" "^13.7.0"
     long "^4.0.0"
 
+providers@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/providers/-/providers-0.5.0.tgz#1f2940884672c37b954b1223aeb9e4eac2ad57ff"
+  integrity sha512-yd88Zn5myWdjxa6+UQYtqUmKoHBBUiswWy+3QLm8ufBnl4X368NoHEP1lL/Tjw75bP/9nfh7UXKbVMsMNCPX4w==
+
 psl@^1.1.28:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
