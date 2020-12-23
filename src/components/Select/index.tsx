@@ -50,12 +50,12 @@ const Select: React.FC<SelectProps> = ({
   }, [selectValue, name, resetFormErrors]);
 
   useEffect(() => {
-    if (resetField) {
+    if (resetField && !isEmptyString(selectValue)) {
       setSelectValue('');
       if (onSelectValueChange)
         onSelectValueChange(name, { label: '', value: '' });
     }
-  }, [resetField, name, onSelectValueChange]);
+  }, [resetField, name, onSelectValueChange, selectValue]);
 
   return (
     <div>
@@ -73,7 +73,7 @@ const Select: React.FC<SelectProps> = ({
             name={name}
             defaultValue={selectValue}
             placeholder={placeHolder}
-            className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300'
+            className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300 text-sm'
             onFocus={() => setShowOptions(true)}
             readOnly
           />
@@ -103,7 +103,7 @@ const Select: React.FC<SelectProps> = ({
             return (
               <li
                 key={key}
-                className='hover:bg-indigo-300 focus-within:bg-indigo-300 px-2 py-1 mt-2 text-gray-800'
+                className='hover:bg-indigo-300 focus-within:bg-indigo-300 px-2 py-1 mt-2 text-gray-800 text-sm'
               >
                 <button
                   type='button'

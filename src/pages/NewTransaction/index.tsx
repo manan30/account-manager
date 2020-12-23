@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { NewTransactionActionType } from 'reducers/NewTransactionReducer/newTransactionReducer.interface';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select, { SelectOption } from '../../components/Select';
@@ -14,6 +15,7 @@ import {
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
+import { NumberValidator } from '../../utils/Validators';
 import CreditorsSelect from './CreditorsSelect';
 
 const transactionTypeDropdownOptions: SelectOption[] = [
@@ -60,6 +62,7 @@ const NewTransaction = () => {
   ) => {
     e.preventDefault();
     let error = false;
+    setResetForm(false);
 
     if (isEmptyString(type)) {
       error = error || true;
@@ -117,6 +120,27 @@ const NewTransaction = () => {
     }
   };
 
+  const handleInputChange = useCallback(
+    (type: NewTransactionActionType) => (name: string, value: string) =>
+      newTransactionDispatch({
+        type,
+        payload: { [name]: value }
+      }),
+    [newTransactionDispatch]
+  );
+
+  const handleSelectChange = useCallback(
+    (type: NewTransactionActionType, use?: string) => (
+      name: string,
+      option: SelectOption
+    ) =>
+      newTransactionDispatch({
+        type,
+        payload: { [name]: use === 'label' ? option.label : option.value }
+      }),
+    [newTransactionDispatch]
+  );
+
   return (
     <div className='flex justify-center w-full'>
       <form className='mb-8 w-1/3 mt-16'>
@@ -129,12 +153,7 @@ const NewTransaction = () => {
           theme={formErrors.type.error ? INPUT_THEME_ERROR : ''}
           resetField={resetForm}
           resetFormErrors={resetFormErrors}
-          onSelectValueChange={(_, option) =>
-            newTransactionDispatch({
-              type: 'ADD_TRANSACTION_TYPE',
-              payload: { type: option.value }
-            })
-          }
+          onSelectValueChange={handleSelectChange('ADD_TRANSACTION_TYPE')}
         />
         {(type === 'Credit' || type === 'Debit') && (
           <div className='mt-6'>
@@ -155,12 +174,8 @@ const NewTransaction = () => {
             theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
-            onBlurUpdate={(_, value) =>
-              newTransactionDispatch({
-                type: 'ADD_TRANSACTION_AMOUNT',
-                payload: { amount: value }
-              })
-            }
+            validator={NumberValidator}
+            onBlurUpdate={handleInputChange('ADD_TRANSACTION_AMOUNT')}
           />
         </div>
         <div className='mt-6'>
@@ -173,12 +188,7 @@ const NewTransaction = () => {
             theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
             resetFormErrors={resetFormErrors}
-            onBlurUpdate={(_, value) =>
-              newTransactionDispatch({
-                type: 'ADD_TRANSACTION_DATE',
-                payload: { date: value }
-              })
-            }
+            onBlurUpdate={handleInputChange('ADD_TRANSACTION_DATE')}
           />
         </div>
         <div className='mt-10'>

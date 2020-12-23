@@ -66,11 +66,11 @@ const Input: React.FC<InputProps> = ({
   };
 
   useEffect(() => {
-    if (resetField) {
+    if (resetField && !isEmptyString(inputValue)) {
       setInputValue('');
       if (onBlurUpdate) onBlurUpdate(name, '');
     }
-  }, [resetField, name, onBlurUpdate]);
+  }, [resetField, name, onBlurUpdate, inputValue]);
 
   useEffect(() => {
     if (validator && !isEmptyString(inputValue)) {
