@@ -15,8 +15,8 @@ import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants
 import { generateRandomKey } from '../../utils/Functions';
 
 const Creditors = () => {
-  const notificationDispatch = useNotificationDispatchContext();
   const { data: creditors, isLoading, error } = useGetAllCreditors();
+  const notificationDispatch = useNotificationDispatchContext();
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -110,8 +110,16 @@ const Creditors = () => {
       {
         Header: 'Account Settled Date',
         accessor: 'accountSettledOn',
-        Cell: ({ row }) =>
-          !row.original.accountSettledOn ? 'N/A' : row.original.accountSettledOn
+        Cell: ({ row }) => {
+          if (row.original.accountSettledOn) {
+            const rawDate = row.original.accountSettledOn.toDate();
+            const date = rawDate.getDate();
+            const month = rawDate.getMonth();
+            const year = rawDate.getFullYear();
+            return `${month}/${date}/${year}`;
+          }
+          return 'N/A';
+        }
       }
     ],
     []

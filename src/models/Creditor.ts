@@ -1,11 +1,12 @@
+import { Timestamp } from '@firebase/firestore-types';
 export interface ICreditor {
   id?: string;
   name: string;
   amount: number;
   currency: string;
   remainingAmount: number;
-  accountSettledOn?: string | null;
+  accountSettledOn?: Timestamp;
   accountSettled: boolean;
-  createdAt: { seconds: number; nanoseconds: number };
-  updatedAt: { seconds: number; nanoseconds: number };
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
