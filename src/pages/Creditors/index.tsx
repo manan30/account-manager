@@ -113,10 +113,13 @@ const Creditors = () => {
         Cell: ({ row }) => {
           if (row.original.accountSettledOn) {
             const rawDate = row.original.accountSettledOn.toDate();
-            const date = rawDate.getDate();
-            const month = rawDate.getMonth();
-            const year = rawDate.getFullYear();
-            return `${month}/${date}/${year}`;
+
+            return new Intl.DateTimeFormat('en-US', {
+              weekday: 'short',
+              month: 'short',
+              year: 'numeric',
+              day: 'numeric'
+            }).format(rawDate);
           }
           return 'N/A';
         }

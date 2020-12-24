@@ -34,11 +34,14 @@ export const updateCreditorOnTransactionAddition = functions.firestore
         } else {
           const newRemAmount = Math.abs(creditor.remainingAmount - data.amount);
           const settledCheck = Number(newRemAmount.toFixed(0)) === 0;
+          const accountSettledOn = settledCheck
+            ? admin.firestore.Timestamp.fromDate(data.transactionDate.toDate())
+            : null;
           const updatedAt = admin.firestore.Timestamp.now();
           await creditorRef.update({
             remainingAmount: Number(newRemAmount.toFixed(2)),
             accountSettled: settledCheck,
-            accountSettledOn: settledCheck ? updatedAt : null,
+            accountSettledOn,
             updatedAt
           } as ICreditor);
         }

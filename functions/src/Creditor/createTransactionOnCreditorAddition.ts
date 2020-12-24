@@ -19,7 +19,7 @@ export const createTransactionOnCreditorAddition = functions.firestore
       const id = snapshot.id;
 
       await db.collection('transaction').add({
-        transactionType: 'Creditor Addition',
+        transactionType: 'Creditor Added',
         transactionEntity: id,
         amount: data.amount,
         transactionDate: data.createdAt,
