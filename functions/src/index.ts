@@ -15,7 +15,7 @@ export const updateCreditor = functions.firestore
       const creditorRef = db.collection(`creditor`).doc(data.transactionEntity);
       const creditor = (await creditorRef.get()).data() as ICreditor;
 
-      if ((data.transactionType = 'Credit')) {
+      if (data.transactionType === 'Credit') {
         const newAmount = creditor.amount + data.amount;
         await creditorRef.update({
           amount: newAmount,
@@ -24,10 +24,15 @@ export const updateCreditor = functions.firestore
           updatedAt: admin.firestore.Timestamp.now()
         });
       } else {
-        // const newRemAmount = creditor.amount + data.amount;
-        // await creditorRef.update({
-        //   remainingAmount: newRemAmount
-        // });
+        const newRemAmount = Math.abs(creditor.remainingAmount - data.amount);
+        const settledCheck = Number(newRemAmount.toFixed(0)) === 0;
+        const updatedAt = admin.firestore.Timestamp.now();
+        await creditorRef.update({
+          remainingAmount: newRemAmount,
+          accountSettled: settledCheck,
+          accountSettledOn: settledCheck ? updatedAt : null,
+          updatedAt
+        });
       }
     }
   });

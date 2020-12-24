@@ -14,7 +14,7 @@ const useGetAllCreditors = () => {
       setError(false);
       const creditorDBRef = firestore
         ?.collection('creditor')
-        .orderBy('createdAt', 'desc');
+        .orderBy('updatedAt', 'desc');
 
       const queryDocs = await creditorDBRef?.get();
       const creditors = queryDocs?.docs.map((doc) => {
