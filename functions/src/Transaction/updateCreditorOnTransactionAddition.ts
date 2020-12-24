@@ -23,22 +23,24 @@ export const updateCreditorOnTransactionAddition = functions.firestore
 
         if (data.transactionType === 'Credit') {
           const newAmount = creditor.amount + data.amount;
+          const newRemainingAmount = creditor.remainingAmount + data.amount;
           await creditorRef.update({
-            amount: newAmount,
-            remainingAmount: Number(newAmount.toFixed(2)),
+            amount: Number(newAmount.toFixed(2)),
+            remainingAmount: Number(newRemainingAmount.toFixed(2)),
             accountSettled: false,
+            accountSettledOn: null,
             updatedAt: admin.firestore.Timestamp.now()
-          });
+          } as ICreditor);
         } else {
           const newRemAmount = Math.abs(creditor.remainingAmount - data.amount);
           const settledCheck = Number(newRemAmount.toFixed(0)) === 0;
           const updatedAt = admin.firestore.Timestamp.now();
           await creditorRef.update({
-            remainingAmount: newRemAmount,
+            remainingAmount: Number(newRemAmount.toFixed(2)),
             accountSettled: settledCheck,
             accountSettledOn: settledCheck ? updatedAt : null,
             updatedAt
-          });
+          } as ICreditor);
         }
       }
     } catch (e) {
