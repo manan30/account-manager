@@ -5,7 +5,7 @@ export interface ICreditor {
   amount: number;
   currency: string;
   remainingAmount: number;
-  accountSettledOn?: Timestamp;
+  accountSettledOn?: Timestamp | null;
   accountSettled: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;

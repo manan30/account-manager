@@ -34,7 +34,7 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [options, setOptions] = useState(selectOptions);
+  const [options] = useState(selectOptions);
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSelectValue(e.target.value);
