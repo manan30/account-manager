@@ -14,14 +14,18 @@ const db = admin.firestore();
 export const createTransactionOnCreditorAddition = functions.firestore
   .document('creditor/{id}')
   .onCreate(async (snapshot) => {
-    const data = snapshot.data() as ICreditor;
-    const id = snapshot.id;
+    try {
+      const data = snapshot.data() as ICreditor;
+      const id = snapshot.id;
 
-    await db.collection('transaction').add({
-      transactionType: 'Creditor Addition',
-      transactionEntity: id,
-      amount: data.amount,
-      transactionDate: data.createdAt,
-      createdAt: admin.firestore.Timestamp.now()
-    } as ITransaction);
+      await db.collection('transaction').add({
+        transactionType: 'Creditor Addition',
+        transactionEntity: id,
+        amount: data.amount,
+        transactionDate: data.createdAt,
+        createdAt: admin.firestore.Timestamp.now()
+      } as ITransaction);
+    } catch (e) {
+      console.error(e);
+    }
   });
