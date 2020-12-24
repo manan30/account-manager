@@ -12,11 +12,12 @@ type SelectProps = {
   label?: string;
   placeHolder?: string;
   selectOptions: SelectOption[];
-  onSelectValueChange?: (name: string, value: SelectOption) => void;
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
+  onSelectValueChange?: (name: string, value: SelectOption) => void;
   resetFormErrors?: (name: string) => void;
+  setResetField?: () => void;
 };
 
 const Select: React.FC<SelectProps> = ({
@@ -24,11 +25,12 @@ const Select: React.FC<SelectProps> = ({
   label = '',
   placeHolder = 'Choose an option',
   selectOptions,
-  onSelectValueChange,
   subContent,
   theme = '',
   resetField,
-  resetFormErrors
+  onSelectValueChange,
+  resetFormErrors,
+  setResetField
 }) => {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
@@ -56,6 +58,13 @@ const Select: React.FC<SelectProps> = ({
         onSelectValueChange(name, { label: '', value: '' });
     }
   }, [resetField, name, onSelectValueChange, selectValue]);
+
+  const handleClick = (option: SelectOption) => {
+    if (setResetField) setResetField();
+    setSelectValue(option.value);
+    setShowOptions(false);
+    if (onSelectValueChange) onSelectValueChange(name, option);
+  };
 
   return (
     <div>
@@ -108,11 +117,7 @@ const Select: React.FC<SelectProps> = ({
                 <button
                   type='button'
                   className='w-full text-left focus:outline-none'
-                  onClick={() => {
-                    setSelectValue(option.value);
-                    setShowOptions(false);
-                    if (onSelectValueChange) onSelectValueChange(name, option);
-                  }}
+                  onClick={() => handleClick(option)}
                 >
                   {option.value}
                 </button>

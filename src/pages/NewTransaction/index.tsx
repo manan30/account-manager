@@ -153,6 +153,7 @@ const NewTransaction = () => {
           subContent={formErrors.type.error && formErrors.type.content}
           theme={formErrors.type.error ? INPUT_THEME_ERROR : ''}
           resetField={resetForm}
+          setResetField={() => setResetForm(false)}
           resetFormErrors={resetFormErrors}
           onSelectValueChange={handleSelectChange('ADD_TRANSACTION_TYPE')}
         />
@@ -174,6 +175,7 @@ const NewTransaction = () => {
             subContent={formErrors.amount.error && formErrors.amount.content}
             theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
+            setResetField={() => setResetForm(false)}
             resetFormErrors={resetFormErrors}
             validator={AmountValidator}
             valueFormatter={NumberWithCommasFormatter}
@@ -189,6 +191,7 @@ const NewTransaction = () => {
             subContent={formErrors.date.error && formErrors.date.content}
             theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
+            setResetField={() => setResetForm(false)}
             resetFormErrors={resetFormErrors}
             onBlurUpdate={handleInputChange('ADD_TRANSACTION_DATE')}
           />

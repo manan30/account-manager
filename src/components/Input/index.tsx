@@ -10,8 +10,6 @@ type InputProps = {
   name: string;
   placeHolder?: string;
   label: string;
-  setFormState?: (name: string, value: string) => void;
-  onBlurUpdate?: (name: string, value: string) => void;
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
@@ -21,6 +19,9 @@ type InputProps = {
   };
   validator?: (value: string) => { testFailed: boolean; errorMessage: string };
   resetFormErrors?: (name: string) => void;
+  setFormState?: (name: string, value: string) => void;
+  onBlurUpdate?: (name: string, value: string) => void;
+  setResetField?: () => void;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -29,12 +30,13 @@ const Input: React.FC<InputProps> = ({
   name,
   placeHolder = '',
   label,
-  setFormState,
   subContent,
   theme,
-  onBlurUpdate,
   resetField,
   valueFormatter,
+  setResetField,
+  setFormState,
+  onBlurUpdate,
   validator,
   resetFormErrors
 }) => {
@@ -43,6 +45,10 @@ const Input: React.FC<InputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
+
+    if (setResetField) {
+      setResetField();
+    }
 
     if (subContent && !isEmptyString(subContent as string) && resetFormErrors) {
       resetFormErrors(name);
