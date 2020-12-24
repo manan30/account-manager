@@ -1,18 +1,22 @@
-export const ADD_TRANSACTION_TYPE = 'ADD_TRANSACTION_TYPE';
-export const ADD_AMOUNT = 'ADD_AMOUNT';
-export const ADD_NAME = 'ADD_NAME';
-
 export interface INewTransactionState {
-  transactionType: string;
-  amount: number;
-  name: string;
+  type: string;
+  amount: string;
+  entity: string;
+  date: string;
 }
 
+export type NewTransactionActionType =
+  | 'ADD_TRANSACTION_TYPE'
+  | 'ADD_TRANSACTION_AMOUNT'
+  | 'ADD_TRANSACTION_ENTITY'
+  | 'ADD_TRANSACTION_DATE';
+
 export interface INewTransactionAction {
-  type: typeof ADD_TRANSACTION_TYPE | typeof ADD_AMOUNT | typeof ADD_NAME;
+  type: NewTransactionActionType;
   payload: {
-    transactionType?: string;
-    amount?: number;
-    name?: string;
+    type?: string;
+    amount?: string;
+    entity?: string;
+    date?: string;
   };
 }

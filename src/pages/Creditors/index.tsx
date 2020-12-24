@@ -12,12 +12,11 @@ import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { AmountFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 
-function Creditors() {
-  const notificationDispatch = useNotificationDispatchContext();
+const Creditors = () => {
   const { data: creditors, isLoading, error } = useGetAllCreditors();
+  const notificationDispatch = useNotificationDispatchContext();
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -44,7 +43,7 @@ function Creditors() {
         Cell: ({ row }) => (
           <Link
             className='text-indigo-500 font-medium hover:text-indigo-700'
-            to={`/creditors/${row.original.id}`}
+            to={`/creditor/${row.original.id}`}
           >
             {row.original.name}
           </Link>
@@ -111,8 +110,19 @@ function Creditors() {
       {
         Header: 'Account Settled Date',
         accessor: 'accountSettledOn',
-        Cell: ({ row }) =>
-          !row.original.accountSettledOn ? 'N/A' : row.original.accountSettledOn
+        Cell: ({ row }) => {
+          if (row.original.accountSettledOn) {
+            const rawDate = row.original.accountSettledOn.toDate();
+
+            return new Intl.DateTimeFormat('en-US', {
+              weekday: 'short',
+              month: 'short',
+              year: 'numeric',
+              day: 'numeric'
+            }).format(rawDate);
+          }
+          return 'N/A';
+        }
       }
     ],
     []
@@ -192,6 +202,6 @@ function Creditors() {
       )}
     </div>
   );
-}
+};
 
 export default Creditors;

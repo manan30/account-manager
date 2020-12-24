@@ -7,7 +7,7 @@ import {
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
 import { REMOVE_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 
-function NotificationManager() {
+const NotificationManager = () => {
   const dispatch = useNotificationDispatchContext();
   const { notifications } = useNotificationStateContext();
 
@@ -39,5 +39,5 @@ function NotificationManager() {
       })}
     </div>
   ) : null;
-}
+};
 export default NotificationManager;

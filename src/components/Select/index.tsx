@@ -5,16 +5,19 @@ import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
 
+export type SelectOption = { label: string; value: string };
+
 type SelectProps = {
   name: string;
   label?: string;
   placeHolder?: string;
-  selectOptions: string[];
-  onSelectValueChange?: (name: string, value: string) => void;
+  selectOptions: SelectOption[];
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
+  onSelectValueChange?: (name: string, value: SelectOption) => void;
   resetFormErrors?: (name: string) => void;
+  setResetField?: () => void;
 };
 
 const Select: React.FC<SelectProps> = ({
@@ -22,38 +25,46 @@ const Select: React.FC<SelectProps> = ({
   label = '',
   placeHolder = 'Choose an option',
   selectOptions,
-  onSelectValueChange,
   subContent,
   theme = '',
   resetField,
-  resetFormErrors
+  onSelectValueChange,
+  resetFormErrors,
+  setResetField
 }) => {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [options, setOptions] = useState(selectOptions);
+  const [options] = useState(selectOptions);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectValue(e.target.value);
-    if (e.target.value === '') {
-      setOptions(selectOptions);
-    } else {
-      setOptions(
-        selectOptions.filter((item) => item.startsWith(e.target.value))
-      );
-    }
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSelectValue(e.target.value);
+  //   if (e.target.value === '') {
+  //     setOptions(selectOptions);
+  //   } else {
+  //     setOptions(
+  //       selectOptions.filter((item) => item.startsWith(e.target.value))
+  //     );
+  //   }
+  // };
 
   useEffect(() => {
-    if (onSelectValueChange) onSelectValueChange(name, selectValue);
     if (resetFormErrors && !isEmptyString(selectValue)) resetFormErrors(name);
-  }, [selectValue, onSelectValueChange, name, resetFormErrors]);
+  }, [selectValue, name, resetFormErrors]);
 
   useEffect(() => {
-    if (resetField) {
+    if (resetField && !isEmptyString(selectValue)) {
       setSelectValue('');
-      if (onSelectValueChange) onSelectValueChange(name, '');
+      if (onSelectValueChange)
+        onSelectValueChange(name, { label: '', value: '' });
     }
-  }, [resetField, name, onSelectValueChange]);
+  }, [resetField, name, onSelectValueChange, selectValue]);
+
+  const handleClick = (option: SelectOption) => {
+    if (setResetField) setResetField();
+    setSelectValue(option.value);
+    setShowOptions(false);
+    if (onSelectValueChange) onSelectValueChange(name, option);
+  };
 
   return (
     <div>
@@ -69,10 +80,9 @@ const Select: React.FC<SelectProps> = ({
           <input
             id={name}
             name={name}
-            value={selectValue}
+            defaultValue={selectValue}
             placeholder={placeHolder}
-            className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300'
-            onChange={handleChange}
+            className='mr-4 w-select-width flex-auto bg-white focus:outline-none focus:ring focus:border-indigo-300 text-sm'
             onFocus={() => setShowOptions(true)}
             readOnly
           />
@@ -96,23 +106,20 @@ const Select: React.FC<SelectProps> = ({
         </div>
       )}
       {showOptions && (
-        <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border'>
+        <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border overflow-y-auto max-h-select'>
           {options.map((option, i) => {
             const key = i;
             return (
               <li
                 key={key}
-                className='hover:bg-indigo-300 focus-within:bg-indigo-300 px-2 py-1 mt-2 text-gray-800'
+                className='hover:bg-indigo-300 focus-within:bg-indigo-300 px-2 py-1 mt-2 text-gray-800 text-sm'
               >
                 <button
                   type='button'
                   className='w-full text-left focus:outline-none'
-                  onClick={() => {
-                    setSelectValue(option);
-                    setShowOptions(false);
-                  }}
+                  onClick={() => handleClick(option)}
                 >
-                  {option}
+                  {option.value}
                 </button>
               </li>
             );

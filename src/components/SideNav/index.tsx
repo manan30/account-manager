@@ -4,13 +4,14 @@ import cn from 'classnames';
 
 const links = [
   { to: '/', linkText: 'Overview' },
-  { to: '/accounts', linkText: 'Accounts' },
-  { to: '/debt', linkText: 'Debt' },
-  { to: '/spending', linkText: 'Spending' },
-  { to: '/creditors', linkText: 'Creditors' }
+  // { to: '/accounts', linkText: 'Accounts' },
+  // { to: '/debt', linkText: 'Debt' },
+  // { to: '/spending', linkText: 'Spending' },
+  { to: '/creditors', linkText: 'Creditors' },
+  { to: '/transaction', linkText: 'Transactions' }
 ];
 
-function SideNav() {
+const SideNav = () => {
   const { pathname } = useLocation();
 
   return (
@@ -42,6 +43,6 @@ function SideNav() {
       </Link>
     </div>
   );
-}
+};
 
 export default SideNav;

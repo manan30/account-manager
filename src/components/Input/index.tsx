@@ -10,8 +10,6 @@ type InputProps = {
   name: string;
   placeHolder?: string;
   label: string;
-  setFormState?: (name: string, value: string) => void;
-  onBlurUpdate?: (name: string, value: string) => void;
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
@@ -21,6 +19,9 @@ type InputProps = {
   };
   validator?: (value: string) => { testFailed: boolean; errorMessage: string };
   resetFormErrors?: (name: string) => void;
+  setFormState?: (name: string, value: string) => void;
+  onBlurUpdate?: (name: string, value: string) => void;
+  setResetField?: () => void;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -29,12 +30,13 @@ const Input: React.FC<InputProps> = ({
   name,
   placeHolder = '',
   label,
-  setFormState,
   subContent,
   theme,
-  onBlurUpdate,
   resetField,
   valueFormatter,
+  setResetField,
+  setFormState,
+  onBlurUpdate,
   validator,
   resetFormErrors
 }) => {
@@ -44,9 +46,14 @@ const Input: React.FC<InputProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
 
+    if (setResetField) {
+      setResetField();
+    }
+
     if (subContent && !isEmptyString(subContent as string) && resetFormErrors) {
       resetFormErrors(name);
     }
+
     const currentValue = valueFormatter
       ? valueFormatter.unFormat(e.target.value)
       : e.target.value;
@@ -66,11 +73,11 @@ const Input: React.FC<InputProps> = ({
   };
 
   useEffect(() => {
-    if (resetField) {
+    if (resetField && !isEmptyString(inputValue)) {
       setInputValue('');
       if (onBlurUpdate) onBlurUpdate(name, '');
     }
-  }, [resetField, name, onBlurUpdate]);
+  }, [resetField, name, onBlurUpdate, inputValue]);
 
   useEffect(() => {
     if (validator && !isEmptyString(inputValue)) {
@@ -99,7 +106,7 @@ const Input: React.FC<InputProps> = ({
           onChange={handleChange}
           placeholder={placeHolder}
           className={cn(
-            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring',
+            'border-solid border-2 rounded-lg p-2 w-full mt-2 focus:outline-none focus:ring text-sm',
             (theme && theme === INPUT_THEME_ERROR) || error.status
               ? 'border-red-500 text-red-500'
               : 'border-gray-400'

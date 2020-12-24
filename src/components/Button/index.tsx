@@ -29,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
         buttonText
       ) : (
         <div className='grid place-items-center'>
-          <Loader />
+          <Loader color='text-gray-200' />
         </div>
       )}
     </button>

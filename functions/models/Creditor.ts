@@ -1,11 +1,13 @@
 import { Timestamp } from '@firebase/firestore-types';
-export interface ICreditor {
-  id?: string;
+import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+
+export interface ICreditor extends DocumentSnapshot {
+  id: string;
   name: string;
   amount: number;
   currency: string;
   remainingAmount: number;
-  accountSettledOn?: Timestamp | null;
+  accountSettledOn?: string | null;
   accountSettled: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;

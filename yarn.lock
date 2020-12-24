@@ -4062,6 +4062,11 @@ hoist-non-react-statics@^3.1.0:
   dependencies:
     react-is "^16.7.0"
 
+hooks@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/hooks/-/hooks-0.3.2.tgz#a31f060c2026cea6cf1ca3eb178430e718e1c4a3"
+  integrity sha1-ox8GDCAmzqbPHKPrF4Qw5xjhxKM=
+
 hosted-git-info@^2.1.4:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
@@ -6172,6 +6177,11 @@ protobufjs@^6.8.6:
     "@types/long" "^4.0.1"
     "@types/node" "^13.7.0"
     long "^4.0.0"
+
+providers@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/providers/-/providers-0.5.0.tgz#1f2940884672c37b954b1223aeb9e4eac2ad57ff"
+  integrity sha512-yd88Zn5myWdjxa6+UQYtqUmKoHBBUiswWy+3QLm8ufBnl4X368NoHEP1lL/Tjw75bP/9nfh7UXKbVMsMNCPX4w==
 
 psl@^1.1.28:
   version "1.8.0"
