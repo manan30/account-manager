@@ -42,6 +42,7 @@ export const updateCreditorOnTransactionAddition = functions.firestore
         }
       }
     } catch (e) {
+      // TODO: Send some notification when this happens
       console.error(e);
     }
   });

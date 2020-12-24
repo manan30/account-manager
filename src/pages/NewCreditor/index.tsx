@@ -12,8 +12,8 @@ import { isEmptyString } from '../../utils/Functions';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import Button from '../../components/Button';
-import { AmountFormatter } from '../../utils/Formatters';
-import { NameValidator, NumberValidator } from '../../utils/Validators';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { NameValidator, AmountValidator } from '../../utils/Validators';
 import { ICreditor } from '../../models/Creditor';
 
 const currencyDropdownOptions: SelectOption[] = [
@@ -170,8 +170,8 @@ const NewCreditor = () => {
             subContent={formErrors.amount.error && formErrors.amount.content}
             theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
-            valueFormatter={AmountFormatter}
-            validator={NumberValidator}
+            valueFormatter={NumberWithCommasFormatter}
+            validator={AmountValidator}
             resetFormErrors={resetFormErrors}
           />
         </div>

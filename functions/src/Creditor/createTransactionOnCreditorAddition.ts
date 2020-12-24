@@ -26,6 +26,7 @@ export const createTransactionOnCreditorAddition = functions.firestore
         createdAt: admin.firestore.Timestamp.now()
       } as ITransaction);
     } catch (e) {
+      // TODO: Send some notification when this happens
       console.error(e);
     }
   });
