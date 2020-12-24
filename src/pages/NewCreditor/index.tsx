@@ -109,7 +109,7 @@ const NewCreditor = () => {
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
-      history.push('/creditor');
+      history.push('/creditors');
     } catch (err) {
       notificationDispatch({
         type: ADD_NOTIFICATION,

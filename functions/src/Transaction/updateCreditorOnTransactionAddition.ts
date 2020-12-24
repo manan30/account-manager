@@ -7,7 +7,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-export const updateCreditor = functions.firestore
+export const updateCreditorOnTransactionAddition = functions.firestore
   .document('transaction/{id}')
   .onCreate(async (snapshot) => {
     const data = snapshot.data() as ITransaction;
