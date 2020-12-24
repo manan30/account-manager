@@ -28,13 +28,15 @@ const generateFakeTransaction = (
   types: string[],
   entities: string[]
 ): ITransaction => {
-  const type = types[faker.random.number({ min: 0, max: types.length - 1 })];
-  const entity =
-    entities[faker.random.number({ min: 0, max: entities.length - 1 })];
+  console.log({ entities });
+  const type = types[Math.floor(Math.random() * (types.length - 1))];
+  const entity = entities[Math.floor(Math.random() * (entities.length - 1))];
   const amount = Number(faker.finance.amount(0, 3000));
   const date = firebaseApp?.firestore.Timestamp.fromDate(
     faker.date.past(2, '12/31/2020')
   );
+
+  console.log({ type, entity, amount, date });
 
   return {
     transactionType: type,
@@ -58,11 +60,13 @@ export const seedCreditors = async (documentCount = 10) => {
   await batch.commit();
 };
 
-export const seedTransactions = async (documentCount = 10) => {
+export const seedTransactions = async (documentCount = 1) => {
   const creditors: string[] = (
     await firestore.collection('creditor').orderBy('createdAt', 'desc').get()
   ).docs.map((doc) => doc.id);
   const types = ['Credit', ' Debit'];
+
+  console.log({ creditors });
 
   const batch = firestore.batch();
 
