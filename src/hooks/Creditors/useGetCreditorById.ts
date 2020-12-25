@@ -1,10 +1,14 @@
+import { ITransaction } from 'models/Transaction';
 import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
 const useGetCreditorById = (id: string) => {
   const { firestore } = useFirebaseContext();
-  const [data, setData] = useState<ICreditor | undefined>();
+  const [creditorData, setCreditorData] = useState<ICreditor | undefined>();
+  const [transactionsData, setTransactionsData] = useState<
+    ITransaction[] | undefined
+  >();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -13,11 +17,21 @@ const useGetCreditorById = (id: string) => {
       setIsLoading(true);
       setError(false);
       const creditorDBRef = firestore?.collection('creditor').doc(id);
-
-      const queryDoc = await creditorDBRef?.get();
-      if (queryDoc?.exists) {
-        const creditor = { id: queryDoc?.id, ...queryDoc.data() } as ICreditor;
-        setData(creditor);
+      const creditorQueryDoc = await creditorDBRef?.get();
+      if (creditorQueryDoc?.exists) {
+        const creditor = {
+          id: creditorQueryDoc?.id,
+          ...creditorQueryDoc.data()
+        } as ICreditor;
+        setCreditorData(creditor);
+        const transactionDBRef = firestore?.collection('transaction');
+        const transactionQueryDocs = await transactionDBRef
+          ?.where('transactionEntity', '==', id)
+          .get();
+        const transactions = transactionQueryDocs?.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() } as ITransaction)
+        );
+        setTransactionsData(transactions);
       }
     } catch (err) {
       console.log(err);
@@ -31,7 +45,7 @@ const useGetCreditorById = (id: string) => {
     fetchCreditorById();
   }, [fetchCreditorById, id]);
 
-  return { data, error, isLoading };
+  return { creditorData, transactionsData, error, isLoading };
 };
 
 export default useGetCreditorById;
