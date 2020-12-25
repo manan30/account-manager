@@ -26,6 +26,7 @@ const useGetCreditorById = (id: string) => {
         setCreditorData(creditor);
         const transactionDBRef = firestore?.collection('transaction');
         const transactionQueryDocs = await transactionDBRef
+          ?.orderBy('transactionDate', 'desc')
           ?.where('transactionEntity', '==', id)
           .get();
         const transactions = transactionQueryDocs?.docs.map(
