@@ -12,6 +12,7 @@ import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 
 const Creditors = () => {
@@ -68,7 +69,9 @@ const Creditors = () => {
             </div>
           );
         },
-        accessor: 'remainingAmount'
+        accessor: 'remainingAmount',
+        Cell: ({ row }) =>
+          NumberWithCommasFormatter.format(`${row.original.remainingAmount}`)
       },
       { Header: 'Currency', accessor: 'currency', disableSortBy: true },
       {
@@ -90,7 +93,9 @@ const Creditors = () => {
             </div>
           );
         },
-        accessor: 'amount'
+        accessor: 'amount',
+        Cell: ({ row }) =>
+          NumberWithCommasFormatter.format(`${row.original.amount}`)
       },
       {
         Header: 'Account Settled',
@@ -186,7 +191,9 @@ const Creditors = () => {
                 {topRemainingCreditors.map((cb) => (
                   // TODO: Add correct amount formatter support
                   <li key={generateRandomKey()} className='mb-2'>
-                    {cb.name} - {cb.remainingAmount} {cb.currency}
+                    {cb.name} -{' '}
+                    {NumberWithCommasFormatter.format(`${cb.remainingAmount}`)}{' '}
+                    {cb.currency}
                   </li>
                 ))}
               </ul>
