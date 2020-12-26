@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
 import useGetAllCreditors from '../../hooks/useGetAllCreditors';
@@ -131,7 +132,10 @@ const Creditors = () => {
       },
       {
         Header: 'USD Conversion',
-        accessor: 'convertedAmount'
+        accessor: 'convertedAmount',
+        Cell: ({ row }) => (
+          <CurrencyConversionCell currency={'GBP'} amount={10} />
+        )
       }
     ],
     []
