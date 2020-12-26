@@ -57,7 +57,7 @@ export const seedCreditors = async (documentCount = 10) => {
   await batch.commit();
 };
 
-export const seedTransactions = async (documentCount = 1) => {
+export const seedTransactions = async (documentCount = 10) => {
   const creditors: string[] = (
     await firestore.collection('creditor').orderBy('createdAt', 'desc').get()
   ).docs.map((doc) => doc.id);
