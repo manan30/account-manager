@@ -11,7 +11,7 @@ const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
   currency,
   amount
 }) => {
-  const {} = useQuery('ConvertAmount');
+  // const {} = useQuery('ConvertAmount');
   return <div />;
 };
 
