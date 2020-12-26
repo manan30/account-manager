@@ -13,7 +13,7 @@ const routes: RouteType[] = [
   { path: '/', component: React.lazy(() => import('./pages/Overview')) },
   {
     path: '/new-transaction',
-    component: React.lazy(() => import('./pages/NewTransaction/withProvider'))
+    component: React.lazy(() => import('./pages/NewTransaction'))
   },
   {
     path: '/transactions',
@@ -29,7 +29,7 @@ const routes: RouteType[] = [
   },
   process.env.NODE_ENV !== 'production' && {
     path: '/seed',
-    component: React.lazy(() => import('./pages/Seed/withProvider'))
+    component: React.lazy(() => import('./pages/Seed'))
   }
 ].filter(Boolean) as RouteType[];
 
