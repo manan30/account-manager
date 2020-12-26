@@ -128,6 +128,10 @@ const Creditors = () => {
           }
           return 'N/A';
         }
+      },
+      {
+        Header: 'USD Conversion',
+        accessor: 'convertedAmount'
       }
     ],
     []

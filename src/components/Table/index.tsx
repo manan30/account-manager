@@ -28,7 +28,11 @@ const Table: <T extends Column, K>(
     previousPage,
     state: { pageIndex }
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } },
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0, pageSize: 10 }
+    },
     useSortBy,
     usePagination
   );
