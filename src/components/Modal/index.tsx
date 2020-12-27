@@ -4,12 +4,14 @@ type ModalProps = {
   isOpen: boolean;
   modalTitle: string;
   children: React.ReactNode;
+  confirmButtonText: string;
   modalVisibilityHandler: () => void;
 };
 
 const Modal: React.FC<ModalProps> = ({
   isOpen = false,
   modalTitle,
+  confirmButtonText = 'Confirm',
   children,
   modalVisibilityHandler
 }) => {
@@ -24,11 +26,25 @@ const Modal: React.FC<ModalProps> = ({
         aria-modal='true'
         aria-labelledby='modal-headline'
       >
-        <div className='bg-white p-4 sm:p-6'>
+        <div className='bg-white p-4'>
           <div className='text-xl text-indigo-600 tracking-wide font-bold mb-3'>
             {modalTitle}
           </div>
           {children}
+          <div className='bg-gray-100 -mx-4 px-4 py-3 -mb-4 mt-3 flex justify-items-end flex-row-reverse items-center'>
+            <button
+              type='button'
+              className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm'
+            >
+              {confirmButtonText}
+            </button>
+            <button
+              type='button'
+              className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
