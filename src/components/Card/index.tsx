@@ -7,9 +7,7 @@ type CardProps = {
 
 const Card: React.FC<CardProps> = ({ children, className: classes }) => {
   return (
-    <div
-      className={'h-full bg-gray-400 rounded-2xl '.concat(`${classes || ''}`)}
-    >
+    <div className={'h-full rounded-2xl '.concat(`${classes || ''}`)}>
       {children}
     </div>
   );
