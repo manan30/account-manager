@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import cn from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Column } from 'react-table';
@@ -12,6 +12,7 @@ import Button from '../../components/Button';
 import Card from '../../components/Card';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 
 const CreditorDetails = () => {
   const notificationsDispatch = useNotificationDispatchContext();
@@ -80,6 +81,20 @@ const CreditorDetails = () => {
   );
 
   const tableData = useMemo(() => transactions, [transactions]);
+
+  useEffect(() => {
+    if (error) {
+      notificationsDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content:
+            'An error occurred while fetching data. Please try again later',
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+      console.error(error);
+    }
+  }, [error, notificationsDispatch]);
 
   return (
     <div className='p-8 bg-gray-100 h-full overflow-y-auto'>

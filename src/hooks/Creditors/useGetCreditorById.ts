@@ -1,6 +1,6 @@
-import { ITransaction } from 'models/Transaction';
 import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from '../../models/Creditor';
+import { ITransaction } from '../../models/Transaction';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
 const useGetCreditorById = (id: string) => {
@@ -26,7 +26,7 @@ const useGetCreditorById = (id: string) => {
         setCreditorData(creditor);
         const transactionDBRef = firestore?.collection('transaction');
         const transactionQueryDocs = await transactionDBRef
-          ?.orderBy('transactionDate', 'desc')
+          ?.orderBy('createdAt', 'desc')
           ?.where('transactionEntity', '==', id)
           .get();
         const transactions = transactionQueryDocs?.docs.map(
