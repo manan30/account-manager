@@ -134,7 +134,10 @@ const Creditors = () => {
         Header: 'USD Conversion',
         accessor: 'convertedAmount',
         Cell: ({ row }) => (
-          <CurrencyConversionCell currency={'GBP'} amount={10} />
+          <CurrencyConversionCell
+            currency={row.original.currency}
+            amount={row.original.amount}
+          />
         )
       }
     ],

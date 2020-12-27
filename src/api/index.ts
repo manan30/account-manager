@@ -5,10 +5,13 @@ export const convertAmountToUSD = async (
   amount?: number
 ) => {
   const response = await fetch(
-    `${CURRENCY_CONVERSION_ENDPOINT}from=${currency}&amount=${amount}`
+    `${CURRENCY_CONVERSION_ENDPOINT}from=${currency}&amount=${amount}`,
+    { method: 'GET' }
   );
-  if (response.status === 200) {
-    const data = await response.json();
-    console.log({ data });
+
+  if (!response.ok || response.status !== 200) {
+    throw new Error('Unable to fetch data');
   }
+
+  return response.json();
 };
