@@ -28,7 +28,11 @@ const Table: <T extends Column, K>(
     previousPage,
     state: { pageIndex }
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } },
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0, pageSize: 10 }
+    },
     useSortBy,
     usePagination
   );
@@ -38,7 +42,7 @@ const Table: <T extends Column, K>(
       <div className='overflow-auto max-h-table'>
         <table
           {...getTableProps()}
-          className='min-w-full divide-y divide-gray-200 sticky top-0'
+          className='min-w-full divide-y divide-gray-200 sticky top-0 table-fixed'
         >
           <TableHeader headerGroups={headerGroups} />
           <TableBody

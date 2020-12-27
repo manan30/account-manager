@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
 import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
@@ -24,7 +25,7 @@ const Creditors = () => {
       {
         Header: ({ column }) => {
           return (
-            <div className='flex items-center'>
+            <div className='flex items-center w-4'>
               <div>Name</div>
               <div className='ml-auto'>
                 {column.isSorted ? (
@@ -128,6 +129,22 @@ const Creditors = () => {
           }
           return 'N/A';
         }
+      },
+      {
+        Header: 'USD Conversion',
+        accessor: 'convertedAmount',
+        Cell: ({ row }) =>
+          row.original.currency === 'USD' ? (
+            <div className='flex justify-center'>
+              ${row.original.remainingAmount}
+            </div>
+          ) : (
+            <CurrencyConversionCell
+              currency={row.original.currency}
+              amount={row.original.remainingAmount}
+            />
+          ),
+        disableSortBy: true
       }
     ],
     []
@@ -170,34 +187,48 @@ const Creditors = () => {
           <Button buttonText='Add New Creditor' />
         </Link>
       </div>
-      <div className='grid grid-cols-3 gap-4 mb-8'>
-        <Card className='p-4 bg-indigo-200'>
+      <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
+        <Card className='p-4 shadow-md bg-gray-100'>
           <div className='flex flex-col'>
-            <span className='text-gray-800 font-medium text-lg mb-2'>
+            <span className='font-bold text-lg mb-2 text-indigo-600'>
               Total Creditors
             </span>
-            <span className='text-gray-800 font-extrabold text-5xl tracking-wider'>
-              {creditors?.length}
+            <span className='text-gray-700 font-semibold text-4xl tracking-wider'>
+              {isLoading ? (
+                <div className='mt-4 h-12 w-12'>
+                  <Loader size={36} />
+                </div>
+              ) : (
+                creditors?.length
+              )}
             </span>
           </div>
         </Card>
-        <Card className='p-4 bg-indigo-200'>
+        <Card className='p-4 shadow-md bg-gray-100'>
           <div className='flex flex-col'>
-            <span className='text-gray-800 font-medium text-lg mb-2'>
+            <span className='text-indigo-600 font-bold text-lg mb-2'>
               {`Top ${topRemainingCreditors.length} Remaining Creditors`}
             </span>
-            <span className='text-gray-800'>
-              <ul>
+            {isLoading ? (
+              <div className='mt-4 h-12 w-12'>
+                <Loader size={36} />
+              </div>
+            ) : (
+              <ul className='text-gray-700 mt-2'>
                 {topRemainingCreditors.map((cb) => (
                   // TODO: Add correct amount formatter support
-                  <li key={generateRandomKey()} className='mb-2'>
-                    {cb.name} -{' '}
-                    {NumberWithCommasFormatter.format(`${cb.remainingAmount}`)}{' '}
-                    {cb.currency}
+                  <li key={generateRandomKey()} className='mb-2 flex'>
+                    <div className='text-sm font-semibold'>{cb.name}</div>
+                    <div className='text-sm ml-auto'>
+                      {NumberWithCommasFormatter.format(
+                        `${cb.remainingAmount}`
+                      )}{' '}
+                      {cb.currency}
+                    </div>
                   </li>
                 ))}
               </ul>
-            </span>
+            )}
           </div>
         </Card>
       </div>

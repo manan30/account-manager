@@ -7,6 +7,7 @@ export interface ICreditor {
   remainingAmount: number;
   accountSettledOn?: Timestamp | null;
   accountSettled: boolean;
+  convertedAmount?: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
