@@ -136,7 +136,7 @@ const Creditors = () => {
         Cell: ({ row }) => (
           <CurrencyConversionCell
             currency={row.original.currency}
-            amount={row.original.amount}
+            amount={row.original.remainingAmount}
           />
         ),
         disableSortBy: true
