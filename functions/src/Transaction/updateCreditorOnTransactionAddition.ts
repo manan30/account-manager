@@ -44,6 +44,14 @@ export const updateCreditorOnTransactionAddition = functions.firestore
             accountSettledOn,
             updatedAt
           } as ICreditor);
+          if (settledCheck)
+            await db.collection('transaction').add({
+              amount: 0,
+              transactionType: 'Account Settled',
+              transactionEntity: data.transactionEntity,
+              transactionDate: data.transactionDate,
+              createdAt: admin.firestore.Timestamp.now()
+            } as ITransaction);
         }
       }
     } catch (e) {
