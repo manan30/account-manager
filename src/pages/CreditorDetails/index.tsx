@@ -95,34 +95,33 @@ const CreditorDetails = () => {
                   <Loader size={36} />
                 </div>
               ) : (
-                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-2 text-sm font-medium'>
-                  <div>
+                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-2 text-sm font-normal'>
+                  <div className='col-start-1 col-end-3'>
                     <span className='font-bold'>Name:</span> {creditor?.name}
                   </div>
-                  <div>
-                    <span className='font-bold'>Account Settled: </span>
-                    <span className='px-2 inline-flex leading-5 rounded-full'>
-                      {creditor?.accountSettled ? (
-                        <div className='bg-green-200 text-green-800'>
-                          Settled
-                        </div>
-                      ) : (
-                        <div className='bg-red-200 text-red-800'>
-                          Not Settled
-                        </div>
-                      )}
-                    </span>
+                  <div className='flex items-center'>
+                    <span className='font-bold'>Account Settled: </span>&nbsp;
+                    {creditor?.accountSettled ? (
+                      <div className='bg-green-200 text-green-800 rounded-full font-medium inline-flex px-2 text-xs'>
+                        Settled
+                      </div>
+                    ) : (
+                      <div className='bg-red-200 text-red-800 rounded-full font-medium inline-flex px-2 text-xs'>
+                        Not Settled
+                      </div>
+                    )}
                   </div>
-                  {creditor?.accountSettledOn && (
-                    <div className='mt-1'>
-                      {new Intl.DateTimeFormat('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        year: 'numeric',
-                        day: 'numeric'
-                      }).format(creditor.accountSettledOn.toDate())}
-                    </div>
-                  )}
+                  <div className='mt-1'>
+                    <span className='font-bold'>Account Settled On: </span>
+                    {creditor?.accountSettledOn
+                      ? new Intl.DateTimeFormat('en-US', {
+                          weekday: 'short',
+                          month: 'short',
+                          year: 'numeric',
+                          day: 'numeric'
+                        }).format(creditor.accountSettledOn.toDate())
+                      : 'N/A'}
+                  </div>
                   <div className='mt-1'>
                     <span className='font-bold'>Remaining Amount: </span>
                     {creditor?.remainingAmount}
@@ -137,10 +136,12 @@ const CreditorDetails = () => {
                   </div>
                   <div className='mt-1 flex'>
                     <span className='font-bold'>Amount in USD: </span>&nbsp;
-                    <CurrencyConversionCell
-                      amount={creditor?.remainingAmount}
-                      currency={creditor?.currency}
-                    />
+                    {creditor && (
+                      <CurrencyConversionCell
+                        amount={creditor?.remainingAmount}
+                        currency={creditor?.currency}
+                      />
+                    )}
                   </div>
                   <div className='mt-1 text-xs'>
                     <span className='font-bold'>Creditor Added On: </span>
