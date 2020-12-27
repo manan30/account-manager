@@ -133,12 +133,17 @@ const Creditors = () => {
       {
         Header: 'USD Conversion',
         accessor: 'convertedAmount',
-        Cell: ({ row }) => (
-          <CurrencyConversionCell
-            currency={row.original.currency}
-            amount={row.original.remainingAmount}
-          />
-        ),
+        Cell: ({ row }) =>
+          row.original.currency === 'USD' ? (
+            <div className='flex justify-center'>
+              ${row.original.remainingAmount}
+            </div>
+          ) : (
+            <CurrencyConversionCell
+              currency={row.original.currency}
+              amount={row.original.remainingAmount}
+            />
+          ),
         disableSortBy: true
       }
     ],
