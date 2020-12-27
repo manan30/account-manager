@@ -25,7 +25,7 @@ const Creditors = () => {
       {
         Header: ({ column }) => {
           return (
-            <div className='flex items-center'>
+            <div className='flex items-center w-4'>
               <div>Name</div>
               <div className='ml-auto'>
                 {column.isSorted ? (
@@ -138,7 +138,8 @@ const Creditors = () => {
             currency={row.original.currency}
             amount={row.original.amount}
           />
-        )
+        ),
+        disableSortBy: true
       }
     ],
     []

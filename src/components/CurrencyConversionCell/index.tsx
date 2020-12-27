@@ -10,11 +10,18 @@ type CurrencyConversionCellProps = {
   amount?: number;
 };
 
+type CurrencyConversionAPIData = {
+  amount: number;
+  base: string;
+  date: Date;
+  rates: { USD: number };
+};
+
 const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
   currency,
   amount
 }) => {
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError } = useQuery<CurrencyConversionAPIData>(
     [`Convert${amount}${currency}ToUSD`, currency, amount],
     () => convertAmountToUSD(currency, amount),
     { staleTime: 10 * 60 * 1000 }
@@ -27,7 +34,7 @@ const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
       {isError ? (
         <MdReportProblem size={24} />
       ) : (
-        `${'$'.concat(data.rates.USD.toFixed(2))}`
+        data && `${'$'.concat(data.rates.USD.toFixed(2))}`
       )}
     </div>
   );
