@@ -8,7 +8,7 @@ import Card from '../../components/Card';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
-import useGetAllCreditors from '../../hooks/useGetAllCreditors';
+import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
@@ -133,17 +133,12 @@ const Creditors = () => {
       {
         Header: 'USD Conversion',
         accessor: 'convertedAmount',
-        Cell: ({ row }) =>
-          row.original.currency === 'USD' ? (
-            <div className='flex justify-center'>
-              ${row.original.remainingAmount}
-            </div>
-          ) : (
-            <CurrencyConversionCell
-              currency={row.original.currency}
-              amount={row.original.remainingAmount}
-            />
-          ),
+        Cell: ({ row }) => (
+          <CurrencyConversionCell
+            currency={row.original.currency}
+            amount={row.original.remainingAmount}
+          />
+        ),
         disableSortBy: true
       }
     ],

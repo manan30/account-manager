@@ -23,9 +23,15 @@ const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
 }) => {
   const { data, isLoading, isError } = useQuery<CurrencyConversionAPIData>(
     [`Convert${amount}${currency}ToUSD`, currency, amount],
-    () => convertAmountToUSD(currency, amount),
+    () => {
+      if (currency !== 'USD') return convertAmountToUSD(currency, amount);
+      return Promise.resolve();
+    },
     { staleTime: 10 * 60 * 1000 }
   );
+
+  if (currency === 'USD')
+    return <div className='flex justify-center'>${amount}</div>;
 
   if (isLoading) return <Loader />;
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from 'models/Creditor';
-import { useFirebaseContext } from '../providers/FirebaseProvider';
+import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
 const useGetAllCreditors = () => {
   const { firestore } = useFirebaseContext();
