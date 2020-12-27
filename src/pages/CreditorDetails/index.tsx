@@ -95,69 +95,79 @@ const CreditorDetails = () => {
                   <Loader size={36} />
                 </div>
               ) : (
-                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-2 text-sm font-normal'>
-                  <div className='col-start-1 col-end-3'>
-                    <span className='font-bold'>Name:</span> {creditor?.name}
+                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-3 text-sm font-normal'>
+                  <div className='col-start-1 col-end-3 flex items-center'>
+                    <span className='font-bold mr-1'>Name:</span>
+                    <span>{creditor?.name}</span>
                   </div>
                   <div className='flex items-center'>
-                    <span className='font-bold'>Account Settled: </span>&nbsp;
-                    {creditor?.accountSettled ? (
-                      <div className='bg-green-200 text-green-800 rounded-full font-medium inline-flex px-2 text-xs'>
-                        Settled
-                      </div>
-                    ) : (
-                      <div className='bg-red-200 text-red-800 rounded-full font-medium inline-flex px-2 text-xs'>
-                        Not Settled
-                      </div>
-                    )}
+                    <span className='font-bold mr-1'>Account Settled:</span>
+                    <span>
+                      {creditor?.accountSettled ? (
+                        <div className='bg-green-200 text-green-800 rounded-full font-medium inline-flex px-2 text-xs'>
+                          Settled
+                        </div>
+                      ) : (
+                        <div className='bg-red-200 text-red-800 rounded-full font-medium inline-flex px-2 text-xs'>
+                          Not Settled
+                        </div>
+                      )}
+                    </span>
                   </div>
-                  <div className='mt-1'>
-                    <span className='font-bold'>Account Settled On: </span>
-                    {creditor?.accountSettledOn
-                      ? new Intl.DateTimeFormat('en-US', {
-                          weekday: 'short',
-                          month: 'short',
-                          year: 'numeric',
-                          day: 'numeric'
-                        }).format(creditor.accountSettledOn.toDate())
-                      : 'N/A'}
+                  <div className='flex items-center'>
+                    <span className='font-bold mr-1'>Account Settled On:</span>
+                    <span>
+                      {creditor?.accountSettledOn
+                        ? new Intl.DateTimeFormat('en-US', {
+                            month: 'short',
+                            year: 'numeric',
+                            day: 'numeric'
+                          }).format(creditor.accountSettledOn.toDate())
+                        : 'N/A'}
+                    </span>
                   </div>
-                  <div className='mt-1'>
-                    <span className='font-bold'>Remaining Amount: </span>
-                    {creditor?.remainingAmount}
+                  <div className='flex items-center'>
+                    <span className='font-bold mr-1'>Remaining Amount:</span>
+                    <span>{creditor?.remainingAmount}</span>
                   </div>
-                  <div className='mt-1'>
-                    <span className='font-bold'>Credit Amount: </span>
-                    {creditor?.amount}
+                  <div className='flex items-center'>
+                    <span className='font-bold mr-1'>Credit Amount:</span>
+                    <span>{creditor?.amount}</span>
                   </div>
-                  <div className='mt-1'>
-                    <span className='font-bold'>Currency: </span>
-                    {creditor?.currency}
+                  <div className='flex items-center'>
+                    <span className='font-bold mr-1'>Currency:</span>
+                    <span>{creditor?.currency}</span>
                   </div>
-                  <div className='mt-1 flex'>
-                    <span className='font-bold'>Amount in USD: </span>&nbsp;
-                    {creditor && (
-                      <CurrencyConversionCell
-                        amount={creditor?.remainingAmount}
-                        currency={creditor?.currency}
-                      />
-                    )}
+                  <div className='flex items-center'>
+                    <span className='font-bold mr-1'>Amount in USD:</span>
+                    <span>
+                      {creditor && (
+                        <CurrencyConversionCell
+                          amount={creditor?.remainingAmount}
+                          currency={creditor?.currency}
+                        />
+                      )}
+                    </span>
                   </div>
-                  <div className='mt-1 text-xs'>
-                    <span className='font-bold'>Creditor Added On: </span>
-                    {new Intl.DateTimeFormat('en-US', {
-                      month: 'short',
-                      year: 'numeric',
-                      day: 'numeric'
-                    }).format(creditor?.createdAt.toDate())}
+                  <div className='text-xs flex items-center'>
+                    <span className='font-bold'>Creditor Added On:</span>
+                    <span>
+                      {new Intl.DateTimeFormat('en-US', {
+                        month: 'short',
+                        year: 'numeric',
+                        day: 'numeric'
+                      }).format(creditor?.createdAt.toDate())}
+                    </span>
                   </div>
-                  <div className='mt-1 text-xs'>
-                    <span className='font-bold'>Last Updated On: </span>
-                    {new Intl.DateTimeFormat('en-US', {
-                      month: 'short',
-                      year: 'numeric',
-                      day: 'numeric'
-                    }).format(creditor?.updatedAt.toDate())}
+                  <div className='text-xs flex items-center'>
+                    <span className='font-bold mr-1'>Last Updated On:</span>
+                    <span>
+                      {new Intl.DateTimeFormat('en-US', {
+                        month: 'short',
+                        year: 'numeric',
+                        day: 'numeric'
+                      }).format(creditor?.updatedAt.toDate())}
+                    </span>
                   </div>
                 </div>
               )}
