@@ -53,7 +53,9 @@ const CreditorDetails = () => {
           <span
             className={cn(
               'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-              row.original.transactionType === 'Debit'
+              ['Debit', 'Account Settled'].includes(
+                row.original.transactionType || ''
+              )
                 ? 'bg-green-200 text-green-800'
                 : 'bg-red-200 text-red-800'
             )}
