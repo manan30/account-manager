@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
 
 type ModalProps = {
@@ -6,6 +6,7 @@ type ModalProps = {
   modalTitle: string;
   children: React.ReactNode;
   confirmButtonText?: string;
+  shouldCloseOnEscape?: boolean;
   onConfirmClickHandler: () => void;
   onCloseClickHandler: () => void;
 };
@@ -15,8 +16,19 @@ const Modal: React.FC<ModalProps> = ({
   modalTitle,
   confirmButtonText = 'Confirm',
   children,
+  shouldCloseOnEscape = false,
   onCloseClickHandler
 }) => {
+  useEffect(() => {
+    if (shouldCloseOnEscape) {
+      const escapeKeyHandler = (e: KeyboardEvent) => {
+        if (e.code === 'Escape') onCloseClickHandler();
+      };
+      window.addEventListener('keyup', escapeKeyHandler);
+      return () => window.removeEventListener('keyup', escapeKeyHandler);
+    }
+  }, [shouldCloseOnEscape, onCloseClickHandler]);
+
   return isOpen ? (
     <div className='fixed z-10 inset-0 overflow-y-auto grid place-items-center'>
       <div className='fixed inset-0 transition-opacity' aria-hidden='true'>
