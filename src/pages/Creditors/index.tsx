@@ -241,9 +241,10 @@ const Creditors = () => {
         )}
       </div>
       <Modal
-        isOpen={true}
+        isOpen={showModal}
         modalTitle='New Creditor Details'
-        modalVisibilityHandler={() => setShowModal(false)}
+        onCloseClickHandler={() => setShowModal(false)}
+        onConfirmClickHandler={() => 'ABCD'}
       >
         ABCD
       </Modal>
