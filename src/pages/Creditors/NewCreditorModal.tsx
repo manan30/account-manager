@@ -128,9 +128,9 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
       });
       console.error({ err });
     } finally {
-      setShowModal(false);
       setResetForm(true);
       setIsCreditorBeingAdded(false);
+      setShowModal(false);
     }
   };
 
@@ -154,6 +154,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
       })),
     []
   );
+
   return (
     <Modal isOpen={showModal} onCloseClickHandler={() => setShowModal(false)}>
       <div className='flex justify-center mx-8 mb-4 -mt-2'>
@@ -166,6 +167,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
             subContent={formErrors.name.error && formErrors.name.content}
             theme={formErrors.name.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
+            setResetField={() => setResetForm(false)}
             validator={NameValidator}
             resetFormErrors={resetFormErrors}
           />
@@ -179,6 +181,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
               subContent={formErrors.amount.error && formErrors.amount.content}
               theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
               resetField={resetForm}
+              setResetField={() => setResetForm(false)}
               valueFormatter={NumberWithCommasFormatter}
               validator={AmountValidator}
               resetFormErrors={resetFormErrors}
@@ -196,6 +199,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
               }
               theme={formErrors.currency.error ? INPUT_THEME_ERROR : ''}
               resetField={resetForm}
+              setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
             />
           </div>

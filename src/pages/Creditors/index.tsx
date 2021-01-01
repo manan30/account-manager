@@ -186,12 +186,10 @@ const Creditors = () => {
     <>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='inline-flex ml-auto mb-8'>
-          {/* <Link to='/new-creditor'> */}
           <Button
             buttonText='Add New Creditor'
             onClickHandler={() => setShowModal(true)}
           />
-          {/* </Link> */}
         </div>
         <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
           <Card className='p-4 shadow-md bg-gray-100'>
@@ -222,7 +220,6 @@ const Creditors = () => {
               ) : (
                 <ul className='text-gray-700 mt-2'>
                   {topRemainingCreditors.map((cb) => (
-                    // TODO: Add correct amount formatter support
                     <li key={generateRandomKey()} className='mb-2 flex'>
                       <div className='text-sm font-semibold'>{cb.name}</div>
                       <div className='text-sm ml-auto'>
