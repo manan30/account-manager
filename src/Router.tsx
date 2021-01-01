@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
 import Loader from './components/Loader';
+import { useFirebaseContext } from './providers/FirebaseProvider';
 
 type RouteType = {
   path: string;
