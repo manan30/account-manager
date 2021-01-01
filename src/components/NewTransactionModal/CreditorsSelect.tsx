@@ -1,6 +1,6 @@
 import React from 'react';
-import Loader from '../../components/Loader';
-import Select, { SelectOption } from '../../components/Select';
+import Loader from '../Loader';
+import Select, { SelectOption } from '../Select';
 import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { useNewTransactionDispatchContext } from '../../providers/NewTransactionProvider';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';

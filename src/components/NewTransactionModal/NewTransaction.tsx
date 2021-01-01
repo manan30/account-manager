@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Select, { SelectOption } from '../../components/Select';
+import Button from '../Button';
+import Input from '../Input';
+import Select, { SelectOption } from '../Select';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
   useNewTransactionDispatchContext,
