@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import Card from '../../components/Card';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
+import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
@@ -16,9 +17,13 @@ import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 
+const NewCreditorModal = React.lazy(() => import('./NewCreditorModal'));
+
 const Creditors = () => {
-  const { data: creditors, isLoading, error } = useGetAllCreditors();
   const notificationDispatch = useNotificationDispatchContext();
+  const [showModal, setShowModal] = useState(false);
+  const [fetchData, setFetchData] = useState(true);
+  const { data: creditors, isLoading, error } = useGetAllCreditors(fetchData);
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -175,65 +180,80 @@ const Creditors = () => {
       .slice(0, 3);
   }, [creditors]);
 
+  useEffect(() => {
+    if (!isLoading) setFetchData(false);
+  }, [isLoading]);
+
   return (
-    <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-      <div className='flex justify-end mb-8'>
-        <Link to='/new-creditor'>
-          <Button buttonText='Add New Creditor' />
-        </Link>
-      </div>
-      <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
-        <Card className='p-4 shadow-md bg-gray-100'>
-          <div className='flex flex-col'>
-            <span className='font-bold text-lg mb-2 text-indigo-600'>
-              Total Creditors
-            </span>
-            <span className='text-gray-700 font-semibold text-4xl tracking-wider'>
+    <>
+      <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
+        <div className='inline-flex ml-auto mb-8'>
+          <Button
+            buttonText='Add New Creditor'
+            onClickHandler={() => setShowModal(true)}
+          />
+        </div>
+        <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
+          <Card className='p-4 shadow-md bg-gray-100'>
+            <div className='flex flex-col'>
+              <span className='font-bold text-lg mb-2 text-indigo-600'>
+                Total Creditors
+              </span>
+              <span className='text-gray-700 font-semibold text-4xl tracking-wider'>
+                {isLoading ? (
+                  <div className='mt-4 h-12 w-12'>
+                    <Loader size={36} />
+                  </div>
+                ) : (
+                  creditors?.length
+                )}
+              </span>
+            </div>
+          </Card>
+          <Card className='p-4 shadow-md bg-gray-100'>
+            <div className='flex flex-col'>
+              <span className='text-indigo-600 font-bold text-lg mb-2'>
+                {`Top ${topRemainingCreditors.length} Remaining Creditors`}
+              </span>
               {isLoading ? (
                 <div className='mt-4 h-12 w-12'>
                   <Loader size={36} />
                 </div>
               ) : (
-                creditors?.length
+                <ul className='text-gray-700 mt-2'>
+                  {topRemainingCreditors.map((cb) => (
+                    <li key={generateRandomKey()} className='mb-2 flex'>
+                      <div className='text-sm font-semibold'>{cb.name}</div>
+                      <div className='text-sm ml-auto'>
+                        {NumberWithCommasFormatter.format(
+                          `${cb.remainingAmount}`
+                        )}{' '}
+                        {cb.currency}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               )}
-            </span>
-          </div>
-        </Card>
-        <Card className='p-4 shadow-md bg-gray-100'>
-          <div className='flex flex-col'>
-            <span className='text-indigo-600 font-bold text-lg mb-2'>
-              {`Top ${topRemainingCreditors.length} Remaining Creditors`}
-            </span>
-            {isLoading ? (
-              <div className='mt-4 h-12 w-12'>
-                <Loader size={36} />
-              </div>
-            ) : (
-              <ul className='text-gray-700 mt-2'>
-                {topRemainingCreditors.map((cb) => (
-                  // TODO: Add correct amount formatter support
-                  <li key={generateRandomKey()} className='mb-2 flex'>
-                    <div className='text-sm font-semibold'>{cb.name}</div>
-                    <div className='text-sm ml-auto'>
-                      {NumberWithCommasFormatter.format(
-                        `${cb.remainingAmount}`
-                      )}{' '}
-                      {cb.currency}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </Card>
-      </div>
-      {isLoading && <Loader size={48} />}
-      {tableData && (
-        <div className='mb-6'>
-          <Table columns={tableColumns} data={tableData} paginate />
+            </div>
+          </Card>
         </div>
+        {isLoading && <Loader size={48} />}
+        {tableData && (
+          <div className='mb-6'>
+            <Table columns={tableColumns} data={tableData} paginate />
+          </div>
+        )}
+      </div>
+      {showModal && (
+        <React.Suspense fallback={<ModalFallback />}>
+          <NewCreditorModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            refetchData={() => setFetchData(true)}
+          />
+        </React.Suspense>
       )}
-    </div>
+    </>
   );
 };
 
