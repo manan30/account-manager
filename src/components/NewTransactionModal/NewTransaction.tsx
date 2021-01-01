@@ -1,7 +1,4 @@
-import React, { useCallback, useState } from 'react';
-import Button from '../Button';
-import Input from '../Input';
-import Select, { SelectOption } from '../Select';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
   useNewTransactionDispatchContext,
@@ -17,6 +14,10 @@ import {
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { isEmptyString } from '../../utils/Functions';
 import { AmountValidator } from '../../utils/Validators';
+import Button from '../Button';
+import Input from '../Input';
+import Modal from '../Modal';
+import Select, { SelectOption } from '../Select';
 import CreditorsSelect from './CreditorsSelect';
 
 const transactionTypeDropdownOptions: SelectOption[] = [
@@ -24,7 +25,18 @@ const transactionTypeDropdownOptions: SelectOption[] = [
   { label: 'debit', value: 'Debit' }
 ];
 
-const NewTransaction = () => {
+type NewTransactionProps = {
+  transactionEntity?: { name?: string; id?: string };
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchData: () => void;
+};
+
+const NewTransaction: React.FC<NewTransactionProps> = ({
+  transactionEntity,
+  showModal,
+  setShowModal
+}) => {
   const { type, entity, amount, date } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
   const { firestore, firebaseApp } = useFirebaseContext();
@@ -142,70 +154,93 @@ const NewTransaction = () => {
     [newTransactionDispatch]
   );
 
+  useEffect(() => {
+    if (transactionEntity) {
+      newTransactionDispatch({
+        type: 'ADD_TRANSACTION_ENTITY',
+        payload: { entity: transactionEntity.id }
+      });
+    }
+  }, [newTransactionDispatch, transactionEntity]);
+
   return (
-    <div className='flex justify-center mx-8'>
-      <form className='mb-8 w-full'>
-        <Select
-          name='type'
-          label='Transaction Type'
-          placeHolder='Eg. Credit, Debit'
-          selectOptions={transactionTypeDropdownOptions}
-          subContent={formErrors.type.error && formErrors.type.content}
-          theme={formErrors.type.error ? INPUT_THEME_ERROR : ''}
-          resetField={resetForm}
-          setResetField={() => setResetForm(false)}
-          resetFormErrors={resetFormErrors}
-          onSelectValueChange={handleSelectChange('ADD_TRANSACTION_TYPE')}
-        />
-        {(type === 'Credit' || type === 'Debit') && (
+    <Modal
+      isOpen={showModal}
+      onCloseClickHandler={() => setShowModal(false)}
+      isPerformingAsyncTask={isTransactionBeingAdded}
+    >
+      <div className='flex justify-center mx-8'>
+        <form className='mb-8 w-full'>
+          <Select
+            name='type'
+            label='Transaction Type'
+            placeHolder='Eg. Credit, Debit'
+            selectOptions={transactionTypeDropdownOptions}
+            subContent={formErrors.type.error && formErrors.type.content}
+            theme={formErrors.type.error ? INPUT_THEME_ERROR : ''}
+            resetField={resetForm}
+            setResetField={() => setResetForm(false)}
+            resetFormErrors={resetFormErrors}
+            onSelectValueChange={handleSelectChange('ADD_TRANSACTION_TYPE')}
+          />
           <div className='mt-6'>
-            <CreditorsSelect
-              formError={formErrors.entity}
-              resetForm={resetForm}
-              resetFormError={resetFormErrors}
+            {transactionEntity ? (
+              <Input
+                label='Creditor Name'
+                name='entity'
+                defaultValue={transactionEntity.name}
+              />
+            ) : (
+              (type === 'Credit' || type === 'Debit') && (
+                <CreditorsSelect
+                  formError={formErrors.entity}
+                  resetForm={resetForm}
+                  resetFormError={resetFormErrors}
+                />
+              )
+            )}
+          </div>
+          <div className='mt-6'>
+            <Input
+              name='amount'
+              type='tel'
+              placeHolder='0.00'
+              label='Amount'
+              subContent={formErrors.amount.error && formErrors.amount.content}
+              theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              validator={AmountValidator}
+              valueFormatter={NumberWithCommasFormatter}
+              onBlurUpdate={handleInputChange('ADD_TRANSACTION_AMOUNT')}
             />
           </div>
-        )}
-        <div className='mt-6'>
-          <Input
-            name='amount'
-            type='tel'
-            placeHolder='0.00'
-            label='Amount'
-            subContent={formErrors.amount.error && formErrors.amount.content}
-            theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
-            resetField={resetForm}
-            setResetField={() => setResetForm(false)}
-            resetFormErrors={resetFormErrors}
-            validator={AmountValidator}
-            valueFormatter={NumberWithCommasFormatter}
-            onBlurUpdate={handleInputChange('ADD_TRANSACTION_AMOUNT')}
-          />
-        </div>
-        <div className='mt-6'>
-          {/* TODO: Validate date input and create date picker UI */}
-          <Input
-            name='date'
-            placeHolder='MM/DD/YYYY'
-            label='Transaction Date'
-            subContent={formErrors.date.error && formErrors.date.content}
-            theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
-            resetField={resetForm}
-            setResetField={() => setResetForm(false)}
-            resetFormErrors={resetFormErrors}
-            onBlurUpdate={handleInputChange('ADD_TRANSACTION_DATE')}
-          />
-        </div>
-        <div className='mt-10'>
-          <Button
-            buttonText='Add Transaction'
-            onClickHandler={(e) => handleSubmit(e)}
-            loading={isTransactionBeingAdded}
-            type='submit'
-          />
-        </div>
-      </form>
-    </div>
+          <div className='mt-6'>
+            {/* TODO: Validate date input and create date picker UI */}
+            <Input
+              name='date'
+              placeHolder='MM/DD/YYYY'
+              label='Transaction Date'
+              subContent={formErrors.date.error && formErrors.date.content}
+              theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              onBlurUpdate={handleInputChange('ADD_TRANSACTION_DATE')}
+            />
+          </div>
+          <div className='mt-10'>
+            <Button
+              buttonText='Add Transaction'
+              onClickHandler={(e) => handleSubmit(e)}
+              loading={isTransactionBeingAdded}
+              type='submit'
+            />
+          </div>
+        </form>
+      </div>
+    </Modal>
   );
 };
 

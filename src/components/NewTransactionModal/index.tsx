@@ -1,5 +1,4 @@
 import React from 'react';
-import Modal from '../Modal';
 import NewTransactionProvider from '../../providers/NewTransactionProvider';
 import NewTransaction from './NewTransaction';
 
@@ -7,18 +6,24 @@ type NewTransactionModalWithProviderProps = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   refetchData: () => void;
+  transactionEntity?: { name?: string; id?: string };
 };
 
 const NewTransactionModalWithProvider: React.FC<NewTransactionModalWithProviderProps> = ({
   showModal,
-  setShowModal
+  transactionEntity,
+  setShowModal,
+  refetchData
 }) => {
   return (
-    <Modal isOpen={showModal} onCloseClickHandler={() => setShowModal(false)}>
-      <NewTransactionProvider>
-        <NewTransaction />
-      </NewTransactionProvider>
-    </Modal>
+    <NewTransactionProvider>
+      <NewTransaction
+        transactionEntity={transactionEntity}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        refetchData={refetchData}
+      />
+    </NewTransactionProvider>
   );
 };
 

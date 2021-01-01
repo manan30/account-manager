@@ -199,7 +199,10 @@ const CreditorDetails = () => {
             </div>
           </Card>
           <span className='ml-auto'>
-            <Button buttonText='Add Transaction' />
+            <Button
+              buttonText='Add Transaction'
+              onClickHandler={() => setShowModal(true)}
+            />
           </span>
         </div>
         {isLoading && <Loader size={48} />}
@@ -214,6 +217,10 @@ const CreditorDetails = () => {
           <NewTransactionModal
             showModal={showModal}
             setShowModal={setShowModal}
+            refetchData={() => setFetchData(true)}
+            transactionEntity={
+              creditor ? { name: creditor?.name, id: creditor.id } : undefined
+            }
           />
         </React.Suspense>
       )}
