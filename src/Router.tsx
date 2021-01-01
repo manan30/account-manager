@@ -19,10 +19,6 @@ const routes: RouteType[] = [
     path: '/transactions',
     component: React.lazy(() => import('./pages/Transaction'))
   },
-  // {
-  //   path: '/new-creditor',
-  //   component: React.lazy(() => import('./pages/NewCreditor'))
-  // },
   {
     path: '/creditors',
     component: React.lazy(() => import('./pages/Creditors'))
