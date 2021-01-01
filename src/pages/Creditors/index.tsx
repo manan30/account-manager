@@ -8,7 +8,6 @@ import Card from '../../components/Card';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
-import Modal from '../../components/Modal';
 import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
 import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -16,6 +15,7 @@ import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificatio
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
+import NewCreditorModal from './NewCreditorModal';
 
 const Creditors = () => {
   const { data: creditors, isLoading, error } = useGetAllCreditors();
@@ -240,14 +240,7 @@ const Creditors = () => {
           </div>
         )}
       </div>
-      <Modal
-        isOpen={showModal}
-        modalTitle='New Creditor Details'
-        onCloseClickHandler={() => setShowModal(false)}
-        onConfirmClickHandler={() => 'ABCD'}
-      >
-        ABCD
-      </Modal>
+      <NewCreditorModal showModal={showModal} setShowModal={setShowModal} />
     </>
   );
 };

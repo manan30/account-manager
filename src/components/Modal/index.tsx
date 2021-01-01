@@ -3,11 +3,11 @@ import { MdClose } from 'react-icons/md';
 
 type ModalProps = {
   isOpen: boolean;
-  modalTitle: string;
+  modalTitle?: string;
   children: React.ReactNode;
   confirmButtonText?: string;
   shouldCloseOnEscape?: boolean;
-  onConfirmClickHandler: () => void;
+  onConfirmClickHandler?: () => void;
   onCloseClickHandler: () => void;
 };
 
@@ -17,7 +17,8 @@ const Modal: React.FC<ModalProps> = ({
   confirmButtonText = 'Confirm',
   children,
   shouldCloseOnEscape = false,
-  onCloseClickHandler
+  onCloseClickHandler,
+  onConfirmClickHandler
 }) => {
   useEffect(() => {
     if (shouldCloseOnEscape) {
@@ -53,21 +54,24 @@ const Modal: React.FC<ModalProps> = ({
             </button>
           </div>
           {children}
-          <div className='bg-gray-100 -mx-4 px-4 py-3 -mb-4 mt-3 flex justify-items-end flex-row-reverse items-center'>
-            <button
-              type='button'
-              className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm'
-            >
-              {confirmButtonText}
-            </button>
-            <button
-              type='button'
-              className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
-              onClick={() => onCloseClickHandler()}
-            >
-              Cancel
-            </button>
-          </div>
+          {onConfirmClickHandler && (
+            <div className='bg-gray-100 -mx-4 px-4 py-3 -mb-4 mt-3 flex justify-items-end flex-row-reverse items-center'>
+              <button
+                type='button'
+                className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm'
+                onClick={() => onConfirmClickHandler()}
+              >
+                {confirmButtonText}
+              </button>
+              <button
+                type='button'
+                className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+                onClick={() => onCloseClickHandler()}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

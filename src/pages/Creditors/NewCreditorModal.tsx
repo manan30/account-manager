@@ -1,20 +1,20 @@
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import Input from '../../components/Input';
-import Select, { SelectOption } from '../../components/Select';
+import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import {
   INPUT_THEME_ERROR,
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
-import { isEmptyString } from '../../utils/Functions';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
-import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
-import Button from '../../components/Button';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
-import { NameValidator, AmountValidator } from '../../utils/Validators';
-import { ICreditor } from '../../models/Creditor';
+import { isEmptyString } from '../../utils/Functions';
+import { AmountValidator, NameValidator } from '../../utils/Validators';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Select, { SelectOption } from '../../components/Select';
+import Modal from '../../components/Modal/index';
 
 const currencyDropdownOptions: SelectOption[] = [
   { label: 'usd', value: 'USD' },
@@ -22,7 +22,15 @@ const currencyDropdownOptions: SelectOption[] = [
   { label: 'inr', value: 'INR' }
 ];
 
-const NewCreditor = () => {
+type NewCreditorModalProps = {
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
+  showModal,
+  setShowModal
+}) => {
   const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
@@ -83,7 +91,7 @@ const NewCreditor = () => {
 
       if (creditors?.includes(formState.name.toLowerCase())) {
         notificationDispatch({
-          type: ADD_NOTIFICATION,
+          type: 'ADD_NOTIFICATION',
           payload: {
             content: `Creditor ${formState.name} already exists. To update the amount please create a new transaction`,
             theme: NOTIFICATION_THEME_FAILURE
@@ -103,7 +111,7 @@ const NewCreditor = () => {
         updatedAt: firebaseApp?.firestore.Timestamp.now()
       });
       notificationDispatch({
-        type: ADD_NOTIFICATION,
+        type: 'ADD_NOTIFICATION',
         payload: {
           content: 'New Creditor Added',
           theme: NOTIFICATION_THEME_SUCCESS
@@ -112,7 +120,7 @@ const NewCreditor = () => {
       history.push('/creditors');
     } catch (err) {
       notificationDispatch({
-        type: ADD_NOTIFICATION,
+        type: 'ADD_NOTIFICATION',
         payload: {
           content: 'Error occurred while adding new creditor',
           theme: NOTIFICATION_THEME_FAILURE
@@ -120,6 +128,7 @@ const NewCreditor = () => {
       });
       console.error({ err });
     } finally {
+      setShowModal(false);
       setResetForm(true);
       setIsCreditorBeingAdded(false);
     }
@@ -145,62 +154,63 @@ const NewCreditor = () => {
       })),
     []
   );
-
   return (
-    <div className='flex justify-center w-full'>
-      <form className='mb-8 w-1/3 mt-16'>
-        <Input
-          name='name'
-          placeHolder='Name of person or entity'
-          label='Name'
-          onBlurUpdate={handleFormUpdate}
-          subContent={formErrors.name.error && formErrors.name.content}
-          theme={formErrors.name.error ? INPUT_THEME_ERROR : ''}
-          resetField={resetForm}
-          validator={NameValidator}
-          resetFormErrors={resetFormErrors}
-        />
-        <div className='mt-6'>
+    <Modal isOpen={showModal} onCloseClickHandler={() => setShowModal(false)}>
+      <div className='flex justify-center mx-8 mb-4 -mt-2'>
+        <form className='w-full'>
           <Input
-            name='amount'
-            type='tel'
-            placeHolder='$0.00'
-            label='Amount'
+            name='name'
+            placeHolder='Name of person or entity'
+            label='Name'
             onBlurUpdate={handleFormUpdate}
-            subContent={formErrors.amount.error && formErrors.amount.content}
-            theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
+            subContent={formErrors.name.error && formErrors.name.content}
+            theme={formErrors.name.error ? INPUT_THEME_ERROR : ''}
             resetField={resetForm}
-            valueFormatter={NumberWithCommasFormatter}
-            validator={AmountValidator}
+            validator={NameValidator}
             resetFormErrors={resetFormErrors}
           />
-        </div>
-        <div className='mt-6'>
-          <Select
-            name='currency'
-            placeHolder='USD, INR, etc'
-            label='Currency'
-            selectOptions={currencyDropdownOptions}
-            onSelectValueChange={handleSelectChange}
-            subContent={
-              formErrors.currency.error && formErrors.currency.content
-            }
-            theme={formErrors.currency.error ? INPUT_THEME_ERROR : ''}
-            resetField={resetForm}
-            resetFormErrors={resetFormErrors}
-          />
-        </div>
-        <div className='mt-10'>
-          <Button
-            buttonText='Add Creditor'
-            onClickHandler={(e) => handleSubmit(e)}
-            loading={isCreditorBeingAdded}
-            type='submit'
-          />
-        </div>
-      </form>
-    </div>
+          <div className='mt-6'>
+            <Input
+              name='amount'
+              type='tel'
+              placeHolder='$0.00'
+              label='Amount'
+              onBlurUpdate={handleFormUpdate}
+              subContent={formErrors.amount.error && formErrors.amount.content}
+              theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              valueFormatter={NumberWithCommasFormatter}
+              validator={AmountValidator}
+              resetFormErrors={resetFormErrors}
+            />
+          </div>
+          <div className='mt-6'>
+            <Select
+              name='currency'
+              placeHolder='USD, INR, etc'
+              label='Currency'
+              selectOptions={currencyDropdownOptions}
+              onSelectValueChange={handleSelectChange}
+              subContent={
+                formErrors.currency.error && formErrors.currency.content
+              }
+              theme={formErrors.currency.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              resetFormErrors={resetFormErrors}
+            />
+          </div>
+          <div className='mt-10'>
+            <Button
+              buttonText='Add Creditor'
+              onClickHandler={(e) => handleSubmit(e)}
+              loading={isCreditorBeingAdded}
+              type='submit'
+            />
+          </div>
+        </form>
+      </div>
+    </Modal>
   );
 };
 
-export default NewCreditor;
+export default NewCreditorModal;
