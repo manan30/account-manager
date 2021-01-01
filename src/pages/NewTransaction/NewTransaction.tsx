@@ -143,8 +143,8 @@ const NewTransaction = () => {
   );
 
   return (
-    <div className='flex justify-center w-full'>
-      <form className='mb-8 w-1/3 mt-16'>
+    <div className='flex justify-center mx-8'>
+      <form className='mb-8 w-full'>
         <Select
           name='type'
           label='Transaction Type'
