@@ -187,11 +187,13 @@ const Creditors = () => {
   return (
     <>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        <div className='inline-flex ml-auto mb-8'>
-          <Button
-            buttonText='Add New Creditor'
-            onClickHandler={() => setShowModal(true)}
-          />
+        <div className='w-full mb-8 flex justify-end'>
+          <div className='inline-flex ml-auto'>
+            <Button
+              buttonText='Add New Creditor'
+              onClickHandler={() => setShowModal(true)}
+            />
+          </div>
         </div>
         <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
           <Card className='p-4 shadow-md bg-gray-100'>
