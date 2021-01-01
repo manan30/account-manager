@@ -58,6 +58,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
     }));
   };
 
+  // TODO: Timeout after certain seconds if the operation did not complete
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -156,7 +157,11 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   );
 
   return (
-    <Modal isOpen={showModal} onCloseClickHandler={() => setShowModal(false)}>
+    <Modal
+      isOpen={showModal}
+      onCloseClickHandler={() => setShowModal(false)}
+      isPerformingAsyncTask={isCreditorBeingAdded}
+    >
       <div className='flex justify-center mx-8 mb-4 -mt-2'>
         <form className='w-full'>
           <Input

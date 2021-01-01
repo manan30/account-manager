@@ -10,6 +10,7 @@ type ModalProps = {
   shouldCloseOnEscape?: boolean;
   onConfirmClickHandler?: () => void;
   onCloseClickHandler: () => void;
+  isPerformingAsyncTask?: boolean;
 };
 
 type AnimationTypes = 'Enter' | 'Exit';
@@ -20,6 +21,7 @@ const Modal: React.FC<ModalProps> = ({
   confirmButtonText = 'Confirm',
   children,
   shouldCloseOnEscape = false,
+  isPerformingAsyncTask = false,
   onCloseClickHandler,
   onConfirmClickHandler
 }) => {
@@ -84,6 +86,7 @@ const Modal: React.FC<ModalProps> = ({
             </div>
             <button
               className='ml-auto p-1 mr-1 rounded-full hover:bg-gray-200'
+              disabled={isPerformingAsyncTask}
               onClick={() => buttonClickHandler(false)}
             >
               <MdClose className='text-gray-500' size={20} />
@@ -102,6 +105,7 @@ const Modal: React.FC<ModalProps> = ({
               <button
                 type='button'
                 className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+                disabled={isPerformingAsyncTask}
                 onClick={() => buttonClickHandler(false)}
               >
                 Cancel
