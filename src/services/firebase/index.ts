@@ -27,7 +27,7 @@ function FirebaseService(): IFirebaseContext {
 
   if (window.location.hostname === 'localhost') {
     firestore.useEmulator('localhost', 8080);
-    auth.useEmulator('http://localhost:1741');
+    auth.useEmulator('http://localhost:9001');
   }
 
   return { firebaseApp: app, firestore, authProviders, auth };
