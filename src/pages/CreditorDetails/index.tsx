@@ -26,7 +26,7 @@ const CreditorDetails = () => {
     transactionsData: transactions,
     error,
     isLoading
-  } = useGetCreditorById(id);
+  } = useGetCreditorById(id, fetchData);
 
   const tableColumns = useMemo<Column<Partial<ITransaction>>[]>(
     () => [
@@ -101,6 +101,10 @@ const CreditorDetails = () => {
       console.error(error);
     }
   }, [error, notificationsDispatch]);
+
+  useEffect(() => {
+    if (!isLoading) setFetchData(false);
+  }, [isLoading]);
 
   return (
     <>

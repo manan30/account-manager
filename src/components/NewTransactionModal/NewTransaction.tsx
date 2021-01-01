@@ -35,7 +35,8 @@ type NewTransactionProps = {
 const NewTransaction: React.FC<NewTransactionProps> = ({
   transactionEntity,
   showModal,
-  setShowModal
+  setShowModal,
+  refetchData
 }) => {
   const { type, entity, amount, date } = useNewTransactionStateContext();
   const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
@@ -166,7 +167,10 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
   return (
     <Modal
       isOpen={showModal}
-      onCloseClickHandler={() => setShowModal(false)}
+      onCloseClickHandler={() => {
+        refetchData();
+        setShowModal(false);
+      }}
       isPerformingAsyncTask={isTransactionBeingAdded}
     >
       <div className='flex justify-center mx-8'>

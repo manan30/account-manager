@@ -3,7 +3,7 @@ import { ICreditor } from '../../models/Creditor';
 import { ITransaction } from '../../models/Transaction';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
-const useGetCreditorById = (id: string) => {
+const useGetCreditorById = (id: string, fetchData: boolean) => {
   const { firestore } = useFirebaseContext();
   const [creditorData, setCreditorData] = useState<ICreditor | undefined>();
   const [transactionsData, setTransactionsData] = useState<
@@ -26,7 +26,7 @@ const useGetCreditorById = (id: string) => {
         setCreditorData(creditor);
         const transactionDBRef = firestore?.collection('transaction');
         const transactionQueryDocs = await transactionDBRef
-          ?.orderBy('createdAt', 'desc')
+          ?.orderBy('transactionDate', 'desc')
           ?.where('transactionEntity', '==', id)
           .get();
         const transactions = transactionQueryDocs?.docs.map(
@@ -43,8 +43,8 @@ const useGetCreditorById = (id: string) => {
   }, [firestore, id]);
 
   useEffect(() => {
-    fetchCreditorById();
-  }, [fetchCreditorById, id]);
+    if (id && fetchData) fetchCreditorById();
+  }, [fetchCreditorById, id, fetchData]);
 
   return { creditorData, transactionsData, error, isLoading };
 };
