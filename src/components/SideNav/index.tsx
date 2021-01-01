@@ -36,12 +36,12 @@ const SideNav = () => {
           );
         })}
       </nav>
-      <Link
+      {/* <Link
         to='/new-transaction'
         className='w-full block text-center text-xl text-gray-300 mb-3 bg-gray-700 p-1 rounded'
       >
         New Transaction
-      </Link>
+      </Link> */}
     </div>
   );
 };

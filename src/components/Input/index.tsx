@@ -13,6 +13,7 @@ type InputProps = {
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
+  defaultValue?: string;
   valueFormatter?: {
     format: (value: string) => string;
     unFormat: (value: string) => string;
@@ -34,6 +35,7 @@ const Input: React.FC<InputProps> = ({
   theme,
   resetField,
   valueFormatter,
+  defaultValue,
   setResetField,
   setFormState,
   onBlurUpdate,
@@ -90,6 +92,10 @@ const Input: React.FC<InputProps> = ({
     }
   }, [inputValue, validator]);
 
+  useEffect(() => {
+    if (defaultValue) setInputValue(defaultValue);
+  }, [defaultValue]);
+
   return (
     <>
       <Label name={name} label={label}>
@@ -114,6 +120,7 @@ const Input: React.FC<InputProps> = ({
           onBlur={() => {
             if (onBlurUpdate) onBlurUpdate(name, inputValue);
           }}
+          disabled={!!defaultValue}
         />
       </Label>
       {(subContent || !isEmptyString(error.message)) && (
