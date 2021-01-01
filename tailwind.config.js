@@ -708,7 +708,9 @@ module.exports = {
       pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       bounce: 'bounce 1s infinite',
       'notification-entry': 'notification-entry 0.5s ease-out',
-      'notification-exit': 'notification-exit 0.5s ease-in'
+      'notification-exit': 'notification-exit 0.5s ease-in',
+      'modal-entry': 'modal-entry 0.6s ease-out',
+      'modal-exit': 'modal-exit 0.6s ease-out'
     },
     keyframes: {
       spin: {
@@ -744,6 +746,26 @@ module.exports = {
         },
         '100%': {
           transform: 'translateX(30rem)'
+        }
+      },
+      'modal-entry': {
+        '0%': {
+          transform: 'translateY(20rem)',
+          opacity: '0'
+        },
+        '100%': {
+          transform: 'translateY(0)',
+          opacity: '1'
+        }
+      },
+      'modal-exit': {
+        '0%': {
+          transform: 'translateY(0)',
+          opacity: '1'
+        },
+        '100%': {
+          transform: 'translateY(20rem)',
+          opacity: '0'
         }
       }
     }

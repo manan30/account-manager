@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from 'models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
+// TODO: Combine both the creditor hooks
 const useGetAllCreditors = (fetch = true) => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<ICreditor[] | undefined>();
