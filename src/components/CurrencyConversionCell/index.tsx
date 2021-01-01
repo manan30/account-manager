@@ -27,7 +27,7 @@ const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
       if (currency !== 'USD') return convertAmountToUSD(currency, amount);
       return Promise.resolve();
     },
-    { staleTime: 10 * 60 * 1000 }
+    { staleTime: 10 * 60 * 1000, retry: 2 }
   );
 
   if (currency === 'USD')
