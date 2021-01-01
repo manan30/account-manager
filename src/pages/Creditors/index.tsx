@@ -18,9 +18,10 @@ import { generateRandomKey } from '../../utils/Functions';
 import NewCreditorModal from './NewCreditorModal';
 
 const Creditors = () => {
-  const { data: creditors, isLoading, error } = useGetAllCreditors();
   const notificationDispatch = useNotificationDispatchContext();
   const [showModal, setShowModal] = useState(false);
+  const [fetchData, setFetchData] = useState(true);
+  const { data: creditors, isLoading, error } = useGetAllCreditors(fetchData);
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -177,6 +178,10 @@ const Creditors = () => {
       .slice(0, 3);
   }, [creditors]);
 
+  useEffect(() => {
+    if (!isLoading) setFetchData(false);
+  }, [isLoading]);
+
   return (
     <>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
@@ -240,7 +245,11 @@ const Creditors = () => {
           </div>
         )}
       </div>
-      <NewCreditorModal showModal={showModal} setShowModal={setShowModal} />
+      <NewCreditorModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        refetchData={() => setFetchData(true)}
+      />
     </>
   );
 };

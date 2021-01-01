@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -25,16 +24,17 @@ const currencyDropdownOptions: SelectOption[] = [
 type NewCreditorModalProps = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchData: () => void;
 };
 
 const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   showModal,
-  setShowModal
+  setShowModal,
+  refetchData
 }) => {
   const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
-  const history = useHistory();
 
   const [formState, setFormState] = useState({
     name: '',
@@ -117,7 +117,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
-      history.push('/creditors');
+      refetchData();
     } catch (err) {
       notificationDispatch({
         type: 'ADD_NOTIFICATION',

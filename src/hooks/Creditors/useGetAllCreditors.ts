@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ICreditor } from 'models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
-const useGetAllCreditors = () => {
+const useGetAllCreditors = (fetch = true) => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<ICreditor[] | undefined>();
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +33,10 @@ const useGetAllCreditors = () => {
   }, [firestore]);
 
   useEffect(() => {
-    fetchAllCreditors();
-  }, [fetchAllCreditors]);
+    if (fetch) {
+      fetchAllCreditors();
+    }
+  }, [fetchAllCreditors, fetch]);
 
   return { data, error, isLoading };
 };
