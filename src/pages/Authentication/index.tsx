@@ -30,7 +30,7 @@ const Authentication = () => {
     auth?.onAuthStateChanged((authUser) => {
       if (authUser && !user) {
         dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
-        history.push(state.from);
+        history.replace(state.from);
       }
     });
   }, [user, auth, dispatch, state, history]);

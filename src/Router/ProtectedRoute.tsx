@@ -10,6 +10,8 @@ type ProtectedRouteProps = {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, children }) => {
   const { user } = useGlobalState();
 
+  console.log({ path });
+
   return (
     <Route
       path={path}

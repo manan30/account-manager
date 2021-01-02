@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Loader from '../components/Loader';
 import NotificationManager from '../components/NotificationManager';
 import SideNav from '../components/SideNav';
+import { generateRandomKey } from '../utils/Functions';
 import ProtectedRoute from './ProtectedRoute';
 
 type RouteType = {
@@ -33,6 +34,7 @@ const routes: RouteType[] = [
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 
 const Router = () => {
+  const { path, component: Component } = routes[2];
   return (
     <>
       <BrowserRouter>
@@ -46,14 +48,14 @@ const Router = () => {
                   component={AuthenticationPage}
                   exact
                 />
-                {routes.map(({ path, component: Component }, i) => {
-                  const key = i;
-                  return (
-                    <ProtectedRoute key={key} path={path}>
-                      <Component />
-                    </ProtectedRoute>
-                  );
-                })}
+                {/* {routes.map(({ path, component: Component }) => (
+                  <ProtectedRoute key={generateRandomKey()} path={path}>
+                    <Component />
+                  </ProtectedRoute>
+                ))} */}
+                <ProtectedRoute path={path}>
+                  <Component />
+                </ProtectedRoute>
               </Switch>
             </Suspense>
           </div>
