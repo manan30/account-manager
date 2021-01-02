@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
@@ -35,6 +35,14 @@ const routes: RouteType[] = [
 ].filter(Boolean) as RouteType[];
 
 const Router = () => {
+  const { auth } = useFirebaseContext();
+
+  useEffect(() => {
+    auth?.onAuthStateChanged((user) => {
+      if (user) console.log('User logged in');
+    });
+  }, [auth]);
+
   return (
     <>
       <BrowserRouter>
