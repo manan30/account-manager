@@ -4,26 +4,26 @@ import { useGlobalState } from '../providers/GlobalStateProvider';
 
 type ProtectedRouteProps = {
   path: string;
-  component: React.LazyExoticComponent<() => JSX.Element>;
+  children: React.ReactNode;
 };
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  path,
-  component: Component
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, children }) => {
   const { user } = useGlobalState();
+
+  console.log({ user });
 
   return (
     <Route
       path={path}
       render={({ location }) => {
-        return user ? (
-          <Component />
-        ) : (
-          <Redirect
-            to={{ pathname: '/authentication', state: { from: location } }}
-          />
-        );
+        // return user ? (
+        //   <div>Hello</div>
+        // ) : (
+        //   <Redirect
+        //     to={{ pathname: '/authentication', state: { from: location } }}
+        //   />
+        // );
+        return children;
       }}
       exact
     />

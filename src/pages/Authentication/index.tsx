@@ -22,8 +22,8 @@ const Authentication = () => {
 
   const handleGoogleAuthProviderClick = async () => {
     const result = await auth?.signInWithPopup(googleAuthProvider);
-    const user = result?.user;
-    const credential = result?.credential;
+    // const user = result?.user;
+    // const credential = result?.credential;
   };
 
   useEffect(() => {

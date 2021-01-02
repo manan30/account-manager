@@ -1,20 +1,8 @@
-import React, { Suspense, useEffect } from 'react';
-import {
-  BrowserRouter,
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useLocation
-} from 'react-router-dom';
-import SideNav from '../components/SideNav';
-import NotificationManager from '../components/NotificationManager';
+import React, { Suspense } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Loader from '../components/Loader';
-import { useFirebaseContext } from '../providers/FirebaseProvider';
-import {
-  useGlobalDispatch,
-  useGlobalState
-} from '../providers/GlobalStateProvider';
+import NotificationManager from '../components/NotificationManager';
+import SideNav from '../components/SideNav';
 import ProtectedRoute from './ProtectedRoute';
 
 type RouteType = {
@@ -53,21 +41,21 @@ const Router = () => {
           <div className='w-3/4'>
             <Suspense fallback={<Loader size={48} />}>
               <Switch>
-                <Route
-                  path='/authentication'
-                  component={AuthenticationPage}
-                  exact
-                />
                 {routes.map((route, i) => {
                   const key = i;
                   return (
-                    <ProtectedRoute
+                    <Route
                       key={key}
                       path={route.path}
                       component={route.component}
                     />
                   );
                 })}
+                {/* <Route
+                  path='/authentication'
+                  component={AuthenticationPage}
+                  exact
+                /> */}
               </Switch>
             </Suspense>
           </div>
