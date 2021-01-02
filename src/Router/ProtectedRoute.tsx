@@ -10,20 +10,17 @@ type ProtectedRouteProps = {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, children }) => {
   const { user } = useGlobalState();
 
-  console.log({ user });
-
   return (
     <Route
       path={path}
       render={({ location }) => {
-        // return user ? (
-        //   <div>Hello</div>
-        // ) : (
-        //   <Redirect
-        //     to={{ pathname: '/authentication', state: { from: location } }}
-        //   />
-        // );
-        return children;
+        return user ? (
+          children
+        ) : (
+          <Redirect
+            to={{ pathname: '/authentication', state: { from: location } }}
+          />
+        );
       }}
       exact
     />

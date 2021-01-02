@@ -41,21 +41,19 @@ const Router = () => {
           <div className='w-3/4'>
             <Suspense fallback={<Loader size={48} />}>
               <Switch>
-                {routes.map((route, i) => {
-                  const key = i;
-                  return (
-                    <Route
-                      key={key}
-                      path={route.path}
-                      component={route.component}
-                    />
-                  );
-                })}
-                {/* <Route
+                <Route
                   path='/authentication'
                   component={AuthenticationPage}
                   exact
-                /> */}
+                />
+                {routes.map(({ path, component: Component }, i) => {
+                  const key = i;
+                  return (
+                    <ProtectedRoute key={key} path={path}>
+                      <Component />
+                    </ProtectedRoute>
+                  );
+                })}
               </Switch>
             </Suspense>
           </div>
