@@ -1,5 +1,12 @@
 import React, { Suspense, useEffect } from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+  useLocation
+} from 'react-router-dom';
 import SideNav from '../components/SideNav';
 import NotificationManager from '../components/NotificationManager';
 import Loader from '../components/Loader';
@@ -8,6 +15,7 @@ import {
   useGlobalDispatch,
   useGlobalState
 } from '../providers/GlobalStateProvider';
+import ProtectedRoute from './ProtectedRoute';
 
 type RouteType = {
   path: string;
@@ -37,18 +45,6 @@ const routes: RouteType[] = [
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 
 const Router = () => {
-  const { auth } = useFirebaseContext();
-  const { user } = useGlobalState();
-  const dispatch = useGlobalDispatch();
-
-  useEffect(() => {
-    auth?.onAuthStateChanged((authUser) => {
-      if (authUser && !user) {
-        dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
-      }
-    });
-  }, [user, auth, dispatch]);
-
   return (
     <>
       <BrowserRouter>
@@ -64,15 +60,12 @@ const Router = () => {
                 />
                 {routes.map((route, i) => {
                   const key = i;
-                  return user ? (
-                    <Route
-                      exact
+                  return (
+                    <ProtectedRoute
                       key={key}
                       path={route.path}
                       component={route.component}
                     />
-                  ) : (
-                    <Redirect to='/authentication' />
                   );
                 })}
               </Switch>

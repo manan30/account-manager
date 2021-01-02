@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import Modal from '../../components/Modal';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
+import {
+  useGlobalDispatch,
+  useGlobalState
+} from '../../providers/GlobalStateProvider';
 
 const Authentication = () => {
   const { authProviders, auth } = useFirebaseContext();
+  const { user } = useGlobalState();
+  const { state } = useLocation<{ from: string }>();
+  const history = useHistory();
+  const dispatch = useGlobalDispatch();
   const [showModal, setShowModal] = useState(true);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -15,8 +24,16 @@ const Authentication = () => {
     const result = await auth?.signInWithPopup(googleAuthProvider);
     const user = result?.user;
     const credential = result?.credential;
-    console.log({ user, credential });
   };
+
+  useEffect(() => {
+    auth?.onAuthStateChanged((authUser) => {
+      if (authUser && !user) {
+        dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
+        history.push(state.from);
+      }
+    });
+  }, [user, auth, dispatch, state, history]);
 
   return (
     <Modal isOpen={showModal} onCloseClickHandler={() => 'ABCD'}>
