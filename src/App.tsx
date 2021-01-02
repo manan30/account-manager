@@ -1,10 +1,10 @@
 import React from 'react';
-import AppRouter from './Router';
-import FirebaseProvider from './providers/FirebaseProvider';
-import NotificationProvider from './providers/NotificationProvider';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import GlobalStateProvider from 'providers/GlobalStateProvider';
+import FirebaseProvider from './providers/FirebaseProvider';
+import GlobalStateProvider from './providers/GlobalStateProvider';
+import NotificationProvider from './providers/NotificationProvider';
+import AppRouter from './Router';
 
 const queryClient = new QueryClient();
 

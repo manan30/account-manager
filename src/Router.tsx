@@ -1,9 +1,10 @@
 import React, { Suspense, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import SideNav from './components/SideNav';
 import NotificationManager from './components/NotificationManager';
 import Loader from './components/Loader';
 import { useFirebaseContext } from './providers/FirebaseProvider';
+import { useGlobalState } from './providers/GlobalStateProvider';
 
 type RouteType = {
   path: string;
@@ -24,24 +25,27 @@ const routes: RouteType[] = [
     path: '/creditor/:id',
     component: React.lazy(() => import('./pages/CreditorDetails'))
   },
-  {
-    path: '/authentication',
-    component: React.lazy(() => import('./pages/Authentication'))
-  },
+  // {
+  //   path: '/authentication',
+  //   component: React.lazy(() => import('./pages/Authentication'))
+  // },
   process.env.NODE_ENV !== 'production' && {
     path: '/seed',
     component: React.lazy(() => import('./pages/Seed'))
   }
 ].filter(Boolean) as RouteType[];
 
+const AuthenticationPage = React.lazy(() => import('./pages/Authentication'));
+
 const Router = () => {
   const { auth } = useFirebaseContext();
+  const { user } = useGlobalState();
 
   useEffect(() => {
-    auth?.onAuthStateChanged((user) => {
-      if (user) console.log('User logged in');
+    auth?.onAuthStateChanged((authUser) => {
+      if (authUser && !user) console.log('User logged in');
     });
-  }, [auth]);
+  }, [user, auth]);
 
   return (
     <>
@@ -50,19 +54,28 @@ const Router = () => {
           <SideNav />
           <div className='w-3/4'>
             <Suspense fallback={<Loader size={48} />}>
-              <Switch>
-                {routes.map((route, i) => {
-                  const key = i;
-                  return (
-                    <Route
-                      exact
-                      key={key}
-                      path={route.path}
-                      component={route.component}
-                    />
-                  );
-                })}
-              </Switch>
+              <Route
+                path='/authentication'
+                component={AuthenticationPage}
+                exact
+              />
+              {!user ? (
+                <Redirect to='/authentication' />
+              ) : (
+                <Switch>
+                  {routes.map((route, i) => {
+                    const key = i;
+                    return (
+                      <Route
+                        exact
+                        key={key}
+                        path={route.path}
+                        component={route.component}
+                      />
+                    );
+                  })}
+                </Switch>
+              )}
             </Suspense>
           </div>
         </div>
