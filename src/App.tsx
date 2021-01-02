@@ -4,19 +4,22 @@ import FirebaseProvider from './providers/FirebaseProvider';
 import NotificationProvider from './providers/NotificationProvider';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import GlobalStateProvider from 'providers/GlobalStateProvider';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <NotificationProvider>
-        <FirebaseProvider>
-          <AppRouter />
-          <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
-        </FirebaseProvider>
-      </NotificationProvider>
-    </QueryClientProvider>
+    <GlobalStateProvider>
+      <QueryClientProvider client={queryClient}>
+        <NotificationProvider>
+          <FirebaseProvider>
+            <AppRouter />
+            <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+          </FirebaseProvider>
+        </NotificationProvider>
+      </QueryClientProvider>
+    </GlobalStateProvider>
   );
 }
 
