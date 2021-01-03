@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Loader from '../components/Loader';
 import NotificationManager from '../components/NotificationManager';
 import SideNav from '../components/SideNav';
+import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
-import ProtectedRoute from './ProtectedRoute';
 
 type RouteType = {
   path: string;
@@ -34,31 +34,43 @@ const routes: RouteType[] = [
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 
 const Router = () => {
-  const { path, component: Component } = routes[2];
+  const { user } = useGlobalState();
+
   return (
     <>
       <BrowserRouter>
         <div className='flex h-full w-full'>
           <SideNav />
-          <div className='w-3/4'>
-            <Suspense fallback={<Loader size={48} />}>
+          <Suspense fallback={<Loader size={48} />}>
+            <Route
+              path='/authentication'
+              component={AuthenticationPage}
+              exact
+            />
+            <div className='w-3/4'>
               <Switch>
-                <Route
-                  path='/authentication'
-                  component={AuthenticationPage}
-                  exact
-                />
-                {/* {routes.map(({ path, component: Component }) => (
-                  <ProtectedRoute key={generateRandomKey()} path={path}>
-                    <Component />
-                  </ProtectedRoute>
-                ))} */}
-                <ProtectedRoute path={path}>
-                  <Component />
-                </ProtectedRoute>
+                {routes.map(({ path, component: Component }) => (
+                  <Route
+                    key={generateRandomKey()}
+                    path={path}
+                    render={({ location }) => {
+                      return user ? (
+                        <Component />
+                      ) : (
+                        <Redirect
+                          to={{
+                            pathname: '/authentication',
+                            state: { from: location }
+                          }}
+                        />
+                      );
+                    }}
+                    exact
+                  />
+                ))}
               </Switch>
-            </Suspense>
-          </div>
+            </div>
+          </Suspense>
         </div>
       </BrowserRouter>
       <NotificationManager />
