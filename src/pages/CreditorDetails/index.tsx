@@ -15,6 +15,7 @@ import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import ModalFallback from '../../components/ModalFallback';
 import NewTransactionModal from '../../components/NewTransactionModal';
+import { Helmet } from 'react-helmet';
 
 const CreditorDetails = () => {
   const notificationsDispatch = useNotificationDispatchContext();
@@ -108,6 +109,21 @@ const CreditorDetails = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{`Creditor Details${' - '.concat(creditor?.name ?? '')}`}</title>
+        <meta
+          name='title'
+          content={`Creditor Details${' - '.concat(creditor?.name ?? '')}`}
+        />
+        <meta
+          property='og:title'
+          content={`Creditor Details${' - '.concat(creditor?.name ?? '')}`}
+        />
+        <meta
+          property='twitter:title'
+          content={`Creditor Details${' - '.concat(creditor?.name ?? '')}`}
+        />
+      </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='flex mb-8'>
           <Card className='p-4 shadow-md bg-gray-100 mr-6 w-3/5'>
