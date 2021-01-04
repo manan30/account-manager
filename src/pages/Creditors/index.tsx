@@ -16,6 +16,7 @@ import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificatio
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
+import { Helmet } from 'react-helmet';
 
 const NewCreditorModal = React.lazy(() => import('./NewCreditorModal'));
 
@@ -186,6 +187,15 @@ const Creditors = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{`Account Manager - Creditors`}</title>
+        <meta name='title' content={`Account Manager - Creditors`} />
+        <meta property='og:title' content={`Account Manager - Creditors`} />
+        <meta
+          property='twitter:title'
+          content={`Account Manager - Creditors`}
+        />
+      </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='w-full mb-8 flex justify-end'>
           <div className='inline-flex ml-auto'>
