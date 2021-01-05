@@ -1,7 +1,6 @@
 import React from 'react';
 import Modal from '../../components/Modal';
 import GoogleIcon from '../../assets/google-icon.svg';
-import TwitterIcon from '../../assets/twitter-icon.svg';
 
 const AuthenticationModal = () => {
   return (

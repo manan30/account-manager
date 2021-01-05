@@ -25,12 +25,21 @@ function FirebaseService(): IFirebaseContext {
   const auth = app.auth();
   const authProviders = app.auth;
 
+  const googleAuthProvider = new authProviders.GoogleAuthProvider();
+  googleAuthProvider.addScope('profile');
+  googleAuthProvider.addScope('email');
+
   if (window.location.hostname === 'localhost') {
     firestore.useEmulator('localhost', 8080);
     auth.useEmulator('http://localhost:9001');
   }
 
-  return { firebaseApp: app, firestore, authProviders, auth };
+  return {
+    firebaseApp: app,
+    firestore,
+    auth,
+    authProviders: { googleAuthProvider }
+  };
 }
 
 export default FirebaseService;
