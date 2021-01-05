@@ -2,7 +2,13 @@ import React from 'react';
 import Modal from '../../components/Modal';
 import GoogleIcon from '../../assets/google-icon.svg';
 
-const AuthenticationModal = () => {
+type AuthenticationModalProps = {
+  onGoogleAuthClicked: () => void;
+};
+
+const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
+  onGoogleAuthClicked
+}) => {
   return (
     <Modal
       isOpen
@@ -11,7 +17,10 @@ const AuthenticationModal = () => {
       }}
     >
       <div className='mx-4 flex flex-col items-center my-4'>
-        <button className='w-full shadow rounded-md p-2 flex items-center justify-center'>
+        <button
+          className='w-full shadow rounded-md p-2 flex items-center justify-center'
+          onClick={onGoogleAuthClicked}
+        >
           <div className='h-6 w-6 mr-4'>
             <GoogleIcon />
           </div>

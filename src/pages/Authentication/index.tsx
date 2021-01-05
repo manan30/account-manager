@@ -14,16 +14,16 @@ const Authentication = () => {
   const history = useHistory();
   const dispatch = useGlobalDispatch();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  // const googleAuthProvider = new authProviders!.GoogleAuthProvider();
-  // googleAuthProvider.addScope('profile');
-  // googleAuthProvider.addScope('email');
-
-  // const handleGoogleAuthProviderClick = async () => {
-  //   const result = await auth?.signInWithPopup(googleAuthProvider);
-  //   // const user = result?.user;
-  //   // const credential = result?.credential;
-  // };
+  const handleGoogleAuthProviderClick = async () => {
+    if (authProviders) {
+      const result = await auth?.signInWithPopup(
+        authProviders.googleAuthProvider
+      );
+      const user = result?.user;
+      const credential = result?.credential;
+      console.log({ user, credential });
+    }
+  };
 
   useEffect(() => {
     auth?.onAuthStateChanged((authUser) => {
@@ -34,7 +34,11 @@ const Authentication = () => {
     });
   }, [user, auth, dispatch, state, history]);
 
-  return <AuthenticationModal />;
+  return (
+    <AuthenticationModal
+      onGoogleAuthClicked={() => handleGoogleAuthProviderClick()}
+    />
+  );
 };
 
 export default Authentication;
