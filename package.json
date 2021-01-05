@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "3.0.0",
+    "@svgr/parcel-plugin-svgr": "^5.5.0",
     "api": "2.5.0",
     "classnames": "2.2.6",
     "components": "0.1.0",
