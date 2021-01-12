@@ -1,5 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
+import { IFirebaseContext } from '../../providers/FirebaseProvider/firebase.interface';
 
 const config = {
   apiKey: process.env.PROD_API_KEY,
@@ -12,7 +14,7 @@ const config = {
   measurementId: process.env.PROD_MEASUREMENT_ID
 };
 
-function FirebaseService() {
+function FirebaseService(): IFirebaseContext {
   if (!app.apps.length) {
     app.initializeApp(config);
   } else {
@@ -20,10 +22,24 @@ function FirebaseService() {
   }
 
   const firestore = app.firestore();
-  if (window.location.hostname === 'localhost')
-    firestore.useEmulator('localhost', 8080);
+  const auth = app.auth();
+  const authProviders = app.auth;
 
-  return { firebaseApp: app, firestore };
+  const googleAuthProvider = new authProviders.GoogleAuthProvider();
+  googleAuthProvider.addScope('profile');
+  googleAuthProvider.addScope('email');
+
+  if (window.location.hostname === 'localhost') {
+    firestore.useEmulator('localhost', 8080);
+    auth.useEmulator('http://localhost:9001');
+  }
+
+  return {
+    firebaseApp: app,
+    firestore,
+    auth,
+    authProviders: { googleAuthProvider }
+  };
 }
 
 export default FirebaseService;
