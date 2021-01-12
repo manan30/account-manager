@@ -17,7 +17,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       }}
       hideCancelButton
     >
-      <div className='mx-4 flex flex-col items-center my-4'>
+      <div className='mx-4 flex flex-col items-center justify-center h-full flex-auto'>
         <button
           className='w-full shadow rounded-md p-2 flex items-center justify-center'
           onClick={onGoogleAuthClicked}
