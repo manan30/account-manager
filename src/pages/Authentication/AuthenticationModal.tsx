@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from '../../components/Modal';
 import GoogleIcon from '../../assets/google-icon.svg';
+import Input from '../../components/Input';
 
 type AuthenticationModalProps = {
   onGoogleAuthClicked: () => void;
@@ -15,6 +16,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       onCloseClickHandler={() => {
         return;
       }}
+      hideCancelButton
     >
       <div className='mx-4 flex flex-col items-center my-4'>
         <button
