@@ -36,14 +36,12 @@ const UnauthorizedUserModal = () => {
           I am sorry but you are currently unauthorized to use this app. Please
           try logging in with the correct email address
         </div>
-        {/* <Link to='/authentication' className='mb-4'> */}
         <button
-          className='text-blue-600 font-semibold'
+          className='font-medium mb-4 text-indigo-600 hover:underline'
           onClick={handleNavigation}
         >
           Login with correct email
         </button>
-        {/* </Link> */}
       </div>
     </Modal>
   );
