@@ -5,7 +5,8 @@ import {
 } from './globalStateReducer.interface';
 
 const defaultGlobalState: IGlobalState = {
-  user: null
+  user: null,
+  unauthorizedUser: false
 };
 
 const globalStateReducer = (

@@ -16,20 +16,23 @@ const Authentication = () => {
 
   const handleGoogleAuthProviderClick = async () => {
     if (authProviders) {
-      const result = await auth?.signInWithPopup(
-        authProviders.googleAuthProvider
-      );
-      const user = result?.user;
-      const credential = result?.credential;
-      console.log({ user, credential });
+      try {
+        await auth?.signInWithPopup(authProviders.googleAuthProvider);
+      } catch (err) {
+        console.error({ err });
+      }
     }
   };
 
   useEffect(() => {
     auth?.onAuthStateChanged((authUser) => {
+      const currentUserEmail = authUser?.email;
+      if (currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL) {
+        setUnAuthorizedUser(true);
+      }
       if (authUser && !user) {
         dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
-        history.replace(state.from);
+        history.replace(state?.from || '/');
       }
     });
   }, [user, auth, dispatch, state, history]);

@@ -2,6 +2,7 @@ import app from 'firebase';
 
 export interface IGlobalState {
   user?: app.User | null;
+  unauthorizedUser: boolean;
 }
 
 export type GlobalStateActionType = 'ADD_APP_USER';
