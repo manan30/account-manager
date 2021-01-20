@@ -5,7 +5,10 @@ export interface IGlobalState {
   unauthorizedUser: boolean;
 }
 
-export type GlobalStateActionType = 'ADD_APP_USER' | 'SET_UNAUTHORIZED_USER';
+export type GlobalStateActionType =
+  | 'ADD_APP_USER'
+  | 'SET_UNAUTHORIZED_USER'
+  | 'LOGOUT_USER';
 
 export interface IGlobalStateAction {
   type: GlobalStateActionType;
