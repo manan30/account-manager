@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
@@ -16,20 +16,31 @@ const Authentication = () => {
 
   const handleGoogleAuthProviderClick = async () => {
     if (authProviders) {
-      const result = await auth?.signInWithPopup(
-        authProviders.googleAuthProvider
-      );
-      const user = result?.user;
-      const credential = result?.credential;
-      console.log({ user, credential });
+      try {
+        await auth?.signInWithPopup(authProviders.googleAuthProvider);
+      } catch (err) {
+        console.error({ err });
+      }
     }
   };
 
   useEffect(() => {
     auth?.onAuthStateChanged((authUser) => {
-      if (authUser && !user) {
-        dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
-        history.replace(state.from);
+      if (authUser) {
+        const currentUserEmail = authUser?.email;
+
+        if (currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL) {
+          dispatch({
+            type: 'SET_UNAUTHORIZED_USER'
+          });
+          history.replace('/unauthorized');
+          return;
+        }
+
+        if (!user) {
+          dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
+          history.replace(state?.from || '/');
+        }
       }
     });
   }, [user, auth, dispatch, state, history]);
