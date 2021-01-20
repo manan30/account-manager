@@ -5,9 +5,9 @@ export interface IGlobalState {
   unauthorizedUser: boolean;
 }
 
-export type GlobalStateActionType = 'ADD_APP_USER';
+export type GlobalStateActionType = 'ADD_APP_USER' | 'SET_UNAUTHORIZED_USER';
 
 export interface IGlobalStateAction {
   type: GlobalStateActionType;
-  payload: { user?: app.User | null };
+  payload: Partial<IGlobalState>;
 }
