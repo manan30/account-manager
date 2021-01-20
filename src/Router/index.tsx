@@ -34,7 +34,7 @@ const routes: RouteType[] = [
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 
 const Router = () => {
-  const { user } = useGlobalState();
+  const { user, unauthorizedUser } = useGlobalState();
 
   return (
     <>
@@ -47,6 +47,7 @@ const Router = () => {
               component={AuthenticationPage}
               exact
             />
+            <Route path='/unauthorized' component={AuthenticationPage} exact />
             <div className='w-3/4'>
               <Switch>
                 {routes.map(({ path, component: Component }) => (
@@ -54,7 +55,7 @@ const Router = () => {
                     key={generateRandomKey()}
                     path={path}
                     render={({ location }) => {
-                      return user ? (
+                      return user && !unauthorizedUser ? (
                         <Component />
                       ) : (
                         <Redirect

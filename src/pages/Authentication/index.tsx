@@ -28,8 +28,13 @@ const Authentication = () => {
     auth?.onAuthStateChanged((authUser) => {
       const currentUserEmail = authUser?.email;
       if (currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL) {
-        setUnAuthorizedUser(true);
+        dispatch({
+          type: 'SET_UNAUTHORIZED_USER'
+        });
+        history.replace('/unauthorized');
+        return;
       }
+
       if (authUser && !user) {
         dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
         history.replace(state?.from || '/');

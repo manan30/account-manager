@@ -21,7 +21,7 @@ const globalStateReducer = (
         unauthorizedUser: false
       } as IGlobalState;
     case 'SET_UNAUTHORIZED_USER':
-      return { user: action.payload, unauthorizedUser: true } as IGlobalState;
+      return { ...state, unauthorizedUser: true } as IGlobalState;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
