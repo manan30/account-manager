@@ -65,6 +65,7 @@
     "faker": "5.1.0",
     "firebase": "^8.2.1",
     "hooks": "0.3.2",
+    "pages": "^0.0.16",
     "prop-types": "15.7.2",
     "providers": "0.5.0",
     "react": "16.13.1",

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Loader from '../components/Loader';
 import NotificationManager from '../components/NotificationManager';
@@ -32,6 +32,9 @@ const routes: RouteType[] = [
 ].filter(Boolean) as RouteType[];
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
+const UnauthorizedUserModal = React.lazy(
+  () => import('../pages/Authentication/UnauthorizedUserModal')
+);
 
 const Router = () => {
   const { user, unauthorizedUser } = useGlobalState();
@@ -47,7 +50,11 @@ const Router = () => {
               component={AuthenticationPage}
               exact
             />
-            <Route path='/unauthorized' component={AuthenticationPage} exact />
+            <Route
+              path='/unauthorized'
+              component={UnauthorizedUserModal}
+              exact
+            />
             <div className='w-3/4'>
               <Switch>
                 {routes.map(({ path, component: Component }) => (

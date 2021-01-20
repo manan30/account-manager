@@ -26,18 +26,21 @@ const Authentication = () => {
 
   useEffect(() => {
     auth?.onAuthStateChanged((authUser) => {
-      const currentUserEmail = authUser?.email;
-      if (currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL) {
-        dispatch({
-          type: 'SET_UNAUTHORIZED_USER'
-        });
-        history.replace('/unauthorized');
-        return;
-      }
+      if (authUser) {
+        const currentUserEmail = authUser?.email;
 
-      if (authUser && !user) {
-        dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
-        history.replace(state?.from || '/');
+        if (currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL) {
+          dispatch({
+            type: 'SET_UNAUTHORIZED_USER'
+          });
+          history.replace('/unauthorized');
+          return;
+        }
+
+        if (!user) {
+          dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
+          history.replace(state?.from || '/');
+        }
       }
     });
   }, [user, auth, dispatch, state, history]);
