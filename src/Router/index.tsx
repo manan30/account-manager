@@ -35,6 +35,7 @@ const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 const UnauthorizedUserModal = React.lazy(
   () => import('../pages/Authentication/UnauthorizedUserModal')
 );
+const NotFoundPage = React.lazy(() => import('../pages/404'));
 
 const Router = () => {
   const { user, unauthorizedUser } = useGlobalState();

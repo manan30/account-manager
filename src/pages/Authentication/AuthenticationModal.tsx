@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '../../components/Modal';
-import GoogleIcon from '../../assets/google-icon.svg';
+import GoogleIcon from '../../assets/svg/google-icon.svg';
 
 type AuthenticationModalProps = {
   onGoogleAuthClicked: () => void;
