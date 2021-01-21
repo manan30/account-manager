@@ -44,41 +44,46 @@ const Router = () => {
     <>
       <BrowserRouter>
         <div className='flex h-full w-full'>
-          <SideNav />
           <Suspense fallback={<Loader size={48} />}>
-            <Route
-              path='/authentication'
-              component={AuthenticationPage}
-              exact
-            />
-            <Route
-              path='/unauthorized'
-              component={UnauthorizedUserModal}
-              exact
-            />
-            <div className='w-3/4'>
-              <Switch>
-                {routes.map(({ path, component: Component }) => (
+            <Switch>
+              <>
+                <div className='flex h-full w-full'>
+                  <SideNav />
                   <Route
-                    key={generateRandomKey()}
-                    path={path}
-                    render={({ location }) => {
-                      return user && !unauthorizedUser ? (
-                        <Component />
-                      ) : (
-                        <Redirect
-                          to={{
-                            pathname: '/authentication',
-                            state: { from: location }
-                          }}
-                        />
-                      );
-                    }}
+                    path='/authentication'
+                    component={AuthenticationPage}
                     exact
                   />
-                ))}
-              </Switch>
-            </div>
+                  <Route
+                    path='/unauthorized'
+                    component={UnauthorizedUserModal}
+                    exact
+                  />
+                  <div className='w-3/4'>
+                    {routes.map(({ path, component: Component }) => (
+                      <Route
+                        key={generateRandomKey()}
+                        path={path}
+                        render={({ location }) => {
+                          return user && !unauthorizedUser ? (
+                            <Component />
+                          ) : (
+                            <Redirect
+                              to={{
+                                pathname: '/authentication',
+                                state: { from: location }
+                              }}
+                            />
+                          );
+                        }}
+                        exact
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+              <Route path='*' component={NotFoundPage} />
+            </Switch>
           </Suspense>
         </div>
       </BrowserRouter>
