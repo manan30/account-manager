@@ -30,7 +30,7 @@ const Authentication = () => {
         const currentUserEmail = authUser?.email;
 
         if (
-          window.location.hostname !== 'localhost' &&
+          process.env.NODE_ENV === 'production' &&
           currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL
         ) {
           dispatch({
