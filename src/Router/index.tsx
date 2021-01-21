@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Loader from '../components/Loader';
 import NotificationManager from '../components/NotificationManager';
+import AuthenticatedApp from './AuthenticatedApp';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 const UnauthorizedUserModal = React.lazy(
@@ -26,6 +27,7 @@ const Router = () => {
                 component={UnauthorizedUserModal}
                 exact
               />
+              <Route path='/' component={AuthenticatedApp} />
               <Route component={NotFoundPage} />
             </Switch>
           </Suspense>

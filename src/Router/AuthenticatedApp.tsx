@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import Loader from '../components/Loader';
 import SideNav from '../components/SideNav';
 import { useGlobalState } from '../providers/GlobalStateProvider';
@@ -32,6 +32,9 @@ const routes: RouteType[] = [
 
 const AuthenticatedApp = () => {
   const { user, unauthorizedUser } = useGlobalState();
+  const { path: rootPath } = useRouteMatch();
+
+  console.log({ rootPath });
 
   return (
     <div className='flex h-full w-full'>
@@ -42,7 +45,7 @@ const AuthenticatedApp = () => {
             {routes.map(({ path, component: Component }) => (
               <Route
                 key={generateRandomKey()}
-                path={path}
+                path={`${rootPath}/${path}`}
                 render={({ location }) => {
                   return user && !unauthorizedUser ? (
                     <Component />
