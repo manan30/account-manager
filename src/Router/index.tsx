@@ -6,6 +6,12 @@ import SideNav from '../components/SideNav';
 import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
 
+const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
+const UnauthorizedUserModal = React.lazy(
+  () => import('../pages/Authentication/UnauthorizedUserModal')
+);
+const NotFoundPage = React.lazy(() => import('../pages/404'));
+
 type RouteType = {
   path: string;
   component: React.LazyExoticComponent<() => JSX.Element>;
@@ -31,11 +37,6 @@ const routes: RouteType[] = [
   }
 ].filter(Boolean) as RouteType[];
 
-const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
-const UnauthorizedUserModal = React.lazy(
-  () => import('../pages/Authentication/UnauthorizedUserModal')
-);
-
 const Router = () => {
   const { user, unauthorizedUser } = useGlobalState();
 
@@ -44,19 +45,19 @@ const Router = () => {
       <BrowserRouter>
         <div className='flex h-full w-full'>
           <SideNav />
-          <Suspense fallback={<Loader size={48} />}>
-            <Route
-              path='/authentication'
-              component={AuthenticationPage}
-              exact
-            />
-            <Route
-              path='/unauthorized'
-              component={UnauthorizedUserModal}
-              exact
-            />
-            <div className='w-3/4'>
+          <div className='w-3/4'>
+            <Suspense fallback={<Loader size={48} />}>
               <Switch>
+                <Route
+                  path='/authentication'
+                  component={AuthenticationPage}
+                  exact
+                />
+                <Route
+                  path='/unauthorized'
+                  component={UnauthorizedUserModal}
+                  exact
+                />
                 {routes.map(({ path, component: Component }) => (
                   <Route
                     key={generateRandomKey()}
@@ -76,9 +77,10 @@ const Router = () => {
                     exact
                   />
                 ))}
+                <Route component={NotFoundPage} />
               </Switch>
-            </div>
-          </Suspense>
+            </Suspense>
+          </div>
         </div>
       </BrowserRouter>
       <NotificationManager />

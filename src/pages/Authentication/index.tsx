@@ -29,7 +29,10 @@ const Authentication = () => {
       if (authUser) {
         const currentUserEmail = authUser?.email;
 
-        if (currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL) {
+        if (
+          process.env.NODE_ENV === 'production' &&
+          currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL
+        ) {
           dispatch({
             type: 'SET_UNAUTHORIZED_USER'
           });
