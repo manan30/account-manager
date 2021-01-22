@@ -11,9 +11,9 @@ const NotFoundPage = () => {
       <div className='tracking-wide text-2xl text-gray-200 mb-4'>
         It looks like you have come across a void and quiet page
       </div>
-      <span className='tracking-wide text-lg text-gray-200'>
+      <span className='text-lg text-gray-200 tracking-wide'>
         But don&apos;t worry you can always go back to where is all{' '}
-        <Link to='/' className='text-gray-700 hover:underline'>
+        <Link to='/' className='text-gray-700 font-medium hover:underline'>
           started
         </Link>
       </span>
