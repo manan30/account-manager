@@ -2,9 +2,8 @@ import React from 'react';
 import VoidIcon from '../../assets/svg/void.svg';
 
 const NotFoundPage = () => {
-  console.log('here');
   return (
-    <div className='h-screen w-screen flex items-center justify-center flex-col'>
+    <div className='h-screen w-screen flex items-center justify-center flex-col absolute z-10 inset-0 bg-red-500'>
       <div className='w-20 h-20'>
         <VoidIcon />
       </div>
