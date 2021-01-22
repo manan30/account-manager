@@ -34,8 +34,6 @@ const AuthenticatedApp = () => {
   const { user, unauthorizedUser } = useGlobalState();
   const { path: rootPath } = useRouteMatch();
 
-  console.log({ rootPath });
-
   return (
     <div className='flex h-full w-full'>
       <SideNav />
@@ -45,7 +43,7 @@ const AuthenticatedApp = () => {
             {routes.map(({ path, component: Component }) => (
               <Route
                 key={generateRandomKey()}
-                path={`${rootPath}/${path}`}
+                path={`${rootPath}${path}`}
                 render={({ location }) => {
                   return user && !unauthorizedUser ? (
                     <Component />

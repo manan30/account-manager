@@ -1,19 +1,22 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import cn from 'classnames';
 
 const links = [
-  { to: '/', linkText: 'Overview' },
+  { to: '', linkText: 'Overview' },
   // { to: '/accounts', linkText: 'Accounts' },
   // { to: '/debt', linkText: 'Debt' },
   // TODO: Rename spending to expenses
   // { to: '/spending', linkText: 'Spending' },
-  { to: '/creditors', linkText: 'Creditors' },
-  { to: '/transaction', linkText: 'Transactions' }
+  { to: 'creditors', linkText: 'Creditors' },
+  { to: 'transaction', linkText: 'Transactions' }
 ];
 
 const SideNav = () => {
   const { pathname } = useLocation();
+  const { url } = useRouteMatch();
+
+  console.log({ url });
 
   return (
     <div className='bg-gray-300 px-8 flex flex-col md:flex-shrink-0 lg:flex-shrink-0 xl:flex-shrink-0 w-1/4'>
@@ -24,7 +27,7 @@ const SideNav = () => {
           return (
             <Link
               key={key}
-              to={link.to}
+              to={`${url}/${link.to}`}
               className={cn(
                 'mt-5 text-xl text-indigo-600',
                 'hover:opacity-100',

@@ -27,7 +27,7 @@ const Router = () => {
                 component={UnauthorizedUserModal}
                 exact
               />
-              <Route path='/' component={AuthenticatedApp} />
+              <Route path='/app' component={AuthenticatedApp} />
               <Route component={NotFoundPage} />
             </Switch>
           </Suspense>
