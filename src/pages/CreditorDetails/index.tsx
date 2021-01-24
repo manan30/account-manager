@@ -89,23 +89,27 @@ const CreditorDetails = () => {
 
   const tableData = useMemo(() => transactions, [transactions]);
 
-  useEffect(() => {
-    if (error) {
-      notificationsDispatch({
-        type: 'ADD_NOTIFICATION',
-        payload: {
-          content:
-            'An error occurred while fetching data. Please try again later',
-          theme: NOTIFICATION_THEME_FAILURE
-        }
-      });
-      console.error(error);
-    }
-  }, [error, notificationsDispatch]);
+  // useEffect(() => {
+  //   if (error) {
+  //     notificationsDispatch({
+  //       type: 'ADD_NOTIFICATION',
+  //       payload: {
+  //         content:
+  //           'An error occurred while fetching data. Please try again later',
+  //         theme: NOTIFICATION_THEME_FAILURE
+  //       }
+  //     });
+  //     console.error(error);
+  //   }
+  // }, [error, notificationsDispatch]);
 
   useEffect(() => {
     if (!isLoading) setFetchData(false);
   }, [isLoading]);
+
+  if (error.status) {
+    return <div />;
+  }
 
   return (
     <>
