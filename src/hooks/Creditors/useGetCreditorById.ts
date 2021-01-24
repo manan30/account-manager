@@ -3,6 +3,11 @@ import { ICreditor } from '../../models/Creditor';
 import { ITransaction } from '../../models/Transaction';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
+type ErrorType = {
+  status: boolean;
+  message: string;
+};
+
 const useGetCreditorById = (id: string, fetchData: boolean) => {
   const { firestore } = useFirebaseContext();
   const [creditorData, setCreditorData] = useState<ICreditor | undefined>();
@@ -10,12 +15,12 @@ const useGetCreditorById = (id: string, fetchData: boolean) => {
     ITransaction[] | undefined
   >();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<ErrorType>({ status: false, message: '' });
 
   const fetchCreditorById = useCallback(async () => {
     try {
       setIsLoading(true);
-      setError(false);
+      setError({ status: false, message: '' });
       const creditorDBRef = firestore?.collection('creditor').doc(id);
       const creditorQueryDoc = await creditorDBRef?.get();
       if (creditorQueryDoc?.exists) {
@@ -33,20 +38,26 @@ const useGetCreditorById = (id: string, fetchData: boolean) => {
           (doc) => ({ id: doc.id, ...doc.data() } as ITransaction)
         );
         setTransactionsData(transactions);
+      } else {
+        setError({ status: true, message: 'Creditor Not Found' });
       }
     } catch (err) {
-      console.log(err);
-      setError(true);
+      console.error(err);
+      setError({ status: true, message: err });
     } finally {
       setIsLoading(false);
     }
   }, [firestore, id]);
 
+  const dismissError = useCallback(() => {
+    setError({ status: false, message: '' });
+  }, []);
+
   useEffect(() => {
     if (id && fetchData) fetchCreditorById();
   }, [fetchCreditorById, id, fetchData]);
 
-  return { creditorData, transactionsData, error, isLoading };
+  return { creditorData, transactionsData, error, isLoading, dismissError };
 };
 
 export default useGetCreditorById;
