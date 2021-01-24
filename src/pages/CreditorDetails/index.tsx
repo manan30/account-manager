@@ -10,15 +10,13 @@ import { ITransaction } from '../../models/Transaction';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
-import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import ModalFallback from '../../components/ModalFallback';
 import NewTransactionModal from '../../components/NewTransactionModal';
 import { Helmet } from 'react-helmet';
+import ErrorModal from '../../components/Modal/ErrorModal';
 
 const CreditorDetails = () => {
-  const notificationsDispatch = useNotificationDispatchContext();
   const [showModal, setShowModal] = useState(false);
   const [fetchData, setFetchData] = useState(true);
   const { id } = useParams<RouteParamsInterface>();
@@ -26,7 +24,8 @@ const CreditorDetails = () => {
     creditorData: creditor,
     transactionsData: transactions,
     error,
-    isLoading
+    isLoading,
+    dismissError
   } = useGetCreditorById(id, fetchData);
 
   const tableColumns = useMemo<Column<Partial<ITransaction>>[]>(
@@ -89,26 +88,20 @@ const CreditorDetails = () => {
 
   const tableData = useMemo(() => transactions, [transactions]);
 
-  // useEffect(() => {
-  //   if (error) {
-  //     notificationsDispatch({
-  //       type: 'ADD_NOTIFICATION',
-  //       payload: {
-  //         content:
-  //           'An error occurred while fetching data. Please try again later',
-  //         theme: NOTIFICATION_THEME_FAILURE
-  //       }
-  //     });
-  //     console.error(error);
-  //   }
-  // }, [error, notificationsDispatch]);
-
   useEffect(() => {
     if (!isLoading) setFetchData(false);
   }, [isLoading]);
 
   if (error.status) {
-    return <div />;
+    return (
+      <React.Suspense fallback={<ModalFallback />}>
+        <ErrorModal
+          isOpen={error.status}
+          message={error.message}
+          closeModal={dismissError}
+        />
+      </React.Suspense>
+    );
   }
 
   return (

@@ -49,11 +49,15 @@ const useGetCreditorById = (id: string, fetchData: boolean) => {
     }
   }, [firestore, id]);
 
+  const dismissError = useCallback(() => {
+    setError({ status: false, message: '' });
+  }, []);
+
   useEffect(() => {
     if (id && fetchData) fetchCreditorById();
   }, [fetchCreditorById, id, fetchData]);
 
-  return { creditorData, transactionsData, error, isLoading };
+  return { creditorData, transactionsData, error, isLoading, dismissError };
 };
 
 export default useGetCreditorById;
