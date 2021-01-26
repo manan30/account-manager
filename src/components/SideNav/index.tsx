@@ -7,7 +7,7 @@ const links = [
   // { to: '/accounts', linkText: 'Accounts' },
   // { to: '/debt', linkText: 'Debt' },
   // TODO: Rename spending to expenses
-  // { to: '/spending', linkText: 'Spending' },
+  { to: '/spending', linkText: 'Spending' },
   { to: '/creditors', linkText: 'Creditors' },
   { to: '/transaction', linkText: 'Transactions' }
 ];
