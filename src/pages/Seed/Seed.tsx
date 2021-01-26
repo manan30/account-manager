@@ -6,6 +6,7 @@ import { SeedActionType } from '../../reducers/SeedReducer/seedReducer.interface
 import {
   seedCreditors,
   seedEverything,
+  seedSpending,
   seedTransactions
 } from '../../services/seed/seed';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -25,26 +26,55 @@ const Seed = () => {
       if (
         !seedOptions.everything &&
         !seedOptions.creditors &&
-        !seedOptions.transactions
+        !seedOptions.transactions &&
+        !seedOptions.spending
       ) {
         return;
       }
 
       if (seedOptions.everything) {
         await seedEverything();
-      } else if (seedOptions.creditors) {
-        await seedCreditors();
-      } else if (seedOptions.transactions) {
-        await seedTransactions();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with everything',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
       }
 
-      notificationDispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-          content: 'Firestore seeding completed',
-          theme: NOTIFICATION_THEME_SUCCESS
-        }
-      });
+      if (seedOptions.creditors) {
+        await seedCreditors();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with creditors',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
+      }
+
+      if (seedOptions.transactions) {
+        await seedTransactions();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with transactions',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
+      }
+
+      if (seedOptions.spending) {
+        await seedSpending();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with spending',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
+      }
 
       seedDispatch({ type: 'RESET' });
     } catch (e) {
