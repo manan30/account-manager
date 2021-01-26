@@ -32,19 +32,34 @@ const Seed = () => {
 
       if (seedOptions.everything) {
         await seedEverything();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with everything',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
       } else if (seedOptions.creditors) {
         await seedCreditors();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with creditors',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
       } else if (seedOptions.transactions) {
         await seedTransactions();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with transactions',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
+      } else if (seedOptions.spending) {
+        
       }
-
-      notificationDispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-          content: 'Firestore seeding completed',
-          theme: NOTIFICATION_THEME_SUCCESS
-        }
-      });
 
       seedDispatch({ type: 'RESET' });
     } catch (e) {

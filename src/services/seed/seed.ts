@@ -1,4 +1,5 @@
 import faker from 'faker';
+import { ISpending } from 'models/Spending';
 import { ICreditor } from '../../models/Creditor';
 import { ITransaction } from '../../models/Transaction';
 import FirebaseService from '../firebase';
@@ -21,7 +22,7 @@ const generateFakeCreditor = (): ICreditor => {
     accountSettledOn,
     accountSettled: false,
     updatedAt: createdAt
-  };
+  } as ICreditor;
 };
 
 const generateFakeTransaction = (
@@ -41,7 +42,27 @@ const generateFakeTransaction = (
     amount,
     transactionDate: date,
     createdAt: firebaseApp.firestore.Timestamp.now()
-  };
+  } as ITransaction;
+};
+
+const generateFakeSpending = (categories: string[]): ISpending => {
+  const storeName = faker.company.companyName();
+  const category =
+    categories[Math.floor(Math.random() * categories.length - 1)];
+  const amount = Number(faker.commerce.price());
+  const date = firebaseApp?.firestore.Timestamp.fromDate(
+    faker.date.past(1, '12/31/2020')
+  );
+  const createdAt = firebaseApp?.firestore.Timestamp.now();
+
+  return {
+    storeName,
+    category,
+    amount,
+    date,
+    createdAt,
+    updatedAt: createdAt
+  } as ISpending;
 };
 
 export const seedCreditors = async (documentCount = 10) => {
