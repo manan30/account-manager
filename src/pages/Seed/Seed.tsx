@@ -6,6 +6,7 @@ import { SeedActionType } from '../../reducers/SeedReducer/seedReducer.interface
 import {
   seedCreditors,
   seedEverything,
+  seedSpending,
   seedTransactions
 } from '../../services/seed/seed';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -25,7 +26,8 @@ const Seed = () => {
       if (
         !seedOptions.everything &&
         !seedOptions.creditors &&
-        !seedOptions.transactions
+        !seedOptions.transactions &&
+        !seedOptions.spending
       ) {
         return;
       }
@@ -39,7 +41,9 @@ const Seed = () => {
             theme: NOTIFICATION_THEME_SUCCESS
           }
         });
-      } else if (seedOptions.creditors) {
+      }
+
+      if (seedOptions.creditors) {
         await seedCreditors();
         notificationDispatch({
           type: ADD_NOTIFICATION,
@@ -48,7 +52,9 @@ const Seed = () => {
             theme: NOTIFICATION_THEME_SUCCESS
           }
         });
-      } else if (seedOptions.transactions) {
+      }
+
+      if (seedOptions.transactions) {
         await seedTransactions();
         notificationDispatch({
           type: ADD_NOTIFICATION,
@@ -57,8 +63,17 @@ const Seed = () => {
             theme: NOTIFICATION_THEME_SUCCESS
           }
         });
-      } else if (seedOptions.spending) {
-        
+      }
+
+      if (seedOptions.spending) {
+        await seedSpending();
+        notificationDispatch({
+          type: ADD_NOTIFICATION,
+          payload: {
+            content: 'Firestore seeded with spending',
+            theme: NOTIFICATION_THEME_SUCCESS
+          }
+        });
       }
 
       seedDispatch({ type: 'RESET' });

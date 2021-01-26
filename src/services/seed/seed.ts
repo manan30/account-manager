@@ -48,7 +48,7 @@ const generateFakeTransaction = (
 const generateFakeSpending = (categories: string[]): ISpending => {
   const storeName = faker.company.companyName();
   const category =
-    categories[Math.floor(Math.random() * categories.length - 1)];
+    categories[Math.floor(Math.random() * (categories.length - 1))];
   const amount = Number(faker.commerce.price());
   const date = firebaseApp?.firestore.Timestamp.fromDate(
     faker.date.past(1, '12/31/2020')
@@ -82,7 +82,7 @@ export const seedTransactions = async (documentCount = 10) => {
   const creditors: string[] = (
     await firestore.collection('creditor').orderBy('createdAt', 'desc').get()
   ).docs.map((doc) => doc.id);
-  const types = ['Credit', ' Debit'];
+  const types = ['Credit', 'Debit'];
 
   const batch = firestore.batch();
 
@@ -96,10 +96,27 @@ export const seedTransactions = async (documentCount = 10) => {
   await batch.commit();
 };
 
+export const seedSpending = async (documentCount = 10) => {
+  const categories = ['Dining', 'Rent', 'Groceries', 'Other', 'Shopping'];
+
+  const batch = firestore.batch();
+
+  for (let i = 0; i < documentCount; i += 1) {
+    const spending = generateFakeSpending(categories);
+    const id = firestore.collection('spending').doc().id;
+    const docRef = firestore.collection('spending').doc(id);
+    batch.set(docRef, spending);
+  }
+
+  await batch.commit();
+};
+
 export const seedEverything = async (
   creditorsCount?: number,
-  transactionsCount?: number
+  transactionsCount?: number,
+  spendingCount?: number
 ) => {
   await seedCreditors(creditorsCount);
   await seedTransactions(transactionsCount);
+  await seedSpending(spendingCount);
 };
