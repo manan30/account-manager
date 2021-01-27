@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { Column } from 'react-table';
+import Badge from '../../components/Badge';
 import Loader from '../../components/Loader';
 import Table from '../../components/Table';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
@@ -64,7 +65,15 @@ const Spending = () => {
         Cell: ({ row }) =>
           `$${NumberWithCommasFormatter.format(`${row.original.amount}`)}`
       },
-      { Header: 'Category', accessor: 'category' },
+      {
+        Header: 'Category',
+        accessor: 'category',
+        Cell: ({ row }) => (
+          <div className='uppercase'>
+            <Badge type={row.original.category || ''} />
+          </div>
+        )
+      },
       {
         Header: 'Date',
         accessor: 'date',
