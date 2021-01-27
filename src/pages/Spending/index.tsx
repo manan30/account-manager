@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
@@ -8,9 +8,13 @@ import Loader from '../../components/Loader';
 import Table from '../../components/Table';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 
 const Spending = () => {
+  const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
@@ -96,6 +100,18 @@ const Spending = () => {
   );
 
   const tableData = useMemo(() => spendingData, [spendingData]);
+
+  useEffect(() => {
+    if (error)
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content:
+            'There was an error fetching data, please try again in some time',
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+  }, [error, notificationDispatch]);
 
   return (
     <>
