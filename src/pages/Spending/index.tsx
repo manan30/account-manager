@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
+import { MdAdd } from 'react-icons/md';
 import { Column } from 'react-table';
 import Badge from '../../components/Badge';
 import Loader from '../../components/Loader';
@@ -129,6 +130,9 @@ const Spending = () => {
           </div>
         )}
       </div>
+      <button className='absolute bottom-0 right-0 rounded-full h-12 w-12 p-2 bg-indigo-500 z-10 mr-12 mb-12 shadow-lg hover:bg-indigo-700 text-white grid place-items-center'>
+        <MdAdd size={32} />
+      </button>
     </>
   );
 };
