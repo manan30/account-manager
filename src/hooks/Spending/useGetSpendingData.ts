@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { ISpending } from 'models/Spending';
+import { ISpending } from '../../models/Spending';
 
 // TODO: Combine both the creditor hooks
 const useGetSpendingData = () => {
