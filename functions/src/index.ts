@@ -1,5 +1,5 @@
 import * as TransactionFunctions from './Transaction';
 import * as CreditorFunctions from './Creditor';
-import * as StoreFunctions from './Stores';
+import { addNewStore } from './Stores/addNewStore';
 
-export { TransactionFunctions, CreditorFunctions, StoreFunctions };
+export { TransactionFunctions, CreditorFunctions, addNewStore };
