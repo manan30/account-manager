@@ -74,6 +74,7 @@
     "react-query": "3.5.5",
     "react-router-dom": "5.2.0",
     "react-table": "7.6.2",
+    "reducers": "^3.0.0-alpha",
     "utils": "0.3.1"
   },
   "browserslist": [
