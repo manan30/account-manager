@@ -14,14 +14,26 @@ expressApp.post('/', async (req, res) => {
   try {
     const { storeName } = req.body;
     if (!storeName || storeName.trim() === '')
-      res.status(400).send({ error: 'Store name cannot be empty' });
+      return res.status(400).send({ error: 'Store name cannot be empty' });
 
-    await db.collection('stores').add(storeName);
+    const storesDocRef = db.collection('stores');
 
-    res.status(200).send({ message: 'New store was added successfully' });
+    if (storesDocRef) {
+      const existingStore = (await storesDocRef.get()).docs.some(
+        (doc) => doc.data().name.toLowerCase() === storeName.toLowerCase()
+      );
+      if (existingStore)
+        return res.status(400).send({ error: 'Store already exists' });
+    }
+
+    const docRef = await storesDocRef.add({ name: storeName });
+
+    return res
+      .status(200)
+      .send({ success: `Document written successfully: ${docRef.id}` });
   } catch (err) {
     console.error({ err });
-    res.status(500).send({ error: err.toString() });
+    return res.status(500).send({ error: err.toString() });
   }
 });
 
