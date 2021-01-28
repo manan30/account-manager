@@ -10,6 +10,7 @@ const db = admin.firestore();
 
 const expressApp = express();
 expressApp.use(cors({ origin: true }));
+
 expressApp.post('/', async (req, res) => {
   try {
     const { storeName } = req.body;

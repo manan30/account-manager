@@ -10,23 +10,24 @@ const db = admin.firestore();
 
 const expressApp = express();
 expressApp.use(cors({ origin: true }));
+
 expressApp.post('/', async (req, res) => {
   try {
-    const { storeName } = req.body;
-    if (!storeName || storeName.trim() === '')
-      return res.status(400).send({ error: 'Store name cannot be empty' });
+    const { categoryName } = req.body;
+    if (!categoryName || categoryName.trim() === '')
+      return res.status(400).send({ error: 'Category name cannot be empty' });
 
-    const storesDocRef = db.collection('stores');
+    const spendingCategoriesDocRef = db.collection('spending-categories');
 
-    if (storesDocRef) {
-      const existingStore = (await storesDocRef.get()).docs.some(
-        (doc) => doc.data().name.toLowerCase() === storeName.toLowerCase()
+    if (spendingCategoriesDocRef) {
+      const existingCategory = (await spendingCategoriesDocRef.get()).docs.some(
+        (doc) => doc.data().name.toLowerCase() === categoryName.toLowerCase()
       );
-      if (existingStore)
-        return res.status(400).send({ error: 'Store already exists' });
+      if (existingCategory)
+        return res.status(400).send({ error: 'Category already exists' });
     }
 
-    const docRef = await storesDocRef.add({ name: storeName });
+    const docRef = await spendingCategoriesDocRef.add({ name: categoryName });
 
     return res
       .status(200)
