@@ -34,7 +34,7 @@ expressApp.post('/', async (req, res) => {
   } catch (err) {
     console.error({ err });
     return res.status(500).send({ error: err.toString() });
-  }A
+  }
 });
 
 export const addNewStore = functions.https.onRequest(expressApp);
