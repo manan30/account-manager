@@ -1,12 +1,20 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
 import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
+import { ISpending } from '../../models/Spending';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import {
+  INPUT_THEME_ERROR,
+  NOTIFICATION_THEME_FAILURE,
+  NOTIFICATION_THEME_SUCCESS
+} from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { isEmptyString } from '../../utils/Functions';
 import { AmountValidator } from '../../utils/Validators';
 
 type AddSpendingModalProps = {
@@ -16,29 +24,29 @@ type AddSpendingModalProps = {
 const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   handleModalClose
 }) => {
-  const { firestore } = useFirebaseContext();
-  const {
-    data: storeNames,
-    error: storeNamesError,
-    isLoading: fetchingStores
-  } = useGetStoreNames();
+  const { firestore, firebaseApp } = useFirebaseContext();
+  const notificationDispatch = useNotificationDispatchContext();
+  const { data: storeNames, isLoading: fetchingStores } = useGetStoreNames();
   const {
     data: spendingCategoryNames,
-    error: spendingCategoryNamesError,
     isLoading: fetchingSpendingCategoryNames
   } = useGetSpendingCategoryNames();
   const [formState, setFormState] = useState({
     storeName: '',
     categoryName: '',
-    amount: ''
+    amount: '',
+    date: ''
   });
   const [formErrors, setFormErrors] = useState({
     storeName: { error: false, content: '' },
-    category: { error: false, content: '' },
+    categoryName: { error: false, content: '' },
     amount: { error: false, content: '' },
     date: { error: false, content: '' }
   });
   const [resetForm, setResetForm] = useState(false);
+  const [isSpendingEntryBeingAdded, setIsSpendingEntryBeingAdded] = useState(
+    false
+  );
 
   const resetFormErrors = useCallback(
     (name: string) =>
@@ -73,8 +81,90 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const handleFormError = (key: string) => {
+    setFormErrors((prevState) => ({
+      ...prevState,
+      [key]: {
+        error: true,
+        content: 'Required Field'
+      }
+    }));
+  };
+
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    let error = false;
+    setResetForm(false);
+
+    const { amount, categoryName, storeName, date } = formState;
+
+    if (isEmptyString(storeName)) {
+      error = error || true;
+      handleFormError('storeName');
+    }
+
+    if (isEmptyString(categoryName)) {
+      error = error || true;
+      handleFormError('categoryName');
+    }
+
+    if (isEmptyString(amount)) {
+      error = error || true;
+      handleFormError('amount');
+    }
+
+    if (isEmptyString(date)) {
+      error = error || true;
+      handleFormError('date');
+    }
+
+    if (error) return;
+
+    try {
+      setIsSpendingEntryBeingAdded(true);
+
+      const timestamp = firebaseApp?.firestore.Timestamp.now();
+
+      await firestore?.collection('spending').add({
+        storeName: storeName.trim(),
+        category: categoryName.trim(),
+        amount: Number(amount.trim()),
+        date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
+        createdAt: timestamp,
+        updatedAt: timestamp
+      } as ISpending);
+
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: 'New Spending Entry Added',
+          theme: NOTIFICATION_THEME_SUCCESS
+        }
+      });
+    } catch (err) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: 'Error occurred while adding a new spending entry',
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+      console.error({ err });
+    } finally {
+      setResetForm(true);
+      setIsSpendingEntryBeingAdded(false);
+    }
+  };
+
   return (
-    <Modal isOpen onCloseClickHandler={handleModalClose}>
+    <Modal
+      isOpen
+      onCloseClickHandler={() => {
+        !isSpendingEntryBeingAdded && handleModalClose();
+      }}
+    >
       <div className='flex justify-center mx-8'>
         <form className='mb-8 w-full'>
           <Select
@@ -99,9 +189,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               placeHolder='Eg. Rent, Groceries'
               selectOptions={spendingCategoryNameDropdownOptions}
               subContent={
-                formErrors.category.error && formErrors.category.content
+                formErrors.categoryName.error && formErrors.categoryName.content
               }
-              theme={formErrors.category.error ? INPUT_THEME_ERROR : ''}
+              theme={formErrors.categoryName.error ? INPUT_THEME_ERROR : ''}
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
@@ -127,6 +217,29 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               onBlurUpdate={(name, value) => {
                 handleChange(name, value);
               }}
+            />
+          </div>
+          <div className='my-6'>
+            <Input
+              name='date'
+              placeHolder='MM/DD/YYYY'
+              label='Spending Date'
+              subContent={formErrors.date.error && formErrors.date.content}
+              theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              onBlurUpdate={(name, value) => {
+                handleChange(name, value);
+              }}
+            />
+          </div>
+          <div className='mt-10'>
+            <Button
+              buttonText='Add Spending Entry'
+              onClickHandler={(e) => handleSubmit(e)}
+              loading={isSpendingEntryBeingAdded}
+              type='submit'
             />
           </div>
         </form>
