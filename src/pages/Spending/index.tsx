@@ -4,7 +4,9 @@ import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { MdAdd } from 'react-icons/md';
 import { Column } from 'react-table';
+import { VictoryChart, VictoryLine, VictoryTheme } from 'victory';
 import Badge from '../../components/Badge';
+import Card from '../../components/Card';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
@@ -105,6 +107,10 @@ const Spending = () => {
 
   const tableData = useMemo(() => spendingData, [spendingData]);
 
+  const generateChartData = useMemo(() => {
+    console.log();
+  }, [spendingData]);
+
   useEffect(() => {
     if (error)
       notificationDispatch({
@@ -126,6 +132,25 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
+        <div className='mb-6 h-64'>
+          <Card className='shadow-lg p-6 mb-6'>
+            <VictoryChart theme={VictoryTheme.material}>
+              <VictoryLine
+                style={{
+                  data: { stroke: '#c43a31' },
+                  parent: { border: '1px solid #ccc' }
+                }}
+                data={[
+                  { x: 1, y: 2 },
+                  { x: 2, y: 3 },
+                  { x: 3, y: 5 },
+                  { x: 4, y: 4 },
+                  { x: 5, y: 7 }
+                ]}
+              />
+            </VictoryChart>
+          </Card>
+        </div>
         {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
