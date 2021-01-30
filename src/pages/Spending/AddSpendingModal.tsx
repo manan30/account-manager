@@ -29,61 +29,6 @@ const AddSpendingModal = () => {
             resetFormErrors={resetFormErrors}
             onSelectValueChange={handleSelectChange('ADD_TRANSACTION_TYPE')}
           />
-          <div className='mt-6'>
-            {transactionEntity ? (
-              <Input
-                label='Creditor Name'
-                name='entity'
-                defaultValue={transactionEntity.name}
-              />
-            ) : (
-              (type === 'Credit' || type === 'Debit') && (
-                <CreditorsSelect
-                  formError={formErrors.entity}
-                  resetForm={resetForm}
-                  resetFormError={resetFormErrors}
-                />
-              )
-            )}
-          </div>
-          <div className='mt-6'>
-            <Input
-              name='amount'
-              type='tel'
-              placeHolder='0.00'
-              label='Amount'
-              subContent={formErrors.amount.error && formErrors.amount.content}
-              theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
-              resetField={resetForm}
-              setResetField={() => setResetForm(false)}
-              resetFormErrors={resetFormErrors}
-              validator={AmountValidator}
-              valueFormatter={NumberWithCommasFormatter}
-              onBlurUpdate={handleInputChange('ADD_TRANSACTION_AMOUNT')}
-            />
-          </div>
-          <div className='mt-6'>
-            {/* TODO: Validate date input and create date picker UI */}
-            <Input
-              name='date'
-              placeHolder='MM/DD/YYYY'
-              label='Transaction Date'
-              subContent={formErrors.date.error && formErrors.date.content}
-              theme={formErrors.date.error ? INPUT_THEME_ERROR : ''}
-              resetField={resetForm}
-              setResetField={() => setResetForm(false)}
-              resetFormErrors={resetFormErrors}
-              onBlurUpdate={handleInputChange('ADD_TRANSACTION_DATE')}
-            />
-          </div>
-          <div className='mt-10'>
-            <Button
-              buttonText='Add Transaction'
-              onClickHandler={(e) => handleSubmit(e)}
-              loading={isTransactionBeingAdded}
-              type='submit'
-            />
-          </div>
         </form>
       </div>
     </Modal>
