@@ -37,7 +37,6 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [options] = useState(selectOptions);
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSelectValue(e.target.value);
@@ -114,7 +113,7 @@ const Select: React.FC<SelectProps> = ({
       )}
       {showOptions && (
         <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border overflow-y-auto max-h-select'>
-          {options.map((option, i) => {
+          {selectOptions.map((option, i) => {
             const key = i;
             return (
               <li

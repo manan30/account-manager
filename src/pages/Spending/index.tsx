@@ -141,7 +141,9 @@ const Spending = () => {
       </button>
       {showAddSpendingModal && (
         <React.Suspense fallback={<ModalFallback />}>
-          <AddSpendingModal />
+          <AddSpendingModal
+            handleModalClose={() => setShowAddSpendingModal(false)}
+          />
         </React.Suspense>
       )}
     </>
