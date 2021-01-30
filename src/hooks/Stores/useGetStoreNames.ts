@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { IStore } from '../../models/Store';
 
-// TODO: Combine both the creditor hooks
 const useGetStoreNames = () => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<IStore[] | undefined>();

@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
-import useGetStoreNames from '../../hooks/Stores';
+import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
+import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 
@@ -15,9 +16,14 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   const { firestore } = useFirebaseContext();
   const {
     data: storeNames,
-    error,
+    error: storeNamesError,
     isLoading: fetchingStores
   } = useGetStoreNames();
+  const {
+    data: spendingCategoryNames,
+    error: spendingCategoryNamesError,
+    isLoading: fetchingSpendingCategoryNames
+  } = useGetSpendingCategoryNames();
   const [formState, setFormState] = useState({
     storeName: '',
     categoryName: ''
@@ -49,6 +55,16 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     return [] as SelectOption[];
   }, [storeNames]);
 
+  const spendingCategoryNameDropdownOptions = useMemo(() => {
+    if (spendingCategoryNames && spendingCategoryNames.length > 0) {
+      return spendingCategoryNames.map(({ name }) => ({
+        label: name.toLowerCase(),
+        value: name
+      })) as SelectOption[];
+    }
+    return [] as SelectOption[];
+  }, [spendingCategoryNames]);
+
   const handleSelectChange = (name: string, value: string) => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
@@ -74,23 +90,25 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
             }
             isLoading={fetchingStores}
           />
-          <Select
-            name='categoryName'
-            label='Category Name'
-            placeHolder='Eg. Rent, Groceries'
-            selectOptions={storeNameDropdownOptions}
-            subContent={
-              formErrors.category.error && formErrors.category.content
-            }
-            theme={formErrors.category.error ? INPUT_THEME_ERROR : ''}
-            resetField={resetForm}
-            setResetField={() => setResetForm(false)}
-            resetFormErrors={resetFormErrors}
-            onSelectValueChange={(name, { value }) =>
-              handleSelectChange(name, value)
-            }
-            isLoading={fetchingStores}
-          />
+          <div className='mt-6'>
+            <Select
+              name='categoryName'
+              label='Category Name'
+              placeHolder='Eg. Rent, Groceries'
+              selectOptions={spendingCategoryNameDropdownOptions}
+              subContent={
+                formErrors.category.error && formErrors.category.content
+              }
+              theme={formErrors.category.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              onSelectValueChange={(name, { value }) =>
+                handleSelectChange(name, value)
+              }
+              isLoading={fetchingSpendingCategoryNames}
+            />
+          </div>
         </form>
       </div>
     </Modal>
