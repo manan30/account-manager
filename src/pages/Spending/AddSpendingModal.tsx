@@ -1,10 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
 import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { AmountValidator } from '../../utils/Validators';
 
 type AddSpendingModalProps = {
   handleModalClose: () => void;
@@ -26,7 +29,8 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   } = useGetSpendingCategoryNames();
   const [formState, setFormState] = useState({
     storeName: '',
-    categoryName: ''
+    categoryName: '',
+    amount: ''
   });
   const [formErrors, setFormErrors] = useState({
     storeName: { error: false, content: '' },
@@ -65,7 +69,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     return [] as SelectOption[];
   }, [spendingCategoryNames]);
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleChange = (name: string, value: string) => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
@@ -85,9 +89,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
             resetField={resetForm}
             setResetField={() => setResetForm(false)}
             resetFormErrors={resetFormErrors}
-            onSelectValueChange={(name, { value }) =>
-              handleSelectChange(name, value)
-            }
+            onSelectValueChange={(name, { value }) => handleChange(name, value)}
             isLoading={fetchingStores}
           />
           <div className='mt-6'>
@@ -104,9 +106,27 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
               onSelectValueChange={(name, { value }) =>
-                handleSelectChange(name, value)
+                handleChange(name, value)
               }
               isLoading={fetchingSpendingCategoryNames}
+            />
+          </div>
+          <div className='mt-6'>
+            <Input
+              name='amount'
+              type='tel'
+              placeHolder='0.00'
+              label='Amount'
+              subContent={formErrors.amount.error && formErrors.amount.content}
+              theme={formErrors.amount.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              validator={AmountValidator}
+              valueFormatter={NumberWithCommasFormatter}
+              onBlurUpdate={(name, value) => {
+                handleChange(name, value);
+              }}
             />
           </div>
         </form>
