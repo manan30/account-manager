@@ -1,30 +1,27 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { ISpending } from '../../models/Spending';
+import { IStore } from '../../models/Store';
 
-// TODO: Combine both the creditor hooks
-const useGetSpendingData = () => {
+const useGetStoreNames = () => {
   const { firestore } = useFirebaseContext();
-  const [data, setData] = useState<ISpending[] | undefined>();
+  const [data, setData] = useState<IStore[] | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const fetchSpendingData = useCallback(async () => {
+  const fetchStoreData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(false);
-      const spendingDBRef = firestore
-        ?.collection('spending')
-        .orderBy('updatedAt', 'desc');
+      const storeDBRef = firestore?.collection('stores');
 
-      const queryDocs = await spendingDBRef?.get();
-      const spendingData = queryDocs?.docs.map((doc) => {
+      const queryDocs = await storeDBRef?.get();
+      const storeData = queryDocs?.docs.map((doc) => {
         return {
           id: doc.id,
           ...doc.data()
-        } as ISpending;
+        } as IStore;
       });
-      setData(spendingData);
+      setData(storeData);
     } catch (err) {
       console.log(err);
       setError(true);
@@ -34,10 +31,10 @@ const useGetSpendingData = () => {
   }, [firestore]);
 
   useEffect(() => {
-    fetchSpendingData();
-  }, [fetchSpendingData]);
+    fetchStoreData();
+  }, [fetchStoreData]);
 
   return { data, error, isLoading };
 };
 
-export default useGetSpendingData;
+export default useGetStoreNames;

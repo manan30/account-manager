@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
+import { MdAdd } from 'react-icons/md';
 import { Column } from 'react-table';
 import Badge from '../../components/Badge';
 import Loader from '../../components/Loader';
+import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
@@ -12,10 +14,12 @@ import { useNotificationDispatchContext } from '../../providers/NotificationProv
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import AddSpendingModal from './AddSpendingModal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
+  const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -129,6 +133,19 @@ const Spending = () => {
           </div>
         )}
       </div>
+      <button
+        className='absolute bottom-0 right-0 rounded-full h-12 w-12 p-2 bg-indigo-500 z-10 mr-12 mb-12 shadow-lg hover:bg-indigo-700 text-white grid place-items-center'
+        onClick={() => setShowAddSpendingModal(true)}
+      >
+        <MdAdd size={32} />
+      </button>
+      {showAddSpendingModal && (
+        <React.Suspense fallback={<ModalFallback />}>
+          <AddSpendingModal
+            handleModalClose={() => setShowAddSpendingModal(false)}
+          />
+        </React.Suspense>
+      )}
     </>
   );
 };
