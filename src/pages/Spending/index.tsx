@@ -4,7 +4,14 @@ import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { MdAdd } from 'react-icons/md';
 import { Column } from 'react-table';
-import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from 'victory';
+import {
+  VictoryAxis,
+  VictoryChart,
+  VictoryLine,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer
+} from 'victory';
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
 import Loader from '../../components/Loader';
@@ -130,22 +137,29 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        <div className='mb-6 h-64'>
-          <Card className='shadow-lg p-6 mb-6'>
-            {isDataFormatted && (
-              <VictoryChart theme={VictoryTheme.material}>
-                <VictoryAxis fixLabelOverlap />
-                <VictoryAxis fixLabelOverlap dependentAxis />
-                <VictoryLine
-                  data={formattedData}
-                  sortKey='x'
-                  sortOrder='ascending'
-                  animate
+        {/* <div className='mb-6 h-64'> */}
+        <Card className='shadow-lg p-6 mb-6'>
+          {isDataFormatted && (
+            <VictoryChart
+              theme={VictoryTheme.material}
+              containerComponent={
+                <VictoryVoronoiContainer
+                  labels={({ datum }) => `$${datum.y}`}
                 />
-              </VictoryChart>
-            )}
-          </Card>
-        </div>
+              }
+            >
+              <VictoryAxis fixLabelOverlap />
+              <VictoryAxis fixLabelOverlap dependentAxis />
+              <VictoryLine
+                data={formattedData}
+                sortKey='x'
+                sortOrder='ascending'
+                animate
+              />
+            </VictoryChart>
+          )}
+        </Card>
+        {/* </div> */}
         {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>

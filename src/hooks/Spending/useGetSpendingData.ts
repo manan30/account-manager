@@ -14,9 +14,10 @@ const useGetSpendingData = () => {
       setIsLoading(true);
       setError(false);
       const spendingDBRef = firestore
-        ?.collection('spending')
-        .orderBy('updatedAt', 'desc');
+        .collection('spending')
+        .orderBy('date', 'desc');
 
+      // TODO: Check if data is correctly ordered
       const queryDocs = await spendingDBRef?.get();
       const spendingData = queryDocs?.docs.map((doc) => {
         return {
@@ -24,6 +25,7 @@ const useGetSpendingData = () => {
           ...doc.data()
         } as ISpending;
       });
+
       setData(spendingData);
     } catch (err) {
       console.log(err);

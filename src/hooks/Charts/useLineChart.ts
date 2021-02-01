@@ -26,7 +26,10 @@ const useLineChart = <T extends ISpending>(data?: Array<T>) => {
 
     setIsDataFormatted(true);
 
-    return [...map.entries()].map(([key, value]) => ({ x: key, y: value }));
+    return [...map.entries()].map(([key, value]) => ({
+      x: key,
+      y: value
+    }));
   }, [data]);
 
   return { formattedData, isDataFormatted };
