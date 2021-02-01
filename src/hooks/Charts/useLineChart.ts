@@ -9,6 +9,13 @@ const useLineChart = <T extends ISpending>(data?: Array<T>) => {
     if (!data?.length) return undefined;
     const map = new Map();
 
+    data.sort((a, b) => {
+      return (
+        new Date(a.date.toDate()).valueOf() -
+        new Date(b.date.toDate()).valueOf()
+      );
+    });
+
     data.forEach((d) => {
       const key = new Intl.DateTimeFormat('en-US', {
         month: 'numeric',

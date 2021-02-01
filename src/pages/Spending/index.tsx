@@ -4,7 +4,7 @@ import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { MdAdd } from 'react-icons/md';
 import { Column } from 'react-table';
-import { VictoryChart, VictoryLine, VictoryTheme } from 'victory';
+import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from 'victory';
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
 import Loader from '../../components/Loader';
@@ -24,8 +24,6 @@ const Spending = () => {
   const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
-
-  console.log({ formattedData });
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -134,15 +132,18 @@ const Spending = () => {
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         {/* <div className='mb-6 h-64'> */}
         <Card className='shadow-lg p-6 mb-6'>
-          <VictoryChart theme={VictoryTheme.material}>
-            <VictoryLine
-              style={{
-                data: { stroke: '#c43a31' },
-                parent: { border: '1px solid #ccc' }
-              }}
-              data={formattedData}
-            />
-          </VictoryChart>
+          {isDataFormatted && (
+            <VictoryChart theme={VictoryTheme.material}>
+              <VictoryAxis fixLabelOverlap />
+              <VictoryAxis fixLabelOverlap />
+              <VictoryLine
+                data={formattedData}
+                sortKey='x'
+                sortOrder='ascending'
+                animate
+              />
+            </VictoryChart>
+          )}
         </Card>
         {/* </div> */}
         {isLoading && <Loader size={48} />}
