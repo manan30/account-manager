@@ -130,22 +130,22 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        {/* <div className='mb-6 h-64'> */}
-        <Card className='shadow-lg p-6 mb-6'>
-          {isDataFormatted && (
-            <VictoryChart theme={VictoryTheme.material}>
-              <VictoryAxis fixLabelOverlap />
-              <VictoryAxis fixLabelOverlap />
-              <VictoryLine
-                data={formattedData}
-                sortKey='x'
-                sortOrder='ascending'
-                animate
-              />
-            </VictoryChart>
-          )}
-        </Card>
-        {/* </div> */}
+        <div className='mb-6 h-64'>
+          <Card className='shadow-lg p-6 mb-6'>
+            {isDataFormatted && (
+              <VictoryChart theme={VictoryTheme.material}>
+                <VictoryAxis fixLabelOverlap />
+                <VictoryAxis fixLabelOverlap dependentAxis />
+                <VictoryLine
+                  data={formattedData}
+                  sortKey='x'
+                  sortOrder='ascending'
+                  animate
+                />
+              </VictoryChart>
+            )}
+          </Card>
+        </div>
         {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
