@@ -10,6 +10,7 @@ import Card from '../../components/Card';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
+import useLineChart from '../../hooks/Charts/useLineChart';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -21,7 +22,10 @@ import AddSpendingModal from './AddSpendingModal';
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
+  const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
+
+  console.log({ formattedData });
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -107,10 +111,6 @@ const Spending = () => {
 
   const tableData = useMemo(() => spendingData, [spendingData]);
 
-  const generateChartData = useMemo(() => {
-    console.log();
-  }, [spendingData]);
-
   useEffect(() => {
     if (error)
       notificationDispatch({
@@ -132,25 +132,19 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        <div className='mb-6 h-64'>
-          <Card className='shadow-lg p-6 mb-6'>
-            <VictoryChart theme={VictoryTheme.material}>
-              <VictoryLine
-                style={{
-                  data: { stroke: '#c43a31' },
-                  parent: { border: '1px solid #ccc' }
-                }}
-                data={[
-                  { x: 1, y: 2 },
-                  { x: 2, y: 3 },
-                  { x: 3, y: 5 },
-                  { x: 4, y: 4 },
-                  { x: 5, y: 7 }
-                ]}
-              />
-            </VictoryChart>
-          </Card>
-        </div>
+        {/* <div className='mb-6 h-64'> */}
+        <Card className='shadow-lg p-6 mb-6'>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryLine
+              style={{
+                data: { stroke: '#c43a31' },
+                parent: { border: '1px solid #ccc' }
+              }}
+              data={formattedData}
+            />
+          </VictoryChart>
+        </Card>
+        {/* </div> */}
         {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
