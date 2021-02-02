@@ -145,6 +145,14 @@ const Spending = () => {
               containerComponent={
                 <VictoryVoronoiContainer
                   labels={({ datum }) => `$${datum.y}`}
+                  labelComponent={
+                    <VictoryTooltip
+                      flyoutStyle={{
+                        fill: 'white'
+                      }}
+                      cornerRadius={0}
+                    />
+                  }
                 />
               }
             >
