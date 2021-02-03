@@ -161,20 +161,22 @@ const Spending = () => {
                 label='Timeline'
                 axisLabelComponent={
                   <VictoryLabel
-                    dy={24}
+                    dy={22}
                     style={[{ fontSize: 12, fill: '#455a63' }]}
                   />
                 }
+                style={{ tickLabels: { fontSize: 8 } }}
                 fixLabelOverlap
               />
               <VictoryAxis
                 label='Amount'
                 axisLabelComponent={
                   <VictoryLabel
-                    dy={-48}
+                    dy={-40}
                     style={[{ fontSize: 12, fill: '#455a63' }]}
                   />
                 }
+                style={{ tickLabels: { fontSize: 8 } }}
                 fixLabelOverlap
                 dependentAxis
               />
