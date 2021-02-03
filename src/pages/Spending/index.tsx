@@ -7,6 +7,7 @@ import { Column } from 'react-table';
 import {
   VictoryAxis,
   VictoryChart,
+  VictoryLabel,
   VictoryLine,
   VictoryTheme,
   VictoryTooltip,
@@ -156,8 +157,27 @@ const Spending = () => {
                 />
               }
             >
-              <VictoryAxis fixLabelOverlap />
-              <VictoryAxis fixLabelOverlap dependentAxis />
+              <VictoryAxis
+                label='Timeline'
+                axisLabelComponent={
+                  <VictoryLabel
+                    dy={24}
+                    style={[{ fontSize: 12, fill: '#455a63' }]}
+                  />
+                }
+                fixLabelOverlap
+              />
+              <VictoryAxis
+                label='Amount'
+                axisLabelComponent={
+                  <VictoryLabel
+                    dy={-48}
+                    style={[{ fontSize: 12, fill: '#455a63' }]}
+                  />
+                }
+                fixLabelOverlap
+                dependentAxis
+              />
               <VictoryLine
                 data={formattedData}
                 sortKey='x'
