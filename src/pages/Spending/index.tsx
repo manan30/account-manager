@@ -18,6 +18,7 @@ import Card from '../../components/Card';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
+import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
@@ -33,6 +34,7 @@ const Spending = () => {
   const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
+  const { chartContainerRef, width } = useChartWidth();
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -139,76 +141,77 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        {/* <div className='mb-6 h-64'> */}
-        <Card className='shadow-lg p-6 mb-6'>
-          {isDataFormatted && (
-            <VictoryChart
-              theme={VictoryTheme.material}
-              containerComponent={
-                <VictoryVoronoiContainer
-                  labels={({ datum }) =>
-                    `${numberToMonthMapping(datum.x)}: $${datum.y}`
-                  }
-                  labelComponent={
-                    <VictoryTooltip
-                      flyoutStyle={{
-                        fill: 'white',
-                        stroke: '#455a63',
-                        strokeWidth: '0.4'
-                      }}
-                      style={{ fontSize: 8, fill: '#667eea' }}
-                      flyoutPadding={8}
-                      cornerRadius={4}
-                      activateData
-                      constrainToVisibleArea
+        <div className='mb-6' ref={chartContainerRef} style={{ height: '40%' }}>
+          <Card className='shadow-lg p-6 mb-6'>
+            {isDataFormatted && (
+              <VictoryChart
+                theme={VictoryTheme.material}
+                width={width}
+                containerComponent={
+                  <VictoryVoronoiContainer
+                    labels={({ datum }) =>
+                      `${numberToMonthMapping(datum.x)}: $${datum.y}`
+                    }
+                    labelComponent={
+                      <VictoryTooltip
+                        flyoutStyle={{
+                          fill: 'white',
+                          stroke: '#455a63',
+                          strokeWidth: '0.4'
+                        }}
+                        style={{ fontSize: 8, fill: '#667eea' }}
+                        flyoutPadding={8}
+                        cornerRadius={4}
+                        activateData
+                        constrainToVisibleArea
+                      />
+                    }
+                  />
+                }
+              >
+                <VictoryAxis
+                  label='Timeline'
+                  axisLabelComponent={
+                    <VictoryLabel
+                      dy={22}
+                      style={[{ fontSize: 12, fill: '#455a63' }]}
                     />
                   }
+                  style={{
+                    tickLabels: { fontSize: 8 },
+                    grid: { stroke: 'none' }
+                  }}
+                  fixLabelOverlap
                 />
-              }
-            >
-              <VictoryAxis
-                label='Timeline'
-                axisLabelComponent={
-                  <VictoryLabel
-                    dy={22}
-                    style={[{ fontSize: 12, fill: '#455a63' }]}
-                  />
-                }
-                style={{
-                  tickLabels: { fontSize: 8 },
-                  grid: { stroke: 'none' }
-                }}
-                fixLabelOverlap
-              />
-              <VictoryAxis
-                label='Amount'
-                axisLabelComponent={
-                  <VictoryLabel
-                    dy={-40}
-                    style={[{ fontSize: 12, fill: '#455a63' }]}
-                  />
-                }
-                style={{
-                  tickLabels: { fontSize: 8 },
-                  grid: { stroke: 'none' }
-                }}
-                fixLabelOverlap
-                dependentAxis
-              />
-              <VictoryLine
-                data={formattedData}
-                sortKey='x'
-                sortOrder='ascending'
-                interpolation='catmullRom'
-                style={{
-                  data: { stroke: '#667eea' }
-                }}
-                animate
-              />
-            </VictoryChart>
-          )}
-        </Card>
-        {/* </div> */}
+                <VictoryAxis
+                  label='Amount'
+                  axisLabelComponent={
+                    <VictoryLabel
+                      dy={-40}
+                      style={[{ fontSize: 12, fill: '#455a63' }]}
+                    />
+                  }
+                  style={{
+                    tickLabels: { fontSize: 8 },
+                    grid: { stroke: 'none' }
+                  }}
+                  fixLabelOverlap
+                  dependentAxis
+                />
+                <VictoryLine
+                  data={formattedData}
+                  sortKey='x'
+                  sortOrder='ascending'
+                  interpolation='catmullRom'
+                  style={{
+                    data: { stroke: '#667eea' }
+                  }}
+                  animate
+                />
+              </VictoryChart>
+            )}
+          </Card>
+        </div>
         {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
