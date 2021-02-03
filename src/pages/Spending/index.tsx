@@ -25,6 +25,7 @@ import { useNotificationDispatchContext } from '../../providers/NotificationProv
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 
 const Spending = () => {
@@ -145,13 +146,21 @@ const Spending = () => {
               theme={VictoryTheme.material}
               containerComponent={
                 <VictoryVoronoiContainer
-                  labels={({ datum }) => `$${datum.y}`}
+                  labels={({ datum }) =>
+                    `${numberToMonthMapping(datum.x)}: $${datum.y}`
+                  }
                   labelComponent={
                     <VictoryTooltip
                       flyoutStyle={{
-                        fill: 'white'
+                        fill: 'white',
+                        stroke: '#455a63',
+                        strokeWidth: '0.4'
                       }}
-                      cornerRadius={0}
+                      style={{ fontSize: 8, fill: '#667eea' }}
+                      flyoutPadding={8}
+                      cornerRadius={4}
+                      activateData
+                      constrainToVisibleArea
                     />
                   }
                 />
@@ -165,7 +174,10 @@ const Spending = () => {
                     style={[{ fontSize: 12, fill: '#455a63' }]}
                   />
                 }
-                style={{ tickLabels: { fontSize: 8 } }}
+                style={{
+                  tickLabels: { fontSize: 8 },
+                  grid: { stroke: 'none' }
+                }}
                 fixLabelOverlap
               />
               <VictoryAxis
@@ -176,7 +188,10 @@ const Spending = () => {
                     style={[{ fontSize: 12, fill: '#455a63' }]}
                   />
                 }
-                style={{ tickLabels: { fontSize: 8 } }}
+                style={{
+                  tickLabels: { fontSize: 8 },
+                  grid: { stroke: 'none' }
+                }}
                 fixLabelOverlap
                 dependentAxis
               />
