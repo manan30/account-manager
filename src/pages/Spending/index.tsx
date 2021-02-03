@@ -184,6 +184,10 @@ const Spending = () => {
                 data={formattedData}
                 sortKey='x'
                 sortOrder='ascending'
+                interpolation='catmullRom'
+                style={{
+                  data: { stroke: '#667eea' }
+                }}
                 animate
               />
             </VictoryChart>
