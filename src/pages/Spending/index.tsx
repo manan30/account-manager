@@ -159,7 +159,7 @@ const Spending = () => {
                           stroke: '#455a63',
                           strokeWidth: '0.4'
                         }}
-                        style={{ fontSize: 8, fill: '#667eea' }}
+                        style={{ fontSize: 12, fill: '#667eea' }}
                         flyoutPadding={8}
                         cornerRadius={4}
                         activateData
@@ -170,29 +170,15 @@ const Spending = () => {
                 }
               >
                 <VictoryAxis
-                  label='Timeline'
-                  axisLabelComponent={
-                    <VictoryLabel
-                      dy={22}
-                      style={[{ fontSize: 12, fill: '#455a63' }]}
-                    />
-                  }
                   style={{
-                    tickLabels: { fontSize: 8 },
+                    tickLabels: { fontSize: 12 },
                     grid: { stroke: 'none' }
                   }}
                   fixLabelOverlap
                 />
                 <VictoryAxis
-                  label='Amount'
-                  axisLabelComponent={
-                    <VictoryLabel
-                      dy={-40}
-                      style={[{ fontSize: 12, fill: '#455a63' }]}
-                    />
-                  }
                   style={{
-                    tickLabels: { fontSize: 8 },
+                    tickLabels: { fontSize: 12 },
                     grid: { stroke: 'none' }
                   }}
                   fixLabelOverlap
