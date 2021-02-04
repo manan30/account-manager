@@ -143,7 +143,7 @@ const Spending = () => {
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='mb-6' ref={chartContainerRef} style={{ height: '40%' }}>
           <Card className='shadow-lg p-6 mb-6'>
-            {isDataFormatted && (
+            {isDataFormatted ? (
               <VictoryChart
                 theme={VictoryTheme.material}
                 width={width}
@@ -195,6 +195,10 @@ const Spending = () => {
                   animate
                 />
               </VictoryChart>
+            ) : (
+              <div className='grid h-full w-full place-items-center'>
+                <Loader size={48} />
+              </div>
             )}
           </Card>
         </div>
