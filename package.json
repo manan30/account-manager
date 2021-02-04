@@ -38,6 +38,7 @@
     "@types/react-query": "1.1.2",
     "@types/react-router-dom": "5.1.6",
     "@types/react-table": "7.0.25",
+    "@types/victory": "^33.1.4",
     "@typescript-eslint/eslint-plugin": "4.9.0",
     "@typescript-eslint/parser": "4.9.0",
     "autoprefixer": "9.8.6",
@@ -75,7 +76,8 @@
     "react-router-dom": "5.2.0",
     "react-table": "7.6.2",
     "reducers": "^3.0.0-alpha",
-    "utils": "0.3.1"
+    "utils": "0.3.1",
+    "victory": "^35.4.7"
   },
   "browserslist": [
     "defaults",

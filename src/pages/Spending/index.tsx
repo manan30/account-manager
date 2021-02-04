@@ -4,22 +4,36 @@ import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { MdAdd } from 'react-icons/md';
 import { Column } from 'react-table';
+import {
+  VictoryAxis,
+  VictoryChart,
+  VictoryLine,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer
+} from 'victory';
 import Badge from '../../components/Badge';
+import Card from '../../components/Card';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
+import useChartWidth from '../../hooks/Charts/useChartWidth';
+import useLineChart from '../../hooks/Charts/useLineChart';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
+  const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
+  const { chartContainerRef, width } = useChartWidth();
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -126,6 +140,67 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
+        <div className='mb-6' ref={chartContainerRef} style={{ height: '40%' }}>
+          <Card className='shadow-lg p-6 mb-6'>
+            {isDataFormatted ? (
+              <VictoryChart
+                theme={VictoryTheme.material}
+                width={width}
+                containerComponent={
+                  <VictoryVoronoiContainer
+                    labels={({ datum }) =>
+                      `${numberToMonthMapping(datum.x)}: $${datum.y}`
+                    }
+                    labelComponent={
+                      <VictoryTooltip
+                        flyoutStyle={{
+                          fill: 'white',
+                          stroke: '#455a63',
+                          strokeWidth: '0.4'
+                        }}
+                        style={{ fontSize: 12, fill: '#667eea' }}
+                        flyoutPadding={8}
+                        cornerRadius={4}
+                        activateData
+                        constrainToVisibleArea
+                      />
+                    }
+                  />
+                }
+              >
+                <VictoryAxis
+                  style={{
+                    tickLabels: { fontSize: 12 },
+                    grid: { stroke: 'none' }
+                  }}
+                  fixLabelOverlap
+                />
+                <VictoryAxis
+                  style={{
+                    tickLabels: { fontSize: 12 },
+                    grid: { stroke: 'none' }
+                  }}
+                  fixLabelOverlap
+                  dependentAxis
+                />
+                <VictoryLine
+                  data={formattedData}
+                  sortKey='x'
+                  sortOrder='ascending'
+                  interpolation='catmullRom'
+                  style={{
+                    data: { stroke: '#667eea' }
+                  }}
+                  animate
+                />
+              </VictoryChart>
+            ) : (
+              <div className='grid h-full w-full place-items-center'>
+                <Loader size={48} />
+              </div>
+            )}
+          </Card>
+        </div>
         {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
