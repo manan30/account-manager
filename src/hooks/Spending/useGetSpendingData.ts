@@ -6,6 +6,7 @@ import { ISpending } from '../../models/Spending';
 const useGetSpendingData = () => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<ISpending[] | undefined>();
+  const [fetchData, setFetchData] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -36,10 +37,16 @@ const useGetSpendingData = () => {
   }, [firestore]);
 
   useEffect(() => {
-    fetchSpendingData();
-  }, [fetchSpendingData]);
+    if (fetchData) {
+      fetchSpendingData();
+    }
+  }, [fetchSpendingData, fetchData]);
 
-  return { data, error, isLoading };
+  useEffect(() => {
+    if (!isLoading) setFetchData(false);
+  }, [isLoading]);
+
+  return { data, error, isLoading, refreshData: setFetchData };
 };
 
 export default useGetSpendingData;

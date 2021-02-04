@@ -30,7 +30,12 @@ import AddSpendingModal from './AddSpendingModal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
-  const { data: spendingData, isLoading, error } = useGetSpendingData();
+  const {
+    data: spendingData,
+    isLoading,
+    error,
+    refreshData
+  } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const { chartContainerRef, width } = useChartWidth();
@@ -217,7 +222,10 @@ const Spending = () => {
       {showAddSpendingModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <AddSpendingModal
-            handleModalClose={() => setShowAddSpendingModal(false)}
+            handleModalClose={() => {
+              setShowAddSpendingModal(false);
+              refreshData(true);
+            }}
           />
         </React.Suspense>
       )}
