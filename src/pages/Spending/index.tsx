@@ -93,7 +93,24 @@ const Spending = () => {
           `$${NumberWithCommasFormatter.format(`${row.original.amount}`)}`
       },
       {
-        Header: 'Category',
+        Header: ({ column }) => {
+          return (
+            <div className='flex items-center'>
+              <div>Category</div>
+              <div className='ml-auto'>
+                {column.isSorted ? (
+                  column.isSortedDesc ? (
+                    <ImSortAmountDesc />
+                  ) : (
+                    <ImSortAmountAsc />
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
+            </div>
+          );
+        },
         accessor: 'category',
         Cell: ({ row }) => (
           <div className='uppercase'>
@@ -102,7 +119,24 @@ const Spending = () => {
         )
       },
       {
-        Header: 'Date',
+        Header: ({ column }) => {
+          return (
+            <div className='flex items-center'>
+              <div>Date</div>
+              <div className='ml-auto'>
+                {column.isSorted ? (
+                  column.isSortedDesc ? (
+                    <ImSortAmountDesc />
+                  ) : (
+                    <ImSortAmountAsc />
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
+            </div>
+          );
+        },
         accessor: 'date',
         Cell: ({ row }) => {
           if (row.original.date) {
