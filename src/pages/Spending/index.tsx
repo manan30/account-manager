@@ -7,7 +7,6 @@ import { Column } from 'react-table';
 import {
   VictoryAxis,
   VictoryChart,
-  VictoryLabel,
   VictoryLine,
   VictoryTheme,
   VictoryTooltip,
