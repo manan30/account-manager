@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { ISpending } from '../../models/Spending';
 
-// TODO: Combine both the creditor hooks
 const useGetSpendingData = () => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<ISpending[] | undefined>();
@@ -18,7 +17,6 @@ const useGetSpendingData = () => {
         .collection('spending')
         .orderBy('date', 'desc');
 
-      // TODO: Check if data is correctly ordered
       const queryDocs = await spendingDBRef?.get();
       const spendingData = queryDocs?.docs.map((doc) => {
         return {

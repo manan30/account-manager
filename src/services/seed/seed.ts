@@ -51,7 +51,7 @@ const generateFakeSpending = (categories: string[]): ISpending => {
     categories[Math.floor(Math.random() * (categories.length - 1))];
   const amount = Number(faker.commerce.price());
   const date = firebaseApp?.firestore.Timestamp.fromDate(
-    faker.date.past(1, '12/31/2020')
+    faker.date.past(2, '12/31/2021')
   );
   const createdAt = firebaseApp?.firestore.Timestamp.now();
 
