@@ -6,7 +6,10 @@ const useLineChart = <T extends ISpending>(data?: Array<T>) => {
 
   const formattedData = useMemo(() => {
     setIsDataFormatted(false);
-    if (!data?.length) return undefined;
+    if (!data?.length) {
+      setIsDataFormatted(false);
+      return undefined;
+    }
     const map = new Map();
 
     data.sort((a, b) => {
