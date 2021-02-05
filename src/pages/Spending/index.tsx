@@ -74,7 +74,7 @@ const Spending = () => {
         },
         accessor: 'storeName',
         Cell: ({ row }) => (
-          <p className='text-indigo-500 font-medium hover:text-indigo-700'>
+          <p className='text-indigo-500 font-medium'>
             {row.original.storeName}
           </p>
         )
