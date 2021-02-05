@@ -27,6 +27,7 @@ import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
+import SpendingOverviewModal from './SpendingOverviewModal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
@@ -37,8 +38,17 @@ const Spending = () => {
     refreshData
   } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
-  const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const { chartContainerRef, width } = useChartWidth();
+  const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
+  const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
+    false
+  );
+  const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
+    ISpending | undefined
+  >();
+  const [spendingEntryModalData, setSpendingEntryModalData] = useState<
+    ISpending[] | undefined
+  >();
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -113,9 +123,15 @@ const Spending = () => {
         },
         accessor: 'category',
         Cell: ({ row }) => (
-          <div className='uppercase'>
+          <button
+            className='uppercase w-full'
+            onClick={() => {
+              setShowSpendingOverviewModal(true);
+              setCurrentSpendingEntry(row.original as ISpending);
+            }}
+          >
             <Badge type={row.original.category || ''} />
-          </div>
+          </button>
         )
       },
       {
@@ -259,6 +275,15 @@ const Spending = () => {
             handleModalClose={() => {
               setShowAddSpendingModal(false);
               refreshData(true);
+            }}
+          />
+        </React.Suspense>
+      )}
+      {showSpendingOverviewModal && (
+        <React.Suspense fallback={<ModalFallback />}>
+          <SpendingOverviewModal
+            handleModalClose={() => {
+              setShowSpendingOverviewModal(false);
             }}
           />
         </React.Suspense>
