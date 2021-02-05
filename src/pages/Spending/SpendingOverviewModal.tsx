@@ -1,5 +1,4 @@
 import React from 'react';
-import Badge from '../../components/Badge';
 import Modal from '../../components/Modal';
 import { ISpending } from '../../models/Spending';
 import { generateRandomKey } from '../../utils/Functions';
