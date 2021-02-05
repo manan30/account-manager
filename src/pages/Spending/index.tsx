@@ -46,7 +46,7 @@ const Spending = () => {
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
     ISpending | undefined
   >();
-  const [spendingEntryModalData, setSpendingEntryModalData] = useState<
+  const [spendingOverviewModalData, setSpendingOverviewModalData] = useState<
     ISpending[] | undefined
   >();
 
@@ -186,6 +186,17 @@ const Spending = () => {
       });
   }, [error, notificationDispatch]);
 
+  useEffect(() => {
+    if (showSpendingOverviewModal)
+      setSpendingOverviewModalData(
+        spendingData?.filter(
+          (d) =>
+            d.category === currentSpendingEntry?.category &&
+            d.id !== currentSpendingEntry.id
+        )
+      );
+  }, [showSpendingOverviewModal, spendingData, currentSpendingEntry]);
+
   return (
     <>
       <Helmet>
@@ -282,6 +293,8 @@ const Spending = () => {
       {showSpendingOverviewModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <SpendingOverviewModal
+            currentTransaction={currentSpendingEntry}
+            allTransactions={spendingOverviewModalData}
             handleModalClose={() => {
               setShowSpendingOverviewModal(false);
             }}
