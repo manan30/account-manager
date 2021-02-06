@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
 import { Column } from 'react-table';
 import {
   VictoryAxis,
@@ -74,7 +74,7 @@ const Spending = () => {
         },
         accessor: 'storeName',
         Cell: ({ row }) => (
-          <p className='text-indigo-500 font-medium'>
+          <p className='text-indigo-500 font-medium w-1/3'>
             {row.original.storeName}
           </p>
         )
@@ -167,6 +167,26 @@ const Spending = () => {
           }
           return 'N/A';
         }
+      },
+      {
+        id: 'edit',
+        accessor: undefined,
+        Cell: () => (
+          <button className='text-gray-500 hover:text-gray-700'>
+            <MdEdit size={20} />
+          </button>
+        ),
+        style: { width: '1rem' }
+      },
+      {
+        id: 'delete',
+        accessor: undefined,
+        Cell: () => (
+          <button className='text-red-400 w-4 hover:text-red-600'>
+            <MdDelete size={20} />
+          </button>
+        ),
+        style: { width: '1rem' }
       }
     ],
     []
