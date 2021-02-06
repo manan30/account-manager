@@ -176,7 +176,7 @@ const Spending = () => {
             <MdEdit size={20} />
           </button>
         ),
-        style: { width: '1rem' }
+        style: { width: '0.1rem', paddingRight: '0' }
       },
       {
         id: 'delete',
@@ -186,7 +186,7 @@ const Spending = () => {
             <MdDelete size={20} />
           </button>
         ),
-        style: { width: '1rem' }
+        style: { width: '0.1rem' }
       }
     ],
     []
