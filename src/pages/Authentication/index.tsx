@@ -27,13 +27,14 @@ const Authentication = () => {
   useEffect(() => {
     auth?.onAuthStateChanged((authUser) => {
       if (authUser) {
-        const currentUserEmail = authUser?.email;
+        const currentUserEmail = authUser?.email ?? '';
+        const authUsers = JSON.parse(
+          process.env.PROD_AUTH_USER_EMAIL ?? ''
+        ) as Array<string>;
 
         if (
           process.env.NODE_ENV === 'production' &&
-          (JSON.parse(process.env.PROD_AUTH_USER_EMAIL ?? '') as Array<
-            string
-          >).includes(currentUserEmail ?? '')
+          !authUsers.includes(currentUserEmail)
         ) {
           dispatch({
             type: 'SET_UNAUTHORIZED_USER'
