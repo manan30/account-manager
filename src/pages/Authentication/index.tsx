@@ -28,7 +28,10 @@ const Authentication = () => {
     auth?.onAuthStateChanged((authUser) => {
       if (authUser) {
         const currentUserEmail = authUser?.email;
-
+        console.log(
+          JSON.parse(process.env.PROD_AUTH_USER_EMAIL ?? ''),
+          currentUserEmail
+        );
         if (
           process.env.NODE_ENV === 'production' &&
           (JSON.parse(process.env.PROD_AUTH_USER_EMAIL ?? '') as Array<
