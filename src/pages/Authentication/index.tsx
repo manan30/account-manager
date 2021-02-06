@@ -31,7 +31,9 @@ const Authentication = () => {
 
         if (
           process.env.NODE_ENV === 'production' &&
-          currentUserEmail !== process.env.PROD_AUTH_USER_EMAIL
+          (JSON.parse(process.env.PROD_AUTH_USER_EMAIL ?? '') as Array<
+            string
+          >).includes(currentUserEmail ?? '')
         ) {
           dispatch({
             type: 'SET_UNAUTHORIZED_USER'
