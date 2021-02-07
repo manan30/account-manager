@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
-import { Column } from 'react-table';
+import { Column, Row } from 'react-table';
 import {
   VictoryAxis,
   VictoryChart,
@@ -28,6 +28,7 @@ import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 import SpendingOverviewModal from './SpendingOverviewModal';
+import DeleteModal from '../../components/Modal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
@@ -38,6 +39,10 @@ const Spending = () => {
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
     false
   );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteDocId, setDeleteDocId] = useState<
+    { id: string; name: string } | undefined
+  >();
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
     ISpending | undefined
   >();
@@ -176,8 +181,17 @@ const Spending = () => {
       {
         id: 'delete',
         accessor: undefined,
-        Cell: () => (
-          <button className='text-red-400 w-4 hover:text-red-600'>
+        Cell: ({ row }: { row: Row<Partial<ISpending>> }) => (
+          <button
+            className='text-red-400 w-4 hover:text-red-600'
+            onClick={() => {
+              setShowDeleteModal(true);
+              setDeleteDocId({
+                id: row.original.id ?? '',
+                name: row.original.storeName ?? ''
+              });
+            }}
+          >
             <MdDelete size={20} />
           </button>
         ),
@@ -313,6 +327,21 @@ const Spending = () => {
               setShowSpendingOverviewModal(false);
             }}
           />
+        </React.Suspense>
+      )}
+      {showDeleteModal && (
+        <React.Suspense fallback={<ModalFallback />}>
+          <DeleteModal
+            onCloseClickHandler={() => setShowDeleteModal(false)}
+            onConfirmClickHandler={() => setShowDeleteModal(false)}
+            confirmButtonText='Confirm'
+            isOpen
+          >
+            <div className='mb-8 px-2'>
+              Are you sure you want to delete{' '}
+              <strong>{deleteDocId?.name}</strong>
+            </div>
+          </DeleteModal>
         </React.Suspense>
       )}
     </>

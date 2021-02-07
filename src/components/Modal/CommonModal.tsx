@@ -16,7 +16,6 @@ const CommonModalProps: React.FC<CommonModalProps> = ({
   isOpen,
   message,
   type,
-  onClickConfirm,
   closeModal
 }) => {
   return (
