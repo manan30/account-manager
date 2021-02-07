@@ -31,12 +31,7 @@ import SpendingOverviewModal from './SpendingOverviewModal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
-  const {
-    data: spendingData,
-    isLoading,
-    error,
-    refreshData
-  } = useGetSpendingData();
+  const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
@@ -305,7 +300,6 @@ const Spending = () => {
           <AddSpendingModal
             handleModalClose={() => {
               setShowAddSpendingModal(false);
-              refreshData(true);
             }}
           />
         </React.Suspense>
