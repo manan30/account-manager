@@ -14,7 +14,7 @@ import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import ModalFallback from '../../components/ModalFallback';
 import NewTransactionModal from '../../components/NewTransactionModal';
 import { Helmet } from 'react-helmet';
-import ErrorModal from '../../components/Modal/ErrorModal';
+import ErrorModal from '../../components/Modal/CommonModal';
 
 const CreditorDetails = () => {
   const [showModal, setShowModal] = useState(false);
@@ -99,6 +99,7 @@ const CreditorDetails = () => {
           isOpen={error.status}
           message={error.message}
           closeModal={dismissError}
+          type='ERROR'
         />
       </React.Suspense>
     );
