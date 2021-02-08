@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import { MdAdd } from 'react-icons/md';
-import { Column } from 'react-table';
+import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
+import { Column, Row } from 'react-table';
 import {
   VictoryAxis,
   VictoryChart,
@@ -15,10 +15,12 @@ import {
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
 import Loader from '../../components/Loader';
+import DeleteModal from '../../components/Modal';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
+import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -31,18 +33,24 @@ import SpendingOverviewModal from './SpendingOverviewModal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
-  const {
-    data: spendingData,
-    isLoading,
-    error,
-    refreshData
-  } = useGetSpendingData();
+  const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
     false
   );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteDoc, setDeleteDoc] = useState<
+    { id: string; name: string } | undefined
+  >();
+  const {
+    error: deleteError,
+    isLoading: isDocumentBeingDeleted,
+    mutation: deleteMutation
+  } = useDeleteSpendingEntry(deleteDoc?.id ?? '', () => {
+    setShowDeleteModal(false);
+  });
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
     ISpending | undefined
   >();
@@ -74,7 +82,7 @@ const Spending = () => {
         },
         accessor: 'storeName',
         Cell: ({ row }) => (
-          <p className='text-indigo-500 font-medium'>
+          <p className='text-indigo-500 font-medium w-1/3'>
             {row.original.storeName}
           </p>
         )
@@ -167,6 +175,35 @@ const Spending = () => {
           }
           return 'N/A';
         }
+      },
+      {
+        id: 'edit',
+        accessor: undefined,
+        Cell: () => (
+          <button className='text-gray-500 hover:text-gray-700'>
+            <MdEdit size={20} />
+          </button>
+        ),
+        style: { width: '0.1rem', paddingRight: '0' }
+      },
+      {
+        id: 'delete',
+        accessor: undefined,
+        Cell: ({ row }: { row: Row<Partial<ISpending>> }) => (
+          <button
+            className='text-red-400 w-4 hover:text-red-600'
+            onClick={() => {
+              setShowDeleteModal(true);
+              setDeleteDoc({
+                id: row.original.id ?? '',
+                name: row.original.storeName ?? ''
+              });
+            }}
+          >
+            <MdDelete size={20} />
+          </button>
+        ),
+        style: { width: '0.1rem' }
       }
     ],
     []
@@ -185,6 +222,17 @@ const Spending = () => {
         }
       });
   }, [error, notificationDispatch]);
+
+  useEffect(() => {
+    if (deleteError)
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content: `There was an error while deleting spending entry for ${deleteDoc?.name}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+  }, [deleteError, notificationDispatch, deleteDoc]);
 
   useEffect(() => {
     if (showSpendingOverviewModal)
@@ -285,7 +333,6 @@ const Spending = () => {
           <AddSpendingModal
             handleModalClose={() => {
               setShowAddSpendingModal(false);
-              refreshData(true);
             }}
           />
         </React.Suspense>
@@ -299,6 +346,21 @@ const Spending = () => {
               setShowSpendingOverviewModal(false);
             }}
           />
+        </React.Suspense>
+      )}
+      {showDeleteModal && (
+        <React.Suspense fallback={<ModalFallback />}>
+          <DeleteModal
+            onCloseClickHandler={() => setShowDeleteModal(false)}
+            onConfirmClickHandler={() => deleteMutation()}
+            confirmButtonText='Confirm'
+            isOpen
+            isPerformingAsyncTask={isDocumentBeingDeleted}
+          >
+            <div className='mb-8 px-2'>
+              Are you sure you want to delete <strong>{deleteDoc?.name}</strong>
+            </div>
+          </DeleteModal>
         </React.Suspense>
       )}
     </>

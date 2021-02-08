@@ -1,50 +1,41 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { ISpending } from '../../models/Spending';
+import { SPENDING } from '../../models/models';
 
 const useGetSpendingData = () => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<ISpending[] | undefined>();
-  const [fetchData, setFetchData] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const fetchSpendingData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(false);
-      const spendingDBRef = firestore
-        .collection('spending')
-        .orderBy('date', 'desc');
-
-      const queryDocs = await spendingDBRef?.get();
-      const spendingData = queryDocs?.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data()
-        } as ISpending;
+  useEffect(() => {
+    const unSubscriber = firestore
+      .collection(SPENDING)
+      .orderBy('date', 'desc')
+      .onSnapshot({
+        next: (snapshot) => {
+          setIsLoading(true);
+          setError(false);
+          const spendingData = snapshot?.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data()
+            } as ISpending;
+          });
+          setData(spendingData);
+          setIsLoading(false);
+        },
+        error: (err) => {
+          console.error(err);
+          setError(true);
+          setIsLoading(false);
+        }
       });
-
-      setData(spendingData);
-    } catch (err) {
-      console.log(err);
-      setError(true);
-    } finally {
-      setIsLoading(false);
-    }
+    return unSubscriber;
   }, [firestore]);
 
-  useEffect(() => {
-    if (fetchData) {
-      fetchSpendingData();
-    }
-  }, [fetchSpendingData, fetchData]);
-
-  useEffect(() => {
-    if (!isLoading) setFetchData(false);
-  }, [isLoading]);
-
-  return { data, error, isLoading, refreshData: setFetchData };
+  return { data, error, isLoading };
 };
 
 export default useGetSpendingData;
