@@ -84,6 +84,13 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   }, []);
 
+  const handleSelectChange = useCallback(
+    (name: string, { value }: { value: string }) => {
+      setFormState((prevState) => ({ ...prevState, [name]: value }));
+    },
+    []
+  );
+
   const handleFormError = (key: string) => {
     setFormErrors((prevState) => ({
       ...prevState,
@@ -195,16 +202,16 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
-              onSelectValueChange={(name, { value }) =>
-                handleChange(name, value)
-              }
+              onSelectValueChange={handleSelectChange}
               isLoading={fetchingStores}
             />
           ) : (
             <Input
               name='storeName'
               label='Store Name'
+              onBlurUpdate={handleChange}
               defaultValue={currentTransaction.storeName}
+              disabled
             />
           )}
           <div className='mt-6'>
@@ -220,10 +227,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
-              onSelectValueChange={(name, { value }) =>
-                handleChange(name, value)
-              }
+              onSelectValueChange={handleSelectChange}
               isLoading={fetchingSpendingCategoryNames}
+              defaultValue={currentTransaction && currentTransaction.category}
             />
           </div>
           <div className='mt-6'>
