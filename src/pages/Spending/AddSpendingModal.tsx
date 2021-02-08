@@ -5,6 +5,7 @@ import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
 import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
+import { SPENDING } from '../../models/models';
 import { ISpending } from '../../models/Spending';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -19,10 +20,12 @@ import { AmountValidator } from '../../utils/Validators';
 
 type AddSpendingModalProps = {
   handleModalClose: () => void;
+  currentTransaction?: ISpending;
 };
 
 const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
-  handleModalClose
+  handleModalClose,
+  currentTransaction
 }) => {
   const { firestore, firebaseApp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
@@ -127,14 +130,26 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
 
       const timestamp = firebaseApp?.firestore.Timestamp.now();
 
-      await firestore?.collection('spending').add({
-        storeName: storeName.trim(),
-        category: categoryName.trim(),
-        amount: Number(amount.trim()),
-        date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
-        createdAt: timestamp,
-        updatedAt: timestamp
-      } as ISpending);
+      if (!currentTransaction) {
+        await firestore?.collection(SPENDING).add({
+          storeName: storeName.trim(),
+          category: categoryName.trim(),
+          amount: Number(amount.trim()),
+          date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
+          createdAt: timestamp,
+          updatedAt: timestamp
+        } as ISpending);
+      } else {
+        await firestore
+          .collection(SPENDING)
+          .doc(currentTransaction.id)
+          .update({
+            category: categoryName.trim(),
+            amount: Number(amount.trim()),
+            date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
+            updatedAt: timestamp
+          } as Partial<ISpending>);
+      }
 
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
@@ -167,21 +182,31 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     >
       <div className='flex justify-center mx-8'>
         <form className='mb-8 w-full'>
-          <Select
-            name='storeName'
-            label='Store Name'
-            placeHolder='Eg. Aldi, Target'
-            selectOptions={storeNameDropdownOptions}
-            subContent={
-              formErrors.storeName.error && formErrors.storeName.content
-            }
-            theme={formErrors.storeName.error ? INPUT_THEME_ERROR : ''}
-            resetField={resetForm}
-            setResetField={() => setResetForm(false)}
-            resetFormErrors={resetFormErrors}
-            onSelectValueChange={(name, { value }) => handleChange(name, value)}
-            isLoading={fetchingStores}
-          />
+          {!currentTransaction ? (
+            <Select
+              name='storeName'
+              label='Store Name'
+              placeHolder='Eg. Aldi, Target'
+              selectOptions={storeNameDropdownOptions}
+              subContent={
+                formErrors.storeName.error && formErrors.storeName.content
+              }
+              theme={formErrors.storeName.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              onSelectValueChange={(name, { value }) =>
+                handleChange(name, value)
+              }
+              isLoading={fetchingStores}
+            />
+          ) : (
+            <Input
+              name='storeName'
+              label='Store Name'
+              defaultValue={currentTransaction.storeName}
+            />
+          )}
           <div className='mt-6'>
             <Select
               name='categoryName'
@@ -236,7 +261,11 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
           </div>
           <div className='mt-10'>
             <Button
-              buttonText='Add Spending Entry'
+              buttonText={
+                !currentTransaction
+                  ? 'Add Spending Entry'
+                  : 'Update Spending Entry'
+              }
               onClickHandler={(e) => handleSubmit(e)}
               loading={isSpendingEntryBeingAdded}
               type='submit'

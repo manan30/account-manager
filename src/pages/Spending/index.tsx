@@ -179,8 +179,14 @@ const Spending = () => {
       {
         id: 'edit',
         accessor: undefined,
-        Cell: () => (
-          <button className='text-gray-500 hover:text-gray-700'>
+        Cell: ({ row }: { row: Row<Partial<ISpending>> }) => (
+          <button
+            className='text-gray-500 hover:text-gray-700'
+            onClick={() => {
+              setCurrentSpendingEntry(row.original as ISpending);
+              setShowAddSpendingModal(true);
+            }}
+          >
             <MdEdit size={20} />
           </button>
         ),
@@ -338,6 +344,7 @@ const Spending = () => {
       {showAddSpendingModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <AddSpendingModal
+            currentTransaction={currentSpendingEntry}
             handleModalClose={() => {
               setShowAddSpendingModal(false);
             }}
