@@ -15,7 +15,7 @@ const SpendingOverviewModal: React.FC<SpendingOverviewModalProps> = ({
   handleModalClose
 }) => {
   return (
-    <Modal isOpen onCloseClickHandler={handleModalClose}>
+    <Modal isOpen shouldCloseOnEscape onCloseClickHandler={handleModalClose}>
       <div className='flex flex-col justify-center items-center mb-4'>
         <h2 className='tracking-wider uppercase text-xl mb-4 text-gray-500'>
           Transaction

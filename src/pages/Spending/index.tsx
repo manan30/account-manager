@@ -237,11 +237,18 @@ const Spending = () => {
   useEffect(() => {
     if (showSpendingOverviewModal)
       setSpendingOverviewModalData(
-        spendingData?.filter(
-          (d) =>
-            d.category === currentSpendingEntry?.category &&
-            d.id !== currentSpendingEntry.id
-        )
+        spendingData
+          ?.filter(
+            (d) =>
+              d.category === currentSpendingEntry?.category &&
+              d.id !== currentSpendingEntry.id
+          )
+          .sort((a, b) => {
+            return (
+              new Date(a.date.toDate()).valueOf() -
+              new Date(b.date.toDate()).valueOf()
+            );
+          })
       );
   }, [showSpendingOverviewModal, spendingData, currentSpendingEntry]);
 
