@@ -15,10 +15,12 @@ import {
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
 import Loader from '../../components/Loader';
+import DeleteModal from '../../components/Modal';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
+import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -28,7 +30,6 @@ import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 import SpendingOverviewModal from './SpendingOverviewModal';
-import DeleteModal from '../../components/Modal';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
@@ -43,6 +44,13 @@ const Spending = () => {
   const [deleteDocId, setDeleteDocId] = useState<
     { id: string; name: string } | undefined
   >();
+  const {
+    error: deleteError,
+    isLoading: isDocumentBeingDeleted,
+    mutation: deleteMutation
+  } = useDeleteSpendingEntry(deleteDocId?.id ?? '', () => {
+    setShowDeleteModal(false);
+  });
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
     ISpending | undefined
   >();
@@ -333,9 +341,10 @@ const Spending = () => {
         <React.Suspense fallback={<ModalFallback />}>
           <DeleteModal
             onCloseClickHandler={() => setShowDeleteModal(false)}
-            onConfirmClickHandler={() => setShowDeleteModal(false)}
+            onConfirmClickHandler={() => deleteMutation()}
             confirmButtonText='Confirm'
             isOpen
+            isPerformingAsyncTask={isDocumentBeingDeleted}
           >
             <div className='mb-8 px-2'>
               Are you sure you want to delete{' '}
