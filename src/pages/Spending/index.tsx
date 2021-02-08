@@ -41,14 +41,14 @@ const Spending = () => {
     false
   );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteDocId, setDeleteDocId] = useState<
+  const [deleteDoc, setDeleteDoc] = useState<
     { id: string; name: string } | undefined
   >();
   const {
     error: deleteError,
     isLoading: isDocumentBeingDeleted,
     mutation: deleteMutation
-  } = useDeleteSpendingEntry(deleteDocId?.id ?? '', () => {
+  } = useDeleteSpendingEntry(deleteDoc?.id ?? '', () => {
     setShowDeleteModal(false);
   });
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
@@ -194,7 +194,7 @@ const Spending = () => {
             className='text-red-400 w-4 hover:text-red-600'
             onClick={() => {
               setShowDeleteModal(true);
-              setDeleteDocId({
+              setDeleteDoc({
                 id: row.original.id ?? '',
                 name: row.original.storeName ?? ''
               });
@@ -222,6 +222,17 @@ const Spending = () => {
         }
       });
   }, [error, notificationDispatch]);
+
+  useEffect(() => {
+    if (deleteError)
+      notificationDispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+          content: `There was an error while deleting spending entry for ${deleteDoc?.name}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+  }, [deleteError, notificationDispatch, deleteDoc]);
 
   useEffect(() => {
     if (showSpendingOverviewModal)
@@ -347,8 +358,7 @@ const Spending = () => {
             isPerformingAsyncTask={isDocumentBeingDeleted}
           >
             <div className='mb-8 px-2'>
-              Are you sure you want to delete{' '}
-              <strong>{deleteDocId?.name}</strong>
+              Are you sure you want to delete <strong>{deleteDoc?.name}</strong>
             </div>
           </DeleteModal>
         </React.Suspense>
