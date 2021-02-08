@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
@@ -23,6 +23,13 @@ type AddSpendingModalProps = {
   currentTransaction?: ISpending;
 };
 
+type FormFields = {
+  storeName?: string;
+  category?: string;
+  amount?: string;
+  date?: string;
+};
+
 const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   handleModalClose,
   currentTransaction
@@ -34,15 +41,15 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     data: spendingCategoryNames,
     isLoading: fetchingSpendingCategoryNames
   } = useGetSpendingCategoryNames();
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<FormFields>({
     storeName: '',
-    categoryName: '',
+    category: '',
     amount: '',
     date: ''
   });
   const [formErrors, setFormErrors] = useState({
     storeName: { error: false, content: '' },
-    categoryName: { error: false, content: '' },
+    category: { error: false, content: '' },
     amount: { error: false, content: '' },
     date: { error: false, content: '' }
   });
@@ -50,6 +57,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   const [isSpendingEntryBeingAdded, setIsSpendingEntryBeingAdded] = useState(
     false
   );
+  const [changedFields, setChangedFields] = useState<FormFields | undefined>();
 
   const resetFormErrors = useCallback(
     (name: string) =>
@@ -80,6 +88,21 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     return [] as SelectOption[];
   }, [spendingCategoryNames]);
 
+  const currentTransactionMap = useMemo(() => {
+    if (!currentTransaction) return undefined;
+    const map = new Map<string, string>(Object.entries(currentTransaction));
+    map.set(
+      'date',
+      new Intl.DateTimeFormat('en-US', {
+        month: '2-digit',
+        year: 'numeric',
+        day: 'numeric'
+      }).format(currentTransaction.date.toDate())
+    );
+    map.set('amount', `${currentTransaction.amount}`);
+    return map;
+  }, [currentTransaction]);
+
   const handleChange = useCallback((name: string, value: string) => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   }, []);
@@ -108,16 +131,16 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     let error = false;
     setResetForm(false);
 
-    const { amount, categoryName, storeName, date } = formState;
+    const { amount, category, storeName, date } = formState;
 
     if (isEmptyString(storeName)) {
       error = error || true;
       handleFormError('storeName');
     }
 
-    if (isEmptyString(categoryName)) {
+    if (isEmptyString(category)) {
       error = error || true;
-      handleFormError('categoryName');
+      handleFormError('category');
     }
 
     if (isEmptyString(amount)) {
@@ -139,23 +162,24 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
 
       if (!currentTransaction) {
         await firestore?.collection(SPENDING).add({
-          storeName: storeName.trim(),
-          category: categoryName.trim(),
-          amount: Number(amount.trim()),
-          date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
+          storeName: storeName?.trim(),
+          category: category?.trim(),
+          amount: Number(amount?.trim()),
+          date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date ?? '')),
           createdAt: timestamp,
           updatedAt: timestamp
         } as ISpending);
       } else {
-        await firestore
-          .collection(SPENDING)
-          .doc(currentTransaction.id)
-          .update({
-            category: categoryName.trim(),
-            amount: Number(amount.trim()),
-            date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
-            updatedAt: timestamp
-          } as Partial<ISpending>);
+        console.log({ changedFields });
+        // await firestore
+        //   .collection(SPENDING)
+        //   .doc(currentTransaction.id)
+        //   .update({
+        //     category: categoryName.trim(),
+        //     amount: Number(amount.trim()),
+        //     date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
+        //     updatedAt: timestamp
+        //   } as Partial<ISpending>);
       }
 
       notificationDispatch({
@@ -179,6 +203,20 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       setIsSpendingEntryBeingAdded(false);
     }
   };
+
+  useEffect(() => {
+    if (currentTransactionMap) {
+      console.log({ currentTransactionMap });
+      Object.entries(formState).forEach(([key, value]) => {
+        if (
+          !currentTransactionMap.has(key) ||
+          currentTransactionMap.get(key) !== value
+        ) {
+          setChangedFields((prevState) => ({ ...prevState, [key]: value }));
+        }
+      });
+    }
+  }, [formState, currentTransactionMap]);
 
   return (
     <Modal
@@ -216,14 +254,14 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
           )}
           <div className='mt-6'>
             <Select
-              name='categoryName'
+              name='category'
               label='Category Name'
               placeHolder='Eg. Rent, Groceries'
               selectOptions={spendingCategoryNameDropdownOptions}
               subContent={
-                formErrors.categoryName.error && formErrors.categoryName.content
+                formErrors.category.error && formErrors.category.content
               }
-              theme={formErrors.categoryName.error ? INPUT_THEME_ERROR : ''}
+              theme={formErrors.category.error ? INPUT_THEME_ERROR : ''}
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
@@ -281,6 +319,12 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               }
               onClickHandler={(e) => handleSubmit(e)}
               loading={isSpendingEntryBeingAdded}
+              disabled={
+                currentTransaction &&
+                changedFields &&
+                Object.values(changedFields).filter((v) => v && v.trim() !== '')
+                  .length === 0
+              }
               type='submit'
             />
           </div>
