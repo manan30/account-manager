@@ -245,8 +245,8 @@ const Spending = () => {
           )
           .sort((a, b) => {
             return (
-              new Date(a.date.toDate()).valueOf() -
-              new Date(b.date.toDate()).valueOf()
+              new Date(b.date.toDate()).valueOf() -
+              new Date(a.date.toDate()).valueOf()
             );
           })
       );

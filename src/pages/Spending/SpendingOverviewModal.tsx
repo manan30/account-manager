@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from '../../components/Modal';
 import { ISpending } from '../../models/Spending';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 
 type SpendingOverviewModalProps = {
@@ -32,7 +33,7 @@ const SpendingOverviewModal: React.FC<SpendingOverviewModalProps> = ({
           {currentTransaction?.storeName}
         </h1>
         <h2 className='tracking-wider uppercase text-xl mb-4 text-indigo-500'>
-          ${currentTransaction?.amount}
+          ${NumberWithCommasFormatter.format(`${currentTransaction?.amount}`)}
         </h2>
         <div className='font-medium text-xl w-full text-center mb-4 text-gray-600'>
           All {currentTransaction?.category || ''} transactions
@@ -54,7 +55,7 @@ const SpendingOverviewModal: React.FC<SpendingOverviewModalProps> = ({
                   {transaction.storeName}
                 </div>
                 <div className='w-1/5 text-right text-gray-700'>
-                  ${transaction.amount}
+                  ${NumberWithCommasFormatter.format(`${transaction.amount}`)}
                 </div>
               </div>
             );
