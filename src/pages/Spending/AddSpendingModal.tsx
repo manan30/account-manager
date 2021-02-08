@@ -80,9 +80,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     return [] as SelectOption[];
   }, [spendingCategoryNames]);
 
-  const handleChange = (name: string, value: string) => {
+  const handleChange = useCallback((name: string, value: string) => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
-  };
+  }, []);
 
   const handleFormError = (key: string) => {
     setFormErrors((prevState) => ({
@@ -239,9 +239,10 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               resetFormErrors={resetFormErrors}
               validator={AmountValidator}
               valueFormatter={NumberWithCommasFormatter}
-              onBlurUpdate={(name, value) => {
-                handleChange(name, value);
-              }}
+              onBlurUpdate={handleChange}
+              defaultValue={
+                currentTransaction && `${currentTransaction.amount}`
+              }
             />
           </div>
           <div className='my-6'>
@@ -254,9 +255,15 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
-              onBlurUpdate={(name, value) => {
-                handleChange(name, value);
-              }}
+              onBlurUpdate={handleChange}
+              defaultValue={
+                currentTransaction &&
+                new Intl.DateTimeFormat('en-US', {
+                  month: '2-digit',
+                  year: 'numeric',
+                  day: 'numeric'
+                }).format(currentTransaction.date.toDate())
+              }
             />
           </div>
           <div className='mt-10'>
