@@ -23,12 +23,12 @@ type AddSpendingModalProps = {
   currentTransaction?: ISpending;
 };
 
-type FormFields = {
+interface FormFields extends Record<string, string | undefined> {
   storeName?: string;
   category?: string;
   amount?: string;
   date?: string;
-};
+}
 
 const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   handleModalClose,
@@ -170,16 +170,20 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
           updatedAt: timestamp
         } as ISpending);
       } else {
-        console.log({ changedFields });
-        // await firestore
-        //   .collection(SPENDING)
-        //   .doc(currentTransaction.id)
-        //   .update({
-        //     category: categoryName.trim(),
-        //     amount: Number(amount.trim()),
-        //     date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
-        //     updatedAt: timestamp
-        //   } as Partial<ISpending>);
+        if (changedFields) {
+          const updatedFields = {} as FormFields;
+          Object.entries(changedFields).forEach(([key, value]) => {
+            if (value?.trim() !== '') updatedFields[key] = value;
+          });
+          if (updatedFields.date)
+            updatedFields.date = firebaseApp?.firestore.Timestamp.fromDate(
+              new Date(updatedFields.date)
+            );
+          await firestore
+            .collection(SPENDING)
+            .doc(currentTransaction.id)
+            .update(updatedFields);
+        }
       }
 
       notificationDispatch({
@@ -206,7 +210,6 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
 
   useEffect(() => {
     if (currentTransactionMap) {
-      console.log({ currentTransactionMap });
       Object.entries(formState).forEach(([key, value]) => {
         if (
           !currentTransactionMap.has(key) ||
