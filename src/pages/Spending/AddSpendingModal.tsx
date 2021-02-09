@@ -197,7 +197,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
-          content: 'New Spending Entry Added',
+          content: !currentTransaction
+            ? 'New spending entry added'
+            : 'Spending entry updated',
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
@@ -205,7 +207,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
-          content: 'Error occurred while adding a new spending entry',
+          content: `Error occurred while ${
+            !currentTransaction ? 'adding new' : 'updating'
+          } spending entry`,
           theme: NOTIFICATION_THEME_FAILURE
         }
       });
