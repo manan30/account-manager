@@ -217,6 +217,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     } finally {
       setResetForm(true);
       setIsSpendingEntryBeingAdded(false);
+      handleModalClose();
     }
   };
 
