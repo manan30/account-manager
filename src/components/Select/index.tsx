@@ -17,6 +17,7 @@ type SelectProps = {
   theme?: string;
   resetField?: boolean;
   isLoading?: boolean;
+  defaultValue?: string;
   onSelectValueChange?: (name: string, value: SelectOption) => void;
   resetFormErrors?: (name: string) => void;
   setResetField?: () => void;
@@ -31,6 +32,7 @@ const Select: React.FC<SelectProps> = ({
   theme = '',
   resetField,
   isLoading,
+  defaultValue,
   onSelectValueChange,
   resetFormErrors,
   setResetField
@@ -60,6 +62,14 @@ const Select: React.FC<SelectProps> = ({
         onSelectValueChange(name, { label: '', value: '' });
     }
   }, [resetField, name, onSelectValueChange, selectValue]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelectValue(defaultValue);
+      if (onSelectValueChange)
+        onSelectValueChange(name, { label: '', value: defaultValue });
+    }
+  }, [defaultValue, onSelectValueChange, name]);
 
   const handleClick = (option: SelectOption) => {
     if (setResetField) setResetField();

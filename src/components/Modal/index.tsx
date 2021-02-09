@@ -36,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (shouldCloseOnEscape) {
       const escapeKeyHandler = (e: KeyboardEvent) => {
-        if (e.code === 'Escape') onCloseClickHandler();
+        if (e.code === 'Escape') buttonClickHandler(false);
       };
       window.addEventListener('keyup', escapeKeyHandler);
       return () => window.removeEventListener('keyup', escapeKeyHandler);

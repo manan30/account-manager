@@ -179,8 +179,14 @@ const Spending = () => {
       {
         id: 'edit',
         accessor: undefined,
-        Cell: () => (
-          <button className='text-gray-500 hover:text-gray-700'>
+        Cell: ({ row }: { row: Row<Partial<ISpending>> }) => (
+          <button
+            className='text-gray-500 hover:text-gray-700'
+            onClick={() => {
+              setCurrentSpendingEntry(row.original as ISpending);
+              setShowAddSpendingModal(true);
+            }}
+          >
             <MdEdit size={20} />
           </button>
         ),
@@ -237,11 +243,18 @@ const Spending = () => {
   useEffect(() => {
     if (showSpendingOverviewModal)
       setSpendingOverviewModalData(
-        spendingData?.filter(
-          (d) =>
-            d.category === currentSpendingEntry?.category &&
-            d.id !== currentSpendingEntry.id
-        )
+        spendingData
+          ?.filter(
+            (d) =>
+              d.category === currentSpendingEntry?.category &&
+              d.id !== currentSpendingEntry.id
+          )
+          .sort((a, b) => {
+            return (
+              new Date(b.date.toDate()).valueOf() -
+              new Date(a.date.toDate()).valueOf()
+            );
+          })
       );
   }, [showSpendingOverviewModal, spendingData, currentSpendingEntry]);
 
@@ -331,6 +344,7 @@ const Spending = () => {
       {showAddSpendingModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <AddSpendingModal
+            currentTransaction={currentSpendingEntry}
             handleModalClose={() => {
               setShowAddSpendingModal(false);
             }}

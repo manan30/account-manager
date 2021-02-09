@@ -1,10 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
 import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
+import { SPENDING } from '../../models/models';
 import { ISpending } from '../../models/Spending';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -19,10 +20,19 @@ import { AmountValidator } from '../../utils/Validators';
 
 type AddSpendingModalProps = {
   handleModalClose: () => void;
+  currentTransaction?: ISpending;
 };
 
+interface FormFields extends Record<string, string | undefined> {
+  storeName?: string;
+  category?: string;
+  amount?: string;
+  date?: string;
+}
+
 const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
-  handleModalClose
+  handleModalClose,
+  currentTransaction
 }) => {
   const { firestore, firebaseApp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
@@ -31,15 +41,15 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     data: spendingCategoryNames,
     isLoading: fetchingSpendingCategoryNames
   } = useGetSpendingCategoryNames();
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<FormFields>({
     storeName: '',
-    categoryName: '',
+    category: '',
     amount: '',
     date: ''
   });
   const [formErrors, setFormErrors] = useState({
     storeName: { error: false, content: '' },
-    categoryName: { error: false, content: '' },
+    category: { error: false, content: '' },
     amount: { error: false, content: '' },
     date: { error: false, content: '' }
   });
@@ -47,6 +57,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   const [isSpendingEntryBeingAdded, setIsSpendingEntryBeingAdded] = useState(
     false
   );
+  const [changedFields, setChangedFields] = useState<FormFields | undefined>();
 
   const resetFormErrors = useCallback(
     (name: string) =>
@@ -77,9 +88,31 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     return [] as SelectOption[];
   }, [spendingCategoryNames]);
 
-  const handleChange = (name: string, value: string) => {
+  const currentTransactionMap = useMemo(() => {
+    if (!currentTransaction) return undefined;
+    const map = new Map<string, string>(Object.entries(currentTransaction));
+    map.set(
+      'date',
+      new Intl.DateTimeFormat('en-US', {
+        month: '2-digit',
+        year: 'numeric',
+        day: 'numeric'
+      }).format(currentTransaction.date.toDate())
+    );
+    map.set('amount', `${currentTransaction.amount}`);
+    return map;
+  }, [currentTransaction]);
+
+  const handleChange = useCallback((name: string, value: string) => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
-  };
+  }, []);
+
+  const handleSelectChange = useCallback(
+    (name: string, { value }: { value: string }) => {
+      setFormState((prevState) => ({ ...prevState, [name]: value }));
+    },
+    []
+  );
 
   const handleFormError = (key: string) => {
     setFormErrors((prevState) => ({
@@ -98,16 +131,16 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     let error = false;
     setResetForm(false);
 
-    const { amount, categoryName, storeName, date } = formState;
+    const { amount, category, storeName, date } = formState;
 
     if (isEmptyString(storeName)) {
       error = error || true;
       handleFormError('storeName');
     }
 
-    if (isEmptyString(categoryName)) {
+    if (isEmptyString(category)) {
       error = error || true;
-      handleFormError('categoryName');
+      handleFormError('category');
     }
 
     if (isEmptyString(amount)) {
@@ -127,19 +160,46 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
 
       const timestamp = firebaseApp?.firestore.Timestamp.now();
 
-      await firestore?.collection('spending').add({
-        storeName: storeName.trim(),
-        category: categoryName.trim(),
-        amount: Number(amount.trim()),
-        date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date)),
-        createdAt: timestamp,
-        updatedAt: timestamp
-      } as ISpending);
+      if (!currentTransaction) {
+        await firestore?.collection(SPENDING).add({
+          storeName: storeName?.trim(),
+          category: category?.trim(),
+          amount: Number(amount?.trim()),
+          date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date ?? '')),
+          createdAt: timestamp,
+          updatedAt: timestamp
+        } as ISpending);
+      } else {
+        if (changedFields) {
+          const updatedFields = {} as Partial<ISpending>;
+          Object.entries(changedFields).forEach(([key, value]) => {
+            if (value && value?.trim() !== '') {
+              if (key === 'date') {
+                updatedFields.date = firebaseApp?.firestore.Timestamp.fromDate(
+                  new Date(value)
+                );
+              } else if (key === 'amount') {
+                updatedFields.amount = Number(value);
+              } else {
+                updatedFields.category = value;
+              }
+            }
+          });
+          await firestore
+            .collection(SPENDING)
+            .doc(currentTransaction.id)
+            .update({ ...updatedFields, updatedAt: timestamp } as Partial<
+              ISpending
+            >);
+        }
+      }
 
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
-          content: 'New Spending Entry Added',
+          content: !currentTransaction
+            ? 'New spending entry added'
+            : 'Spending entry updated',
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
@@ -147,7 +207,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
-          content: 'Error occurred while adding a new spending entry',
+          content: `Error occurred while ${
+            !currentTransaction ? 'adding new' : 'updating'
+          } spending entry`,
           theme: NOTIFICATION_THEME_FAILURE
         }
       });
@@ -155,8 +217,22 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     } finally {
       setResetForm(true);
       setIsSpendingEntryBeingAdded(false);
+      handleModalClose();
     }
   };
+
+  useEffect(() => {
+    if (currentTransactionMap) {
+      Object.entries(formState).forEach(([key, value]) => {
+        if (
+          !currentTransactionMap.has(key) ||
+          currentTransactionMap.get(key) !== value
+        ) {
+          setChangedFields((prevState) => ({ ...prevState, [key]: value }));
+        }
+      });
+    }
+  }, [formState, currentTransactionMap]);
 
   return (
     <Modal
@@ -167,38 +243,47 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     >
       <div className='flex justify-center mx-8'>
         <form className='mb-8 w-full'>
-          <Select
-            name='storeName'
-            label='Store Name'
-            placeHolder='Eg. Aldi, Target'
-            selectOptions={storeNameDropdownOptions}
-            subContent={
-              formErrors.storeName.error && formErrors.storeName.content
-            }
-            theme={formErrors.storeName.error ? INPUT_THEME_ERROR : ''}
-            resetField={resetForm}
-            setResetField={() => setResetForm(false)}
-            resetFormErrors={resetFormErrors}
-            onSelectValueChange={(name, { value }) => handleChange(name, value)}
-            isLoading={fetchingStores}
-          />
+          {!currentTransaction ? (
+            <Select
+              name='storeName'
+              label='Store Name'
+              placeHolder='Eg. Aldi, Target'
+              selectOptions={storeNameDropdownOptions}
+              subContent={
+                formErrors.storeName.error && formErrors.storeName.content
+              }
+              theme={formErrors.storeName.error ? INPUT_THEME_ERROR : ''}
+              resetField={resetForm}
+              setResetField={() => setResetForm(false)}
+              resetFormErrors={resetFormErrors}
+              onSelectValueChange={handleSelectChange}
+              isLoading={fetchingStores}
+            />
+          ) : (
+            <Input
+              name='storeName'
+              label='Store Name'
+              onBlurUpdate={handleChange}
+              defaultValue={currentTransaction.storeName}
+              disabled
+            />
+          )}
           <div className='mt-6'>
             <Select
-              name='categoryName'
+              name='category'
               label='Category Name'
               placeHolder='Eg. Rent, Groceries'
               selectOptions={spendingCategoryNameDropdownOptions}
               subContent={
-                formErrors.categoryName.error && formErrors.categoryName.content
+                formErrors.category.error && formErrors.category.content
               }
-              theme={formErrors.categoryName.error ? INPUT_THEME_ERROR : ''}
+              theme={formErrors.category.error ? INPUT_THEME_ERROR : ''}
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
-              onSelectValueChange={(name, { value }) =>
-                handleChange(name, value)
-              }
+              onSelectValueChange={handleSelectChange}
               isLoading={fetchingSpendingCategoryNames}
+              defaultValue={currentTransaction && currentTransaction.category}
             />
           </div>
           <div className='mt-6'>
@@ -214,9 +299,10 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               resetFormErrors={resetFormErrors}
               validator={AmountValidator}
               valueFormatter={NumberWithCommasFormatter}
-              onBlurUpdate={(name, value) => {
-                handleChange(name, value);
-              }}
+              onBlurUpdate={handleChange}
+              defaultValue={
+                currentTransaction && `${currentTransaction.amount}`
+              }
             />
           </div>
           <div className='my-6'>
@@ -229,16 +315,32 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               resetField={resetForm}
               setResetField={() => setResetForm(false)}
               resetFormErrors={resetFormErrors}
-              onBlurUpdate={(name, value) => {
-                handleChange(name, value);
-              }}
+              onBlurUpdate={handleChange}
+              defaultValue={
+                currentTransaction &&
+                new Intl.DateTimeFormat('en-US', {
+                  month: '2-digit',
+                  year: 'numeric',
+                  day: 'numeric'
+                }).format(currentTransaction.date.toDate())
+              }
             />
           </div>
           <div className='mt-10'>
             <Button
-              buttonText='Add Spending Entry'
+              buttonText={
+                !currentTransaction
+                  ? 'Add Spending Entry'
+                  : 'Update Spending Entry'
+              }
               onClickHandler={(e) => handleSubmit(e)}
               loading={isSpendingEntryBeingAdded}
+              disabled={
+                currentTransaction &&
+                changedFields &&
+                Object.values(changedFields).filter((v) => v && v.trim() !== '')
+                  .length === 0
+              }
               type='submit'
             />
           </div>
