@@ -171,18 +171,26 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
         } as ISpending);
       } else {
         if (changedFields) {
-          const updatedFields = {} as FormFields;
+          const updatedFields = {} as Partial<ISpending>;
           Object.entries(changedFields).forEach(([key, value]) => {
-            if (value?.trim() !== '') updatedFields[key] = value;
+            if (value && value?.trim() !== '') {
+              if (key === 'date') {
+                updatedFields.date = firebaseApp?.firestore.Timestamp.fromDate(
+                  new Date(value)
+                );
+              } else if (key === 'amount') {
+                updatedFields.amount = Number(value);
+              } else {
+                updatedFields.category = value;
+              }
+            }
           });
-          if (updatedFields.date)
-            updatedFields.date = firebaseApp?.firestore.Timestamp.fromDate(
-              new Date(updatedFields.date)
-            );
           await firestore
             .collection(SPENDING)
             .doc(currentTransaction.id)
-            .update(updatedFields);
+            .update({ ...updatedFields, updatedAt: timestamp } as Partial<
+              ISpending
+            >);
         }
       }
 
