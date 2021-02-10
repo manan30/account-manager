@@ -20,6 +20,7 @@ import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
+import useStackedChart from '../../hooks/Charts/useStackedChart';
 import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
@@ -35,6 +36,7 @@ const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
+  const stackedChart = useStackedChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
