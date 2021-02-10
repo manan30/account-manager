@@ -282,6 +282,7 @@ const Spending = () => {
                 width={width}
                 containerComponent={
                   <VictoryVoronoiContainer
+                    voronoiBlacklist={['line']}
                     labels={({ datum }) =>
                       `${numberToMonthMapping(datum.x)}: $${datum.y}`
                     }
@@ -318,6 +319,7 @@ const Spending = () => {
                   dependentAxis
                 />
                 <VictoryLine
+                  name='line'
                   data={formattedData}
                   sortKey='x'
                   sortOrder='ascending'
@@ -328,22 +330,13 @@ const Spending = () => {
                   animate
                 />
                 <VictoryScatter
+                  name='scatter'
                   symbol='circle'
                   style={{ data: { fill: '#2b4ff1' } }}
+                  size={({ active }) => (active ? 6 : 4)}
                   data={formattedData}
                   animate
                 />
-                {/* <VictoryStack
-                  colorScale={['tomato', 'orange', 'gold']}
-                  horizontal
-                >
-                  {stackChartData.map((data) => {
-                    console.log({ data });
-                    return (
-                      <VictoryBar key={data.key} data={data.value} animate />
-                    );
-                  })}
-                </VictoryStack> */}
               </VictoryChart>
             ) : (
               <div className='grid h-full w-full place-items-center'>
