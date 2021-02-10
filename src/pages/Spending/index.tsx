@@ -6,8 +6,10 @@ import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
 import { Column, Row } from 'react-table';
 import {
   VictoryAxis,
+  VictoryBar,
   VictoryChart,
   VictoryLine,
+  VictoryStack,
   VictoryTheme,
   VictoryTooltip,
   VictoryVoronoiContainer
@@ -28,7 +30,6 @@ import { useNotificationDispatchContext } from '../../providers/NotificationProv
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
-import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 import SpendingOverviewModal from './SpendingOverviewModal';
 
@@ -36,7 +37,11 @@ const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
-  const stackedChart = useStackedChart(spendingData);
+  const {
+    formattedData: stackChartData,
+    isDataFormatted: stackChartDataFormatted,
+    categories
+  } = useStackedChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
@@ -271,15 +276,15 @@ const Spending = () => {
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='mb-6' ref={chartContainerRef} style={{ height: '40%' }}>
           <Card className='shadow-lg p-6 mb-6'>
-            {isDataFormatted ? (
+            {stackChartDataFormatted && stackChartData ? (
               <VictoryChart
                 theme={VictoryTheme.material}
                 width={width}
                 containerComponent={
                   <VictoryVoronoiContainer
-                    labels={({ datum }) =>
-                      `${numberToMonthMapping(datum.x)}: $${datum.y}`
-                    }
+                    labels={({ datum }) => {
+                      return `${datum.x}-$${datum.y}`;
+                    }}
                     labelComponent={
                       <VictoryTooltip
                         flyoutStyle={{
@@ -302,6 +307,7 @@ const Spending = () => {
                     tickLabels: { fontSize: 12 },
                     grid: { stroke: 'none' }
                   }}
+                  label={stackChartData.map((data) => data.key)}
                   fixLabelOverlap
                 />
                 <VictoryAxis
@@ -312,7 +318,7 @@ const Spending = () => {
                   fixLabelOverlap
                   dependentAxis
                 />
-                <VictoryLine
+                {/* <VictoryLine
                   data={formattedData}
                   sortKey='x'
                   sortOrder='ascending'
@@ -321,7 +327,13 @@ const Spending = () => {
                     data: { stroke: '#667eea' }
                   }}
                   animate
-                />
+                /> */}
+                <VictoryStack>
+                  {stackChartData.map((data) => {
+                    console.log({ data });
+                    return <VictoryBar key={data.key} data={data.value} />;
+                  })}
+                </VictoryStack>
               </VictoryChart>
             ) : (
               <div className='grid h-full w-full place-items-center'>

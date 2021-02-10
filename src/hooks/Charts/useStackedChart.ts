@@ -40,11 +40,16 @@ const useStackedChart = <T extends ISpending>(data?: Array<T>) => {
 
     setIsDataFormatted(true);
 
-    return [...map.entries()].map(([key, value]) => ({
-      x: key,
-      y: value
-    }));
+    return [...map.entries()].map(([key, value]) => {
+      const formattedValue = Object.entries(value).map(([k, v]) => ({
+        x: k,
+        y: v
+      }));
+      return { key, value: formattedValue };
+    });
   }, [data, categories]);
+
+  console.log({ formattedData });
 
   return {
     formattedData,
