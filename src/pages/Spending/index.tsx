@@ -8,6 +8,7 @@ import {
   VictoryAxis,
   VictoryChart,
   VictoryLine,
+  VictoryPie,
   VictoryScatter,
   VictoryTheme,
   VictoryTooltip,
@@ -21,7 +22,7 @@ import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
-import useStackedChart from '../../hooks/Charts/useStackedChart';
+import usePieChart from '../../hooks/Charts/usePieChart';
 import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
@@ -37,11 +38,6 @@ const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
   const { formattedData, isDataFormatted } = useLineChart(spendingData);
-  const {
-    formattedData: stackChartData,
-    isDataFormatted: stackChartDataFormatted,
-    categories
-  } = useStackedChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
@@ -67,6 +63,10 @@ const Spending = () => {
   const [currentMonthYear, setCurrentMonthYear] = useState<
     string | undefined
   >();
+  const {
+    formattedData: pieChartData,
+    isDataFormatted: pieChartDataFormatted
+  } = usePieChart(spendingData, currentMonthYear);
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -357,6 +357,9 @@ const Spending = () => {
                   ]}
                   animate
                 />
+                {pieChartData && pieChartDataFormatted && (
+                  <VictoryPie data={pieChartData} animate />
+                )}
               </VictoryChart>
             ) : (
               <div className='grid h-full w-full place-items-center'>
