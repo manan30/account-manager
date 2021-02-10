@@ -64,6 +64,9 @@ const Spending = () => {
   const [spendingOverviewModalData, setSpendingOverviewModalData] = useState<
     ISpending[] | undefined
   >();
+  const [currentMonthYear, setCurrentMonthYear] = useState<
+    string | undefined
+  >();
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -335,6 +338,23 @@ const Spending = () => {
                   style={{ data: { fill: '#2b4ff1' } }}
                   size={({ active }) => (active ? 6 : 4)}
                   data={formattedData}
+                  events={[
+                    {
+                      target: 'data',
+                      eventHandlers: {
+                        onClick: () => {
+                          return [
+                            {
+                              target: 'data',
+                              mutation: ({ datum }) => {
+                                setCurrentMonthYear(datum.x);
+                              }
+                            }
+                          ];
+                        }
+                      }
+                    }
+                  ]}
                   animate
                 />
               </VictoryChart>
