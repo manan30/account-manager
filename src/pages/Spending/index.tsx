@@ -8,6 +8,7 @@ import {
   VictoryAxis,
   VictoryChart,
   VictoryLine,
+  VictoryScatter,
   VictoryTheme,
   VictoryTooltip,
   VictoryVoronoiContainer
@@ -324,6 +325,12 @@ const Spending = () => {
                   style={{
                     data: { stroke: '#667eea' }
                   }}
+                  animate
+                />
+                <VictoryScatter
+                  symbol='circle'
+                  style={{ data: { fill: '#2b4ff1' } }}
+                  data={formattedData}
                   animate
                 />
                 {/* <VictoryStack
