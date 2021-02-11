@@ -345,6 +345,8 @@ const Spending = () => {
                         )}`
                       }
                       endAngle={angle}
+                      padAngle={10}
+                      innerRadius={50}
                       animate
                     />
                   </VictoryChart>
