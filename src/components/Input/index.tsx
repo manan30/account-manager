@@ -23,6 +23,7 @@ type InputProps = {
   setFormState?: (name: string, value: string) => void;
   onBlurUpdate?: (name: string, value: string) => void;
   setResetField?: () => void;
+  disabled?: boolean;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -36,6 +37,7 @@ const Input: React.FC<InputProps> = ({
   resetField,
   valueFormatter,
   defaultValue,
+  disabled,
   setResetField,
   setFormState,
   onBlurUpdate,
@@ -93,8 +95,11 @@ const Input: React.FC<InputProps> = ({
   }, [inputValue, validator]);
 
   useEffect(() => {
-    if (defaultValue) setInputValue(defaultValue);
-  }, [defaultValue]);
+    if (defaultValue) {
+      setInputValue(defaultValue);
+      if (onBlurUpdate) onBlurUpdate(name, defaultValue);
+    }
+  }, [defaultValue, onBlurUpdate, name]);
 
   return (
     <>
@@ -120,7 +125,7 @@ const Input: React.FC<InputProps> = ({
           onBlur={() => {
             if (onBlurUpdate) onBlurUpdate(name, inputValue);
           }}
-          disabled={!!defaultValue}
+          disabled={disabled}
         />
       </Label>
       {(subContent || !isEmptyString(error.message)) && (

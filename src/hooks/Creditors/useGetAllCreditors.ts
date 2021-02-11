@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ICreditor } from 'models/Creditor';
+import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
 // TODO: Combine both the creditor hooks

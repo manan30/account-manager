@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import cn from 'classnames';
 import { MdClose } from 'react-icons/md';
+import Loader from '../Loader';
 
 type ModalProps = {
   isOpen: boolean;
@@ -35,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (shouldCloseOnEscape) {
       const escapeKeyHandler = (e: KeyboardEvent) => {
-        if (e.code === 'Escape') onCloseClickHandler();
+        if (e.code === 'Escape') buttonClickHandler(false);
       };
       window.addEventListener('keyup', escapeKeyHandler);
       return () => window.removeEventListener('keyup', escapeKeyHandler);
@@ -98,10 +99,15 @@ const Modal: React.FC<ModalProps> = ({
           <div className='bg-gray-100 -mx-4 px-4 py-3 -mb-4 mt-3 flex justify-items-end flex-row-reverse items-center'>
             <button
               type='button'
-              className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm'
-              onClick={() => buttonClickHandler(true)}
+              className='w-24 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 sm:ml-3 sm:text-sm'
+              disabled={isPerformingAsyncTask}
+              onClick={onConfirmClickHandler}
             >
-              {confirmButtonText || 'Confirm'}
+              {isPerformingAsyncTask ? (
+                <Loader color='text-white' />
+              ) : (
+                confirmButtonText || 'Confirm'
+              )}
             </button>
             <button
               type='button'
