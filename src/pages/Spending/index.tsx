@@ -306,12 +306,27 @@ const Spending = () => {
             </div>
             <div
               style={{ height: 'calc(100% - 2.5rem)' }}
-              // className='bg-red-500'
               ref={chartContainerRef}
             >
               {showPieChart ? (
                 pieChartData && pieChartDataFormatted ? (
-                  <VictoryPie data={pieChartData} animate />
+                  <VictoryChart theme={VictoryTheme.material} width={width}>
+                    <VictoryAxis
+                      style={{
+                        axis: { stroke: 'transparent' },
+                        ticks: { stroke: 'transparent' },
+                        tickLabels: { fill: 'transparent' }
+                      }}
+                    />
+                    <VictoryPie
+                      data={pieChartData}
+                      style={{
+                        data: { fill: ({ datum }) => datum.fill },
+                        labels: { fontSize: 16, fontWeight: 'bold' }
+                      }}
+                      animate
+                    />
+                  </VictoryChart>
                 ) : (
                   <div className='grid h-full w-full place-items-center'>
                     <Loader size={48} />

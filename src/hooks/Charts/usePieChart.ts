@@ -1,5 +1,6 @@
-import { ISpending } from 'models/Spending';
 import { useMemo, useState } from 'react';
+import { ISpending } from '../../models/Spending';
+import { spendingCategoryColorMapping } from '../../utils/Functions';
 
 const usePieChart = (
   data?: Array<ISpending> | undefined,
@@ -23,14 +24,16 @@ const usePieChart = (
       return dMonthYear === monthYear;
     });
 
-    console.log({ currentMonthYearData });
-
     currentMonthYearData.forEach(({ amount, category }) => {
       map.set(category, map.get(category) + amount || amount);
     });
 
     setIsDataFormatted(true);
-    return [...map].map(([key, value]) => ({ x: key, y: value }));
+    return [...map].map(([key, value]) => ({
+      x: key,
+      y: value,
+      fill: spendingCategoryColorMapping(key)
+    }));
   }, [data, monthYear]);
 
   return {
