@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import cn from 'classnames';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
+import { MdAdd, MdArrowBack, MdDelete, MdEdit } from 'react-icons/md';
 import { Column, Row } from 'react-table';
 import {
   VictoryAxis,
@@ -284,8 +285,24 @@ const Spending = () => {
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='mb-6' style={{ height: '40%' }}>
           <Card className='shadow-lg p-6 mb-6'>
-            <div className='text-xl font-semibold tracking-wider text-indigo-600 h-10'>
-              Monthly Spending
+            <div
+              className={cn(
+                'text-xl font-semibold tracking-wider text-indigo-600 h-10',
+                showPieChart && 'flex items-center'
+              )}
+            >
+              {showPieChart && (
+                <button
+                  className='text-indigo-500 mr-4'
+                  onClick={() => {
+                    setShowPieChart(false);
+                    setCurrentMonthYear(undefined);
+                  }}
+                >
+                  <MdArrowBack size={20} />
+                </button>
+              )}
+              <div>{showPieChart ? 'Pie Chart' : 'Monthly Spending'}</div>
             </div>
             <div
               style={{ height: 'calc(100% - 2.5rem)' }}
@@ -293,7 +310,13 @@ const Spending = () => {
               ref={chartContainerRef}
             >
               {showPieChart ? (
-                <div></div>
+                pieChartData && pieChartDataFormatted ? (
+                  <VictoryPie data={pieChartData} animate />
+                ) : (
+                  <div className='grid h-full w-full place-items-center'>
+                    <Loader size={48} />
+                  </div>
+                )
               ) : lineChartData && lineChartDataFormatted ? (
                 <VictoryChart
                   theme={VictoryTheme.material}
@@ -376,9 +399,6 @@ const Spending = () => {
                     ]}
                     animate
                   />
-                  {pieChartData && pieChartDataFormatted && (
-                    <VictoryPie data={pieChartData} animate />
-                  )}
                 </VictoryChart>
               ) : (
                 <div className='grid h-full w-full place-items-center'>
