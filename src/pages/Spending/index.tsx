@@ -17,6 +17,7 @@ import {
 } from 'victory';
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
+import CustomLabel from '../../components/CustomLabel';
 import Loader from '../../components/Loader';
 import DeleteModal from '../../components/Modal';
 import ModalFallback from '../../components/ModalFallback';
@@ -324,6 +325,9 @@ const Spending = () => {
                         data: { fill: ({ datum }) => datum.fill },
                         labels: { fontSize: 16, fontWeight: 'bold' }
                       }}
+                      labels={({ datum }) =>
+                        `${datum.x}: $${datum.y.toFixed(0)}`
+                      }
                       animate
                     />
                   </VictoryChart>
