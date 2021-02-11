@@ -37,7 +37,10 @@ import SpendingOverviewModal from './SpendingOverviewModal';
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
-  const { formattedData, isDataFormatted } = useLineChart(spendingData);
+  const {
+    formattedData: lineChartData,
+    isDataFormatted: lineChartDataFormatted
+  } = useLineChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
@@ -63,11 +66,13 @@ const Spending = () => {
   const [currentMonthYear, setCurrentMonthYear] = useState<
     string | undefined
   >();
+  const [showPieChart, setShowPieChart] = useState(false);
   const {
     formattedData: pieChartData,
     isDataFormatted: pieChartDataFormatted
   } = usePieChart(spendingData, currentMonthYear);
 
+  console.log({ width });
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
       {
@@ -277,98 +282,110 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        <div className='mb-6' ref={chartContainerRef} style={{ height: '40%' }}>
+        <div className='mb-6' style={{ height: '40%' }}>
           <Card className='shadow-lg p-6 mb-6'>
-            {isDataFormatted ? (
-              <VictoryChart
-                theme={VictoryTheme.material}
-                width={width}
-                containerComponent={
-                  <VictoryVoronoiContainer
-                    voronoiBlacklist={['line']}
-                    labels={({ datum }) =>
-                      `${numberToMonthMapping(datum.x)}: $${datum.y}`
-                    }
-                    labelComponent={
-                      <VictoryTooltip
-                        flyoutStyle={{
-                          fill: 'white',
-                          stroke: '#455a63',
-                          strokeWidth: '0.4'
-                        }}
-                        style={{
-                          fontSize: 12,
-                          fill: '#667eea'
-                        }}
-                        flyoutPadding={8}
-                        cornerRadius={4}
-                        activateData
-                        constrainToVisibleArea
-                      />
-                    }
+            <div className='text-xl font-semibold tracking-wider text-indigo-600 h-10'>
+              Monthly Spending
+            </div>
+            <div
+              style={{ height: 'calc(100% - 2.5rem)' }}
+              // className='bg-red-500'
+              ref={chartContainerRef}
+            >
+              {showPieChart ? (
+                <div></div>
+              ) : lineChartData && lineChartDataFormatted ? (
+                <VictoryChart
+                  theme={VictoryTheme.material}
+                  width={width}
+                  containerComponent={
+                    <VictoryVoronoiContainer
+                      voronoiBlacklist={['line']}
+                      labels={({ datum }) =>
+                        `${numberToMonthMapping(datum.x)}: $${datum.y}`
+                      }
+                      labelComponent={
+                        <VictoryTooltip
+                          flyoutStyle={{
+                            fill: 'white',
+                            stroke: '#455a63',
+                            strokeWidth: '0.4'
+                          }}
+                          style={{
+                            fontSize: 12,
+                            fill: '#667eea'
+                          }}
+                          flyoutPadding={8}
+                          cornerRadius={4}
+                          activateData
+                          constrainToVisibleArea
+                        />
+                      }
+                    />
+                  }
+                >
+                  <VictoryAxis
+                    style={{
+                      tickLabels: { fontSize: 12 },
+                      grid: { stroke: 'none' }
+                    }}
+                    fixLabelOverlap
                   />
-                }
-              >
-                <VictoryAxis
-                  style={{
-                    tickLabels: { fontSize: 12 },
-                    grid: { stroke: 'none' }
-                  }}
-                  fixLabelOverlap
-                />
-                <VictoryAxis
-                  style={{
-                    tickLabels: { fontSize: 12 },
-                    grid: { stroke: 'none' }
-                  }}
-                  fixLabelOverlap
-                  dependentAxis
-                />
-                <VictoryLine
-                  name='line'
-                  data={formattedData}
-                  sortKey='x'
-                  sortOrder='ascending'
-                  interpolation='catmullRom'
-                  style={{
-                    data: { stroke: '#667eea' }
-                  }}
-                  animate
-                />
-                <VictoryScatter
-                  name='scatter'
-                  symbol='circle'
-                  style={{ data: { fill: '#2b4ff1', cursor: 'pointer' } }}
-                  size={({ active }) => (active ? 6 : 4)}
-                  data={formattedData}
-                  events={[
-                    {
-                      target: 'data',
-                      eventHandlers: {
-                        onClick: () => {
-                          return [
-                            {
-                              target: 'data',
-                              mutation: ({ datum }) => {
-                                setCurrentMonthYear(datum.x);
+                  <VictoryAxis
+                    style={{
+                      tickLabels: { fontSize: 12 },
+                      grid: { stroke: 'none' }
+                    }}
+                    fixLabelOverlap
+                    dependentAxis
+                  />
+                  <VictoryLine
+                    name='line'
+                    data={lineChartData}
+                    sortKey='x'
+                    sortOrder='ascending'
+                    interpolation='catmullRom'
+                    style={{
+                      data: { stroke: '#667eea' }
+                    }}
+                    animate
+                  />
+                  <VictoryScatter
+                    name='scatter'
+                    symbol='circle'
+                    style={{ data: { fill: '#2b4ff1', cursor: 'pointer' } }}
+                    size={({ active }) => (active ? 6 : 4)}
+                    data={lineChartData}
+                    events={[
+                      {
+                        target: 'data',
+                        eventHandlers: {
+                          onClick: () => {
+                            return [
+                              {
+                                target: 'data',
+                                mutation: ({ datum }) => {
+                                  setCurrentMonthYear(datum.x);
+                                  setShowPieChart(true);
+                                }
                               }
-                            }
-                          ];
+                            ];
+                          }
                         }
                       }
-                    }
-                  ]}
-                  animate
-                />
-                {pieChartData && pieChartDataFormatted && (
-                  <VictoryPie data={pieChartData} animate />
-                )}
-              </VictoryChart>
-            ) : (
-              <div className='grid h-full w-full place-items-center'>
-                <Loader size={48} />
-              </div>
-            )}
+                    ]}
+                    animate
+                  />
+                  {pieChartData && pieChartDataFormatted && (
+                    <VictoryPie data={pieChartData} animate />
+                  )}
+                </VictoryChart>
+              ) : (
+                <div className='grid h-full w-full place-items-center'>
+                  <Loader size={48} />
+                </div>
+              )}
+            </div>
           </Card>
         </div>
         {isLoading && <Loader size={48} />}
