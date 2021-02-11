@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import cn from 'classnames';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
@@ -274,6 +274,14 @@ const Spending = () => {
       );
   }, [showSpendingOverviewModal, spendingData, currentSpendingEntry]);
 
+  const verboseMonthYear = useCallback(() => {
+    const [month, year] = currentMonthYear?.split('/') ?? [];
+    return `Spending for ${new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      year: '2-digit'
+    }).format(new Date(Number(year), Number(month) - 1))}`;
+  }, [currentMonthYear]);
+
   return (
     <>
       <Helmet>
@@ -302,7 +310,9 @@ const Spending = () => {
                   <MdArrowBack size={20} />
                 </button>
               )}
-              <div>{showPieChart ? 'Pie Chart' : 'Monthly Spending'}</div>
+              <div>
+                {showPieChart ? verboseMonthYear() : 'Monthly Spending'}
+              </div>
             </div>
             <div
               style={{ height: 'calc(100% - 2.5rem)' }}
@@ -313,16 +323,21 @@ const Spending = () => {
                   <VictoryChart theme={VictoryTheme.material} width={width}>
                     <VictoryAxis
                       style={{
-                        axis: { stroke: 'transparent' },
-                        ticks: { stroke: 'transparent' },
-                        tickLabels: { fill: 'transparent' }
+                        axis: { stroke: 'none' },
+                        ticks: { stroke: 'none' },
+                        tickLabels: { fill: 'none' },
+                        grid: { stroke: 'none' }
                       }}
                     />
                     <VictoryPie
                       data={pieChartData}
                       style={{
                         data: { fill: ({ datum }) => datum.fill },
-                        labels: { fontSize: 16, fontWeight: 'bold' }
+                        labels: {
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          padding: 16
+                        }
                       }}
                       labels={({ datum }) =>
                         `${datum.x}: $${NumberWithCommasFormatter.format(
