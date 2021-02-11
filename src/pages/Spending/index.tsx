@@ -1,13 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import cn from 'classnames';
 import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
+import { MdAdd, MdArrowBack, MdDelete, MdEdit } from 'react-icons/md';
 import { Column, Row } from 'react-table';
 import {
   VictoryAxis,
   VictoryChart,
   VictoryLine,
+  VictoryPie,
+  VictoryScatter,
   VictoryTheme,
   VictoryTooltip,
   VictoryVoronoiContainer
@@ -20,6 +23,7 @@ import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
+import usePieChart from '../../hooks/Charts/usePieChart';
 import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
 import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
@@ -34,7 +38,10 @@ import SpendingOverviewModal from './SpendingOverviewModal';
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { data: spendingData, isLoading, error } = useGetSpendingData();
-  const { formattedData, isDataFormatted } = useLineChart(spendingData);
+  const {
+    formattedData: lineChartData,
+    isDataFormatted: lineChartDataFormatted
+  } = useLineChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
@@ -57,6 +64,15 @@ const Spending = () => {
   const [spendingOverviewModalData, setSpendingOverviewModalData] = useState<
     ISpending[] | undefined
   >();
+  const [currentMonthYear, setCurrentMonthYear] = useState<
+    string | undefined
+  >();
+  const [showPieChart, setShowPieChart] = useState(false);
+  const {
+    formattedData: pieChartData,
+    isDataFormatted: pieChartDataFormatted,
+    angle
+  } = usePieChart(spendingData, currentMonthYear, showPieChart);
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
@@ -258,6 +274,14 @@ const Spending = () => {
       );
   }, [showSpendingOverviewModal, spendingData, currentSpendingEntry]);
 
+  const verboseMonthYear = useCallback(() => {
+    const [month, year] = currentMonthYear?.split('/') ?? [];
+    return `Spending for ${new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      year: '2-digit'
+    }).format(new Date(Number(year), Number(month) - 1))}`;
+  }, [currentMonthYear]);
+
   return (
     <>
       <Helmet>
@@ -267,65 +291,159 @@ const Spending = () => {
         <meta property='twitter:title' content={`Account Manager - Spending`} />
       </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        <div className='mb-6' ref={chartContainerRef} style={{ height: '40%' }}>
+        <div className='mb-6' style={{ height: '40%' }}>
           <Card className='shadow-lg p-6 mb-6'>
-            {isDataFormatted ? (
-              <VictoryChart
-                theme={VictoryTheme.material}
-                width={width}
-                containerComponent={
-                  <VictoryVoronoiContainer
-                    labels={({ datum }) =>
-                      `${numberToMonthMapping(datum.x)}: $${datum.y}`
-                    }
-                    labelComponent={
-                      <VictoryTooltip
-                        flyoutStyle={{
-                          fill: 'white',
-                          stroke: '#455a63',
-                          strokeWidth: '0.4'
-                        }}
-                        style={{ fontSize: 12, fill: '#667eea' }}
-                        flyoutPadding={8}
-                        cornerRadius={4}
-                        activateData
-                        constrainToVisibleArea
-                      />
-                    }
-                  />
-                }
-              >
-                <VictoryAxis
-                  style={{
-                    tickLabels: { fontSize: 12 },
-                    grid: { stroke: 'none' }
+            <div
+              className={cn(
+                'text-xl font-semibold tracking-wider text-indigo-600 h-10',
+                showPieChart && 'flex items-center'
+              )}
+            >
+              {showPieChart && (
+                <button
+                  className='text-indigo-500 mr-4'
+                  onClick={() => {
+                    setShowPieChart(false);
+                    setCurrentMonthYear(undefined);
                   }}
-                  fixLabelOverlap
-                />
-                <VictoryAxis
-                  style={{
-                    tickLabels: { fontSize: 12 },
-                    grid: { stroke: 'none' }
-                  }}
-                  fixLabelOverlap
-                  dependentAxis
-                />
-                <VictoryLine
-                  data={formattedData}
-                  sortKey='x'
-                  sortOrder='ascending'
-                  interpolation='catmullRom'
-                  style={{
-                    data: { stroke: '#667eea' }
-                  }}
-                  animate
-                />
-              </VictoryChart>
-            ) : (
-              <div className='grid h-full w-full place-items-center'>
-                <Loader size={48} />
+                >
+                  <MdArrowBack size={20} />
+                </button>
+              )}
+              <div>
+                {showPieChart ? verboseMonthYear() : 'Monthly Spending'}
               </div>
-            )}
+            </div>
+            <div
+              style={{ height: 'calc(100% - 2.5rem)' }}
+              ref={chartContainerRef}
+            >
+              {showPieChart ? (
+                pieChartData && pieChartDataFormatted ? (
+                  <VictoryChart theme={VictoryTheme.material} width={width}>
+                    <VictoryAxis
+                      style={{
+                        axis: { stroke: 'none' },
+                        ticks: { stroke: 'none' },
+                        tickLabels: { fill: 'none' },
+                        grid: { stroke: 'none' }
+                      }}
+                    />
+                    <VictoryPie
+                      data={pieChartData}
+                      style={{
+                        data: { fill: ({ datum }) => datum.fill },
+                        labels: {
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          padding: 16
+                        }
+                      }}
+                      labels={({ datum }) =>
+                        `${datum.x}: $${NumberWithCommasFormatter.format(
+                          datum.y.toFixed(0)
+                        )}`
+                      }
+                      endAngle={angle}
+                      padAngle={10}
+                      innerRadius={50}
+                      animate
+                    />
+                  </VictoryChart>
+                ) : (
+                  <div className='grid h-full w-full place-items-center'>
+                    <Loader size={48} />
+                  </div>
+                )
+              ) : lineChartData && lineChartDataFormatted ? (
+                <VictoryChart
+                  theme={VictoryTheme.material}
+                  width={width}
+                  containerComponent={
+                    <VictoryVoronoiContainer
+                      voronoiBlacklist={['line']}
+                      labels={({ datum }) =>
+                        `${numberToMonthMapping(datum.x)}: $${datum.y}`
+                      }
+                      labelComponent={
+                        <VictoryTooltip
+                          flyoutStyle={{
+                            fill: 'white',
+                            stroke: '#455a63',
+                            strokeWidth: '0.4'
+                          }}
+                          style={{
+                            fontSize: 12,
+                            fill: '#667eea'
+                          }}
+                          flyoutPadding={8}
+                          cornerRadius={4}
+                          activateData
+                          constrainToVisibleArea
+                        />
+                      }
+                    />
+                  }
+                >
+                  <VictoryAxis
+                    style={{
+                      tickLabels: { fontSize: 12 },
+                      grid: { stroke: 'none' }
+                    }}
+                    fixLabelOverlap
+                  />
+                  <VictoryAxis
+                    style={{
+                      tickLabels: { fontSize: 12 },
+                      grid: { stroke: 'none' }
+                    }}
+                    fixLabelOverlap
+                    dependentAxis
+                  />
+                  <VictoryLine
+                    name='line'
+                    data={lineChartData}
+                    sortKey='x'
+                    sortOrder='ascending'
+                    interpolation='catmullRom'
+                    style={{
+                      data: { stroke: '#667eea' }
+                    }}
+                    animate
+                  />
+                  <VictoryScatter
+                    name='scatter'
+                    symbol='circle'
+                    style={{ data: { fill: '#2b4ff1', cursor: 'pointer' } }}
+                    size={({ active }) => (active ? 6 : 4)}
+                    data={lineChartData}
+                    events={[
+                      {
+                        target: 'data',
+                        eventHandlers: {
+                          onClick: () => {
+                            return [
+                              {
+                                target: 'data',
+                                mutation: ({ datum }) => {
+                                  setCurrentMonthYear(datum.x);
+                                  setShowPieChart(true);
+                                }
+                              }
+                            ];
+                          }
+                        }
+                      }
+                    ]}
+                    animate
+                  />
+                </VictoryChart>
+              ) : (
+                <div className='grid h-full w-full place-items-center'>
+                  <Loader size={48} />
+                </div>
+              )}
+            </div>
           </Card>
         </div>
         {isLoading && <Loader size={48} />}

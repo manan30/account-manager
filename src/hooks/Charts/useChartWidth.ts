@@ -6,7 +6,7 @@ const useChartWidth = () => {
 
   useLayoutEffect(() => {
     if (chartContainerRef.current) {
-      setWidth(chartContainerRef.current.getBoundingClientRect().width);
+      setWidth(chartContainerRef.current.offsetWidth);
     }
   }, [chartContainerRef]);
 
