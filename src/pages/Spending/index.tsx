@@ -296,7 +296,10 @@ const Spending = () => {
                           stroke: '#455a63',
                           strokeWidth: '0.4'
                         }}
-                        style={{ fontSize: 12, fill: '#667eea' }}
+                        style={{
+                          fontSize: 12,
+                          fill: '#667eea'
+                        }}
                         flyoutPadding={8}
                         cornerRadius={4}
                         activateData
@@ -335,7 +338,7 @@ const Spending = () => {
                 <VictoryScatter
                   name='scatter'
                   symbol='circle'
-                  style={{ data: { fill: '#2b4ff1' } }}
+                  style={{ data: { fill: '#2b4ff1', cursor: 'pointer' } }}
                   size={({ active }) => (active ? 6 : 4)}
                   data={formattedData}
                   events={[
