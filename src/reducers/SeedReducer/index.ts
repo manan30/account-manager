@@ -5,7 +5,8 @@ const seedDefaultState: ISeedState = {
   seedOptions: {
     everything: false,
     creditors: false,
-    transactions: false
+    transactions: false,
+    spending: false
   }
 };
 
@@ -18,7 +19,8 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
           if (
             curr === 'everything' ||
             curr === 'creditors' ||
-            curr === 'transactions'
+            curr === 'transactions' ||
+            curr === 'spending'
           )
             acc[curr] = action?.payload?.status;
           return acc;
@@ -49,6 +51,21 @@ const seedReducer = (state: ISeedState, action: ISeedAction) => {
             action?.payload?.status &&
             Object.entries(state.seedOptions)
               .filter(([key]) => key !== 'everything' && key !== 'transactions')
+              .every((value) => value[1] === true)
+              ? true
+              : false
+        }
+      } as ISeedState;
+    case 'ADD_SPENDING':
+      return {
+        ...state,
+        seedOptions: {
+          ...state.seedOptions,
+          spending: action?.payload?.status,
+          everything:
+            action?.payload?.status &&
+            Object.entries(state.seedOptions)
+              .filter(([key]) => key !== 'everything' && key !== 'spending')
               .every((value) => value[1] === true)
               ? true
               : false

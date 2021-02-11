@@ -193,6 +193,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
                 label='Creditor Name'
                 name='entity'
                 defaultValue={transactionEntity.name}
+                disabled
               />
             ) : (
               (type === 'Credit' || type === 'Debit') && (

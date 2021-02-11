@@ -28,7 +28,7 @@ const TableBody: <T extends Record<string, unknown>>(
             {row.cells.map((cell) => {
               return (
                 <td
-                  {...cell.getCellProps()}
+                  {...cell.getCellProps([{ style: cell.column.style }])}
                   key={cell.column.id}
                   className='px-6 py-4 whitespace-no-wrap text-sm'
                 >

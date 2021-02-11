@@ -1,7 +1,8 @@
 export enum SeedOptions {
   everything = 'everything',
   creditors = 'creditors',
-  transactions = 'transactions'
+  transactions = 'transactions',
+  spending = 'spending'
 }
 
 export interface ISeedState {
@@ -12,6 +13,7 @@ export type SeedActionType =
   | 'ADD_EVERYTHING'
   | 'ADD_CREDITORS'
   | 'ADD_TRANSACTIONS'
+  | 'ADD_SPENDING'
   | 'RESET';
 
 export interface ISeedAction {
