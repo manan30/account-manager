@@ -1,21 +1,30 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ISpending } from '../../models/Spending';
 import { spendingCategoryColorMapping } from '../../utils/Functions';
 
 const usePieChart = (
   data?: Array<ISpending> | undefined,
-  monthYear?: string
+  monthYear?: string,
+  showPieChart?: boolean
 ) => {
   const [isDataFormatted, setIsDataFormatted] = useState(false);
+  const [formattedData, setFormattedData] = useState<
+    {
+      x: string;
+      y: string;
+      fill: string;
+    }[]
+  >([]);
+  const [angle, setAngle] = useState(0);
 
-  const formattedData = useMemo(() => {
+  useEffect(() => {
     setIsDataFormatted(false);
     if (!data?.length || !monthYear) {
       setIsDataFormatted(false);
       return undefined;
     }
-    const map = new Map();
 
+    const map = new Map();
     const currentMonthYearData = data.filter((datum) => {
       const dMonthYear = new Intl.DateTimeFormat('en-US', {
         month: 'numeric',
@@ -29,16 +38,28 @@ const usePieChart = (
     });
 
     setIsDataFormatted(true);
-    return [...map].map(([key, value]) => ({
-      x: key,
-      y: value,
-      fill: spendingCategoryColorMapping(key)
-    }));
+    setFormattedData(
+      [...map].map(([key, value]) => ({
+        x: key,
+        y: value,
+        fill: spendingCategoryColorMapping(key)
+      }))
+    );
   }, [data, monthYear]);
+
+  useEffect(() => {
+    if (showPieChart) {
+      setAngle(0);
+      setTimeout(() => {
+        setAngle(360), 1000;
+      });
+    }
+  }, [showPieChart]);
 
   return {
     formattedData,
-    isDataFormatted
+    isDataFormatted,
+    angle
   };
 };
 

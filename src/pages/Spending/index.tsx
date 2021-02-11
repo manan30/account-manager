@@ -17,7 +17,6 @@ import {
 } from 'victory';
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
-import CustomLabel from '../../components/CustomLabel';
 import Loader from '../../components/Loader';
 import DeleteModal from '../../components/Modal';
 import ModalFallback from '../../components/ModalFallback';
@@ -71,10 +70,10 @@ const Spending = () => {
   const [showPieChart, setShowPieChart] = useState(false);
   const {
     formattedData: pieChartData,
-    isDataFormatted: pieChartDataFormatted
-  } = usePieChart(spendingData, currentMonthYear);
+    isDataFormatted: pieChartDataFormatted,
+    angle
+  } = usePieChart(spendingData, currentMonthYear, showPieChart);
 
-  console.log({ width });
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [
       {
@@ -326,8 +325,11 @@ const Spending = () => {
                         labels: { fontSize: 16, fontWeight: 'bold' }
                       }}
                       labels={({ datum }) =>
-                        `${datum.x}: $${datum.y.toFixed(0)}`
+                        `${datum.x}: $${NumberWithCommasFormatter.format(
+                          datum.y.toFixed(0)
+                        )}`
                       }
+                      endAngle={angle}
                       animate
                     />
                   </VictoryChart>
