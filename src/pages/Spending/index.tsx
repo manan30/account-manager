@@ -38,14 +38,16 @@ import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
-  const { data: spendingData, isLoading, error } = useFirestoreReadQuery({
+  const { data: spendingData, isLoading, error } = useFirestoreReadQuery<
+    ISpending
+  >({
     collection: 'spending',
     orderByClauses: [['date', 'desc']]
   });
   const {
     formattedData: lineChartData,
     isDataFormatted: lineChartDataFormatted
-  } = useLineChart(spendingData as ISpending[]);
+  } = useLineChart(spendingData);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
@@ -76,7 +78,7 @@ const Spending = () => {
     formattedData: pieChartData,
     isDataFormatted: pieChartDataFormatted,
     angle
-  } = usePieChart(spendingData as ISpending[], currentMonthYear, showPieChart);
+  } = usePieChart(spendingData, currentMonthYear, showPieChart);
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [

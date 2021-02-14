@@ -4,7 +4,7 @@ import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { OrderByOptions } from 'firebase';
 import { DocumentData, Query } from '@firebase/firestore-types';
 
-const useFirestoreReadQuery = ({
+const useFirestoreReadQuery = <T>({
   collection,
   orderByClauses
 }: {
@@ -12,7 +12,7 @@ const useFirestoreReadQuery = ({
   orderByClauses?: Array<[string, OrderByOptions]>;
 }) => {
   const { firestore } = useFirebaseContext();
-  const [data, setData] = useState<unknown[] | undefined>();
+  const [data, setData] = useState<T[] | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const collectionRef = useRef<Query<DocumentData> | undefined>();
@@ -39,7 +39,7 @@ const useFirestoreReadQuery = ({
             const queryData = snapshot?.docs.map((doc) => {
               return {
                 id: doc.id,
-                ...doc.data()
+                ...(doc.data() as T)
               };
             });
             setData(queryData);
