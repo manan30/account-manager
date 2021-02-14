@@ -25,7 +25,7 @@ import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
 import usePieChart from '../../hooks/Charts/usePieChart';
 import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
-import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
+// import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
@@ -34,14 +34,18 @@ import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 import SpendingOverviewModal from './SpendingOverviewModal';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
-  const { data: spendingData, isLoading, error } = useGetSpendingData();
+  const { data: spendingData, isLoading, error } = useFirestoreReadQuery({
+    collection: 'spending',
+    orderByClauses: [['date', 'desc']]
+  });
   const {
     formattedData: lineChartData,
     isDataFormatted: lineChartDataFormatted
-  } = useLineChart(spendingData);
+  } = useLineChart(spendingData as ISpending[]);
   const { chartContainerRef, width } = useChartWidth();
   const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
   const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
@@ -72,7 +76,7 @@ const Spending = () => {
     formattedData: pieChartData,
     isDataFormatted: pieChartDataFormatted,
     angle
-  } = usePieChart(spendingData, currentMonthYear, showPieChart);
+  } = usePieChart(spendingData as ISpending[], currentMonthYear, showPieChart);
 
   const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
     () => [

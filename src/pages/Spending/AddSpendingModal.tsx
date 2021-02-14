@@ -5,7 +5,6 @@ import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
 import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
-import { SPENDING } from '../../models/models';
 import { ISpending } from '../../models/Spending';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -161,7 +160,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       const timestamp = firebaseApp?.firestore.Timestamp.now();
 
       if (!currentTransaction) {
-        await firestore?.collection(SPENDING).add({
+        await firestore?.collection('spending').add({
           storeName: storeName?.trim(),
           category: category?.trim(),
           amount: Number(amount?.trim()),
@@ -186,7 +185,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
             }
           });
           await firestore
-            .collection(SPENDING)
+            .collection('spending')
             .doc(currentTransaction.id)
             .update({ ...updatedFields, updatedAt: timestamp } as Partial<
               ISpending

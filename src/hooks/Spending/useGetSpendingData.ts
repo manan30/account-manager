@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { ISpending } from '../../models/Spending';
-import { SPENDING } from '../../models/models';
+import { CollectionName } from '../../models/models';
 
 const useGetSpendingData = () => {
   const { firestore } = useFirebaseContext();
@@ -11,7 +11,7 @@ const useGetSpendingData = () => {
 
   useEffect(() => {
     const unSubscriber = firestore
-      .collection(SPENDING)
+      .collection('spending')
       .orderBy('date', 'desc')
       .onSnapshot({
         next: (snapshot) => {
