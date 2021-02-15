@@ -24,13 +24,11 @@ const currencyDropdownOptions: SelectOption[] = [
 type NewCreditorModalProps = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  refetchData: () => void;
 };
 
 const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   showModal,
-  setShowModal,
-  refetchData
+  setShowModal
 }) => {
   const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
@@ -118,7 +116,6 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
-      refetchData();
     } catch (err) {
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
