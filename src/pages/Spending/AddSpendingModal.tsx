@@ -1,9 +1,11 @@
+import { ISpendingCategory } from 'models/SpendingCategory';
+import { IStore } from 'models/Store';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
-import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
 import { ISpending } from '../../models/Spending';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
@@ -35,11 +37,16 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
 }) => {
   const { firestore, firebaseApp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
-  const { data: storeNames, isLoading: fetchingStores } = useGetStoreNames();
   const {
-    data: spendingCategoryNames,
+    data: storeNamesData,
+    isLoading: fetchingStores
+  } = useFirestoreReadQuery<IStore>({ collection: 'stores' });
+  const {
+    data: spendingCategoryNamesData,
     isLoading: fetchingSpendingCategoryNames
-  } = useGetSpendingCategoryNames();
+  } = useFirestoreReadQuery<ISpendingCategory>({
+    collection: 'spending-categories'
+  });
   const [formState, setFormState] = useState<FormFields>({
     storeName: '',
     category: '',
@@ -68,24 +75,24 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   );
 
   const storeNameDropdownOptions = useMemo(() => {
-    if (storeNames && storeNames.length > 0) {
-      return storeNames.map(({ name }) => ({
+    if (storeNamesData && storeNamesData.length > 0) {
+      return storeNamesData.map(({ name }) => ({
         label: name.toLowerCase(),
         value: name
       })) as SelectOption[];
     }
     return [] as SelectOption[];
-  }, [storeNames]);
+  }, [storeNamesData]);
 
   const spendingCategoryNameDropdownOptions = useMemo(() => {
-    if (spendingCategoryNames && spendingCategoryNames.length > 0) {
-      return spendingCategoryNames.map(({ name }) => ({
+    if (spendingCategoryNamesData && spendingCategoryNamesData.length > 0) {
+      return spendingCategoryNamesData.map(({ name }) => ({
         label: name.toLowerCase(),
         value: name
       })) as SelectOption[];
     }
     return [] as SelectOption[];
-  }, [spendingCategoryNames]);
+  }, [spendingCategoryNamesData]);
 
   const currentTransactionMap = useMemo(() => {
     if (!currentTransaction) return undefined;

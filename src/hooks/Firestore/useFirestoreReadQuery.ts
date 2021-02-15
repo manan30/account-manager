@@ -12,7 +12,7 @@ const useFirestoreReadQuery = <T>({
   orderByClauses?: Array<[string, OrderByOptions]>;
 }) => {
   const { firestore } = useFirebaseContext();
-  const [data, setData] = useState<T[] | undefined>();
+  const [data, setData] = useState<Array<T> | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const collectionRef = useRef<Query<DocumentData> | undefined>();
