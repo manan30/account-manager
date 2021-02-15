@@ -6,7 +6,6 @@ import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
 import { ISpending } from '../../models/Spending';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
