@@ -1,4 +1,10 @@
 import React, { useCallback, useState } from 'react';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Modal from '../../components/Modal/index';
+import Select, { SelectOption } from '../../components/Select';
+import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -10,10 +16,6 @@ import {
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { isEmptyString } from '../../utils/Functions';
 import { AmountValidator, NameValidator } from '../../utils/Validators';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Select, { SelectOption } from '../../components/Select';
-import Modal from '../../components/Modal/index';
 
 const currencyDropdownOptions: SelectOption[] = [
   { label: 'usd', value: 'USD' },
@@ -33,6 +35,12 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
+  const { data: creditorsData } = useFirestoreReadQuery<ICreditor>({
+    collection: 'creditor'
+  });
+  const [addNewCreditorMutation] = useFirestoreCreateQuery({
+    collectionName: 'creditor'
+  });
 
   const [formState, setFormState] = useState({
     name: '',
@@ -83,10 +91,9 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
 
     try {
       setIsCreditorBeingAdded(true);
-      const querySnapShot = await firestore?.collection('creditor').get();
-      const creditors = querySnapShot?.docs
-        .map<ICreditor>((doc) => ({ id: doc.id, ...doc.data() } as ICreditor))
-        .map((doc) => doc.name.toLowerCase());
+      const creditors = creditorsData?.map((creditor) =>
+        creditor.name.toLowerCase()
+      );
 
       if (creditors?.includes(formState.name.toLowerCase())) {
         notificationDispatch({
