@@ -33,7 +33,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   setShowModal
 }) => {
   const notificationDispatch = useNotificationDispatchContext();
-  const { firebaseApp } = useFirebaseContext();
+  const { firestoreTimestamp } = useFirebaseContext();
   const { data: creditorsData } = useFirestoreReadQuery<ICreditor>({
     collection: 'creditor'
   });
@@ -106,6 +106,8 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
         return;
       }
 
+      const timestamp = firestoreTimestamp.now();
+
       await addNewCreditorMutation({
         name: formState.name.trim(),
         amount: Number(formState.amount.trim()),
@@ -113,8 +115,8 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
         remainingAmount: Number(formState.amount.trim()),
         accountSettledOn: null,
         accountSettled: false,
-        createdAt: firebaseApp?.firestore.Timestamp.now(),
-        updatedAt: firebaseApp?.firestore.Timestamp.now()
+        createdAt: timestamp,
+        updatedAt: timestamp
       } as ICreditor);
 
       notificationDispatch({

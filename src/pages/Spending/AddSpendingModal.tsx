@@ -35,7 +35,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   handleModalClose,
   currentTransaction
 }) => {
-  const { firestore, firebaseApp } = useFirebaseContext();
+  const { firestore, firestoreTimestamp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const {
     data: storeNamesData,
@@ -162,14 +162,14 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     if (error) return;
 
     try {
-      const timestamp = firebaseApp?.firestore.Timestamp.now();
+      const timestamp = firestoreTimestamp.now();
 
       if (!currentTransaction) {
         await addNewSpendingEntryMutation({
           storeName: storeName?.trim(),
           category: category?.trim(),
           amount: Number(amount?.trim()),
-          date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date ?? '')),
+          date: firestoreTimestamp.fromDate(new Date(date ?? '')),
           createdAt: timestamp,
           updatedAt: timestamp
         } as ISpending);
@@ -179,7 +179,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
           Object.entries(changedFields).forEach(([key, value]) => {
             if (value && value?.trim() !== '') {
               if (key === 'date') {
-                updatedFields.date = firebaseApp?.firestore.Timestamp.fromDate(
+                updatedFields.date = firestoreTimestamp.fromDate(
                   new Date(value)
                 );
               } else if (key === 'amount') {

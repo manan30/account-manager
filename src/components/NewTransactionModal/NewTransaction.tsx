@@ -40,7 +40,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
   setShowModal,
   refetchData
 }) => {
-  const { firebaseApp } = useFirebaseContext();
+  const { firestoreTimestamp } = useFirebaseContext();
   const { type, entity, amount, date } = useNewTransactionStateContext();
   const [addNewTransactionMutation, { isLoading }] = useFirestoreCreateQuery<
     ITransaction
@@ -111,11 +111,10 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
         transactionType: type.trim(),
         transactionEntity: entity.trim(),
         amount: Number(amount.trim()),
-        transactionDate: firebaseApp?.firestore.Timestamp.fromDate(
-          new Date(date)
-        ),
-        createdAt: firebaseApp?.firestore.Timestamp.now()
+        transactionDate: firestoreTimestamp.fromDate(new Date(date)),
+        createdAt: firestoreTimestamp.now()
       } as ITransaction);
+
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
