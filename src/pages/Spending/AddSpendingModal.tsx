@@ -1,12 +1,13 @@
-import { ISpendingCategory } from 'models/SpendingCategory';
-import { IStore } from 'models/Store';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
+import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { ISpending } from '../../models/Spending';
+import { ISpendingCategory } from '../../models/SpendingCategory';
+import { IStore } from '../../models/Store';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import {
@@ -46,6 +47,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   } = useFirestoreReadQuery<ISpendingCategory>({
     collection: 'spending-categories'
   });
+  const [addNewSpendingEntryMutation, { isLoading }] = useFirestoreCreateQuery<
+    ISpending
+  >({ collectionName: 'spending' });
   const [formState, setFormState] = useState<FormFields>({
     storeName: '',
     category: '',
@@ -59,9 +63,6 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     date: { error: false, content: '' }
   });
   const [resetForm, setResetForm] = useState(false);
-  const [isSpendingEntryBeingAdded, setIsSpendingEntryBeingAdded] = useState(
-    false
-  );
   const [changedFields, setChangedFields] = useState<FormFields | undefined>();
 
   const resetFormErrors = useCallback(
@@ -161,12 +162,10 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     if (error) return;
 
     try {
-      setIsSpendingEntryBeingAdded(true);
-
       const timestamp = firebaseApp?.firestore.Timestamp.now();
 
       if (!currentTransaction) {
-        await firestore?.collection('spending').add({
+        await addNewSpendingEntryMutation({
           storeName: storeName?.trim(),
           category: category?.trim(),
           amount: Number(amount?.trim()),
@@ -221,7 +220,6 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       console.error({ err });
     } finally {
       setResetForm(true);
-      setIsSpendingEntryBeingAdded(false);
       handleModalClose();
     }
   };
@@ -243,7 +241,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     <Modal
       isOpen
       onCloseClickHandler={() => {
-        !isSpendingEntryBeingAdded && handleModalClose();
+        !isLoading && handleModalClose();
       }}
     >
       <div className='flex justify-center mx-8'>
@@ -339,7 +337,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
                   : 'Update Spending Entry'
               }
               onClickHandler={(e) => handleSubmit(e)}
-              loading={isSpendingEntryBeingAdded}
+              loading={isLoading}
               disabled={
                 currentTransaction &&
                 changedFields &&
