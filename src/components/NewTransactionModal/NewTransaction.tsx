@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
+import { ITransaction } from '../../models/Transaction';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
   useNewTransactionDispatchContext,
@@ -38,9 +40,13 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
   setShowModal,
   refetchData
 }) => {
+  const { firebaseApp } = useFirebaseContext();
   const { type, entity, amount, date } = useNewTransactionStateContext();
-  const [isTransactionBeingAdded, setIsTransactionBeingAdded] = useState(false);
-  const { firestore, firebaseApp } = useFirebaseContext();
+  const [addNewTransactionMutation, { isLoading }] = useFirestoreCreateQuery<
+    ITransaction
+  >({
+    collectionName: 'transaction'
+  });
   const newTransactionDispatch = useNewTransactionDispatchContext();
   const notificationDispatch = useNotificationDispatchContext();
 
@@ -101,9 +107,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
     if (error) return;
 
     try {
-      setIsTransactionBeingAdded(true);
-
-      await firestore?.collection('transaction').add({
+      await addNewTransactionMutation({
         transactionType: type.trim(),
         transactionEntity: entity.trim(),
         amount: Number(amount.trim()),
@@ -111,7 +115,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
           new Date(date)
         ),
         createdAt: firebaseApp?.firestore.Timestamp.now()
-      });
+      } as ITransaction);
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
@@ -130,7 +134,6 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
       console.error({ err });
     } finally {
       setResetForm(true);
-      setIsTransactionBeingAdded(false);
     }
   };
 
@@ -171,7 +174,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
         refetchData();
         setShowModal(false);
       }}
-      isPerformingAsyncTask={isTransactionBeingAdded}
+      isPerformingAsyncTask={isLoading}
     >
       <div className='flex justify-center mx-8'>
         <form className='mb-8 w-full'>
@@ -239,7 +242,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
             <Button
               buttonText='Add Transaction'
               onClickHandler={(e) => handleSubmit(e)}
-              loading={isTransactionBeingAdded}
+              loading={isLoading}
               type='submit'
             />
           </div>
