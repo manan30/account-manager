@@ -5,6 +5,7 @@ import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
 import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
+import useFirestoreUpdateQuery from '../../hooks/Firestore/useFirestoreUpdateQuery';
 import { ISpending } from '../../models/Spending';
 import { ISpendingCategory } from '../../models/SpendingCategory';
 import { IStore } from '../../models/Store';
@@ -50,6 +51,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   const [addNewSpendingEntryMutation, { isLoading }] = useFirestoreCreateQuery<
     ISpending
   >({ collectionName: 'spending' });
+  const [updateSpendingEntryMutation] = useFirestoreUpdateQuery<ISpending>({
+    collectionName: 'spending'
+  });
   const [formState, setFormState] = useState<FormFields>({
     storeName: '',
     category: '',
@@ -189,12 +193,10 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               }
             }
           });
-          await firestore
-            .collection('spending')
-            .doc(currentTransaction.id)
-            .update({ ...updatedFields, updatedAt: timestamp } as Partial<
-              ISpending
-            >);
+          await updateSpendingEntryMutation(currentTransaction.id ?? '', {
+            ...updatedFields,
+            updatedAt: timestamp
+          } as Partial<ISpending>);
         }
       }
 
