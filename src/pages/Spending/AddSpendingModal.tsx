@@ -36,7 +36,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   handleModalClose,
   currentTransaction
 }) => {
-  const { firestore, firestoreTimestamp } = useFirebaseContext();
+  const { firestoreTimestamp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
   const {
     data: storeNamesData,
