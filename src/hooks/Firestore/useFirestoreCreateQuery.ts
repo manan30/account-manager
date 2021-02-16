@@ -11,7 +11,14 @@ type CreateQueryArgs = {
 const useFirestoreCreateQuery = <T>({
   collectionName,
   onComplete
-}: CreateQueryArgs) => {
+}: CreateQueryArgs): [
+  (document: T) => Promise<void>,
+  {
+    data: DocumentReference<DocumentData> | undefined;
+    error: boolean;
+    isLoading: boolean;
+  }
+] => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<
     DocumentReference<DocumentData> | undefined
