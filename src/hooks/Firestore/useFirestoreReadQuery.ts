@@ -2,7 +2,7 @@ import { CollectionName } from '../../models/models';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { OrderByOptions } from 'firebase';
-import { FieldPath, Query, WhereFilterOp } from '@firebase/firestore-types';
+import { Query, WhereFilterOp } from '@firebase/firestore-types';
 
 const useFirestoreReadQuery = <T>({
   collection,
