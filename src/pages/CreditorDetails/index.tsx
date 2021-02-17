@@ -1,33 +1,36 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import cn from 'classnames';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Column } from 'react-table';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import NewTransactionModal from '../../components/NewTransactionModal';
+import Table from '../../components/Table';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { RouteParamsInterface } from '../../interfaces/route-interface';
 import { ICreditor } from '../../models/Creditor';
 import { ITransaction } from '../../models/Transaction';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
-import CurrencyConversionCell from '../../components/CurrencyConversionCell';
-import Table from '../../components/Table';
 
 const CreditorDetails = () => {
+  const notificationDispatch = useNotificationDispatchContext();
   const [showModal, setShowModal] = useState(false);
   const { id } = useParams<RouteParamsInterface>();
   const {
     data: creditorData,
     isLoading: creditorDataLoading,
-    error: creditorDataError
+    error: creditorDataError,
+    specificError: creditorNotFound
   } = useFirestoreReadQuery<ICreditor>({
     collection: 'creditor',
     id
   });
-
   const {
     data: transactionsData,
     isLoading: transactionsDataLoading,
@@ -99,6 +102,38 @@ const CreditorDetails = () => {
   );
 
   const tableData = useMemo(() => transactionsData, [transactionsData]);
+
+  useEffect(() => {
+    if (creditorNotFound) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: creditorNotFound,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    } else if (creditorDataError) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: `An error occurred while fetching creditor id: ${id}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    }
+  }, [creditorDataError, creditorNotFound, id, notificationDispatch]);
+
+  useEffect(() => {
+    if (transactionsDataError) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: `An error occurred while fetching transaction for creditor id: ${id}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    }
+  }, [id, transactionsDataError, notificationDispatch]);
 
   return (
     <>

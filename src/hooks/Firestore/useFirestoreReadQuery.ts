@@ -19,6 +19,7 @@ const useFirestoreReadQuery = <T>({
   const [data, setData] = useState<Array<T> | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [specificError, setSpecificError] = useState<string | undefined>();
   const collectionRef = useRef<Query | undefined>();
 
   useEffect(() => {
@@ -26,14 +27,18 @@ const useFirestoreReadQuery = <T>({
 
     if (whereClauses?.length) {
       whereClauses.forEach(([field, op, value]) => {
-        collectionRef.current = collectionRef.current?.where(field, op, value);
+        collectionRef.current = collectionRef.current?.where(
+          field.toString(),
+          op,
+          value
+        );
       });
     }
 
     if (orderByClauses?.length) {
       orderByClauses.forEach((clause) => {
         collectionRef.current = collectionRef.current?.orderBy(
-          clause[0],
+          clause[0].toString(),
           clause[1]
         );
       });
@@ -47,6 +52,9 @@ const useFirestoreReadQuery = <T>({
       const doc = await firestore.collection(collection).doc(id).get();
       if (doc?.exists) {
         setData([{ id: doc.id, ...(doc.data() as T) }]);
+      } else {
+        setSpecificError(`Document with id ${id} does not exist`);
+        setError(true);
       }
     } catch (err) {
       console.error({ err });
@@ -87,7 +95,7 @@ const useFirestoreReadQuery = <T>({
     }
   }, [firestore, collectionRef, id, fetchDocById]);
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, specificError };
 };
 
 export default useFirestoreReadQuery;
