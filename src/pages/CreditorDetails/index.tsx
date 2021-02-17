@@ -265,7 +265,6 @@ const CreditorDetails = () => {
           <NewTransactionModal
             showModal={showModal}
             setShowModal={setShowModal}
-            // refetchData={() => setFetchData(true)}
             transactionEntity={
               creditor ? { name: creditor?.name, id: creditor.id } : undefined
             }
