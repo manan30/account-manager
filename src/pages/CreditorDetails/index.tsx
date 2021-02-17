@@ -1,32 +1,40 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import cn from 'classnames';
+import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Column } from 'react-table';
-import Loader from '../../components/Loader';
-import Table from '../../components/Table';
-import useGetCreditorById from '../../hooks/Creditors/useGetCreditorById';
-import { RouteParamsInterface } from '../../interfaces/route-interface';
-import { ITransaction } from '../../models/Transaction';
-import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import ModalFallback from '../../components/ModalFallback';
 import NewTransactionModal from '../../components/NewTransactionModal';
-import { Helmet } from 'react-helmet';
-import ErrorModal from '../../components/Modal/CommonModal';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
+// import useGetCreditorById from '../../hooks/Creditors/useGetCreditorById';
+import { RouteParamsInterface } from '../../interfaces/route-interface';
+import { ICreditor } from '../../models/Creditor';
+import { ITransaction } from '../../models/Transaction';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
 
 const CreditorDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [fetchData, setFetchData] = useState(true);
   const { id } = useParams<RouteParamsInterface>();
-  const {
-    creditorData: creditor,
-    transactionsData: transactions,
-    error,
-    isLoading,
-    dismissError
-  } = useGetCreditorById(id, fetchData);
+  // const {
+  //   creditorData: creditor,
+  //   transactionsData: transactions,
+  //   error,
+  //   isLoading,
+  //   dismissError
+  // } = useGetCreditorById(id, fetchData);
+  const { data: creditorData, error } = useFirestoreReadQuery<ICreditor>({
+    collection: 'creditor',
+    whereClauses: [['name', '==', 'ttt']]
+  });
+
+  const creditor = creditorData?.[0];
+
+  useEffect(() => {
+    console.log({ creditorData, error });
+  }, [creditorData, error]);
 
   const tableColumns = useMemo<Column<Partial<ITransaction>>[]>(
     () => [
@@ -86,24 +94,24 @@ const CreditorDetails = () => {
     []
   );
 
-  const tableData = useMemo(() => transactions, [transactions]);
+  // const tableData = useMemo(() => transactions, [transactions]);
 
-  useEffect(() => {
-    if (!isLoading) setFetchData(false);
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) setFetchData(false);
+  // }, [isLoading]);
 
-  if (error.status) {
-    return (
-      <React.Suspense fallback={<ModalFallback />}>
-        <ErrorModal
-          isOpen={error.status}
-          message={error.message}
-          closeModal={dismissError}
-          type='ERROR'
-        />
-      </React.Suspense>
-    );
-  }
+  // if (error.status) {
+  //   return (
+  //     <React.Suspense fallback={<ModalFallback />}>
+  //       <ErrorModal
+  //         isOpen={error.status}
+  //         message={error.message}
+  //         closeModal={dismissError}
+  //         type='ERROR'
+  //       />
+  //     </React.Suspense>
+  //   );
+  // }
 
   return (
     <>
@@ -130,7 +138,7 @@ const CreditorDetails = () => {
                 Creditor Details
               </span>
               <span className='text-gray-700'>
-                {isLoading ? (
+                {/* {isLoading ? (
                   <div className='mt-4 h-12 w-12'>
                     <Loader size={36} />
                   </div>
@@ -212,7 +220,7 @@ const CreditorDetails = () => {
                       </span>
                     </div>
                   </div>
-                )}
+                )} */}
               </span>
             </div>
           </Card>
@@ -223,12 +231,12 @@ const CreditorDetails = () => {
             />
           </span>
         </div>
-        {isLoading && <Loader size={48} />}
+        {/* {isLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
             <Table columns={tableColumns} data={tableData} paginate />
           </div>
-        )}
+        )} */}
       </div>
       {showModal && (
         <React.Suspense fallback={<ModalFallback />}>
