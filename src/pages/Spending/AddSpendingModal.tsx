@@ -3,12 +3,10 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Select, { SelectOption } from '../../components/Select';
-import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
-import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import useFirestoreUpdateQuery from '../../hooks/Firestore/useFirestoreUpdateQuery';
+import useGetSpendingCategoryNames from '../../hooks/SpendingCategory/useGetSpendingCategoryNames';
+import useGetStoreNames from '../../hooks/Stores/useGetStoreNames';
+import { SPENDING } from '../../models/models';
 import { ISpending } from '../../models/Spending';
-import { ISpendingCategory } from '../../models/SpendingCategory';
-import { IStore } from '../../models/Store';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import {
@@ -36,24 +34,13 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   handleModalClose,
   currentTransaction
 }) => {
-  const { firestoreTimestamp } = useFirebaseContext();
+  const { firestore, firebaseApp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
+  const { data: storeNames, isLoading: fetchingStores } = useGetStoreNames();
   const {
-    data: storeNamesData,
-    isLoading: fetchingStores
-  } = useFirestoreReadQuery<IStore>({ collection: 'stores' });
-  const {
-    data: spendingCategoryNamesData,
+    data: spendingCategoryNames,
     isLoading: fetchingSpendingCategoryNames
-  } = useFirestoreReadQuery<ISpendingCategory>({
-    collection: 'spending-categories'
-  });
-  const [addNewSpendingEntryMutation, { isLoading }] = useFirestoreCreateQuery<
-    ISpending
-  >({ collectionName: 'spending' });
-  const [updateSpendingEntryMutation] = useFirestoreUpdateQuery<ISpending>({
-    collectionName: 'spending'
-  });
+  } = useGetSpendingCategoryNames();
   const [formState, setFormState] = useState<FormFields>({
     storeName: '',
     category: '',
@@ -67,6 +54,9 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     date: { error: false, content: '' }
   });
   const [resetForm, setResetForm] = useState(false);
+  const [isSpendingEntryBeingAdded, setIsSpendingEntryBeingAdded] = useState(
+    false
+  );
   const [changedFields, setChangedFields] = useState<FormFields | undefined>();
 
   const resetFormErrors = useCallback(
@@ -79,24 +69,24 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   );
 
   const storeNameDropdownOptions = useMemo(() => {
-    if (storeNamesData && storeNamesData.length > 0) {
-      return storeNamesData.map(({ name }) => ({
+    if (storeNames && storeNames.length > 0) {
+      return storeNames.map(({ name }) => ({
         label: name.toLowerCase(),
         value: name
       })) as SelectOption[];
     }
     return [] as SelectOption[];
-  }, [storeNamesData]);
+  }, [storeNames]);
 
   const spendingCategoryNameDropdownOptions = useMemo(() => {
-    if (spendingCategoryNamesData && spendingCategoryNamesData.length > 0) {
-      return spendingCategoryNamesData.map(({ name }) => ({
+    if (spendingCategoryNames && spendingCategoryNames.length > 0) {
+      return spendingCategoryNames.map(({ name }) => ({
         label: name.toLowerCase(),
         value: name
       })) as SelectOption[];
     }
     return [] as SelectOption[];
-  }, [spendingCategoryNamesData]);
+  }, [spendingCategoryNames]);
 
   const currentTransactionMap = useMemo(() => {
     if (!currentTransaction) return undefined;
@@ -166,14 +156,16 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     if (error) return;
 
     try {
-      const timestamp = firestoreTimestamp.now();
+      setIsSpendingEntryBeingAdded(true);
+
+      const timestamp = firebaseApp?.firestore.Timestamp.now();
 
       if (!currentTransaction) {
-        await addNewSpendingEntryMutation({
+        await firestore?.collection(SPENDING).add({
           storeName: storeName?.trim(),
           category: category?.trim(),
           amount: Number(amount?.trim()),
-          date: firestoreTimestamp.fromDate(new Date(date ?? '')),
+          date: firebaseApp?.firestore.Timestamp.fromDate(new Date(date ?? '')),
           createdAt: timestamp,
           updatedAt: timestamp
         } as ISpending);
@@ -183,7 +175,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
           Object.entries(changedFields).forEach(([key, value]) => {
             if (value && value?.trim() !== '') {
               if (key === 'date') {
-                updatedFields.date = firestoreTimestamp.fromDate(
+                updatedFields.date = firebaseApp?.firestore.Timestamp.fromDate(
                   new Date(value)
                 );
               } else if (key === 'amount') {
@@ -193,10 +185,12 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
               }
             }
           });
-          await updateSpendingEntryMutation(currentTransaction.id ?? '', {
-            ...updatedFields,
-            updatedAt: timestamp
-          } as Partial<ISpending>);
+          await firestore
+            .collection(SPENDING)
+            .doc(currentTransaction.id)
+            .update({ ...updatedFields, updatedAt: timestamp } as Partial<
+              ISpending
+            >);
         }
       }
 
@@ -222,6 +216,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       console.error({ err });
     } finally {
       setResetForm(true);
+      setIsSpendingEntryBeingAdded(false);
       handleModalClose();
     }
   };
@@ -243,7 +238,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
     <Modal
       isOpen
       onCloseClickHandler={() => {
-        !isLoading && handleModalClose();
+        !isSpendingEntryBeingAdded && handleModalClose();
       }}
     >
       <div className='flex justify-center mx-8'>
@@ -339,7 +334,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
                   : 'Update Spending Entry'
               }
               onClickHandler={(e) => handleSubmit(e)}
-              loading={isLoading}
+              loading={isSpendingEntryBeingAdded}
               disabled={
                 currentTransaction &&
                 changedFields &&

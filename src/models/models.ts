@@ -1,6 +1,1 @@
-export type CollectionName =
-  | 'spending'
-  | 'creditor'
-  | 'spending-categories'
-  | 'stores'
-  | 'transaction';
+export const SPENDING = 'spending';

@@ -5,13 +5,15 @@ import NewTransaction from './NewTransaction';
 type NewTransactionModalWithProviderProps = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchData: () => void;
   transactionEntity?: { name?: string; id?: string };
 };
 
 const NewTransactionModalWithProvider: React.FC<NewTransactionModalWithProviderProps> = ({
   showModal,
   transactionEntity,
-  setShowModal
+  setShowModal,
+  refetchData
 }) => {
   return (
     <NewTransactionProvider>
@@ -19,6 +21,7 @@ const NewTransactionModalWithProvider: React.FC<NewTransactionModalWithProviderP
         transactionEntity={transactionEntity}
         showModal={showModal}
         setShowModal={setShowModal}
+        refetchData={refetchData}
       />
     </NewTransactionProvider>
   );

@@ -35,13 +35,10 @@ function FirebaseService(): IFirebaseContext {
   }
 
   return {
+    firebaseApp: app,
     firestore,
     auth,
-    authProviders: { googleAuthProvider },
-    firestoreTimestamp: {
-      now: app.firestore.Timestamp.now,
-      fromDate: app.firestore.Timestamp.fromDate
-    }
+    authProviders: { googleAuthProvider }
   };
 }
 

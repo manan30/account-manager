@@ -1,10 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Modal from '../../components/Modal/index';
-import Select, { SelectOption } from '../../components/Select';
-import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
-import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
@@ -16,6 +10,10 @@ import {
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { isEmptyString } from '../../utils/Functions';
 import { AmountValidator, NameValidator } from '../../utils/Validators';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Select, { SelectOption } from '../../components/Select';
+import Modal from '../../components/Modal/index';
 
 const currencyDropdownOptions: SelectOption[] = [
   { label: 'usd', value: 'USD' },
@@ -26,22 +24,17 @@ const currencyDropdownOptions: SelectOption[] = [
 type NewCreditorModalProps = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchData: () => void;
 };
 
 const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   showModal,
-  setShowModal
+  setShowModal,
+  refetchData
 }) => {
+  const { firebaseApp, firestore } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatchContext();
-  const { firestoreTimestamp } = useFirebaseContext();
-  const { data: creditorsData } = useFirestoreReadQuery<ICreditor>({
-    collection: 'creditor'
-  });
-  const [addNewCreditorMutation, { isLoading }] = useFirestoreCreateQuery<
-    ICreditor
-  >({
-    collectionName: 'creditor'
-  });
+  const [isCreditorBeingAdded, setIsCreditorBeingAdded] = useState(false);
 
   const [formState, setFormState] = useState({
     name: '',
@@ -91,9 +84,11 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
     if (error) return;
 
     try {
-      const creditors = creditorsData?.map((creditor) =>
-        creditor.name.toLowerCase()
-      );
+      setIsCreditorBeingAdded(true);
+      const querySnapShot = await firestore?.collection('creditor').get();
+      const creditors = querySnapShot?.docs
+        .map<ICreditor>((doc) => ({ id: doc.id, ...doc.data() } as ICreditor))
+        .map((doc) => doc.name.toLowerCase());
 
       if (creditors?.includes(formState.name.toLowerCase())) {
         notificationDispatch({
@@ -106,19 +101,16 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
         return;
       }
 
-      const timestamp = firestoreTimestamp.now();
-
-      await addNewCreditorMutation({
+      await firestore?.collection('creditor').add({
         name: formState.name.trim(),
         amount: Number(formState.amount.trim()),
         currency: formState.currency.trim(),
         remainingAmount: Number(formState.amount.trim()),
         accountSettledOn: null,
         accountSettled: false,
-        createdAt: timestamp,
-        updatedAt: timestamp
-      } as ICreditor);
-
+        createdAt: firebaseApp?.firestore.Timestamp.now(),
+        updatedAt: firebaseApp?.firestore.Timestamp.now()
+      });
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
@@ -126,6 +118,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
           theme: NOTIFICATION_THEME_SUCCESS
         }
       });
+      refetchData();
     } catch (err) {
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
@@ -137,6 +130,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
       console.error({ err });
     } finally {
       setResetForm(true);
+      setIsCreditorBeingAdded(false);
       setShowModal(false);
     }
   };
@@ -166,7 +160,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
     <Modal
       isOpen={showModal}
       onCloseClickHandler={() => setShowModal(false)}
-      isPerformingAsyncTask={isLoading}
+      isPerformingAsyncTask={isCreditorBeingAdded}
     >
       <div className='flex justify-center mx-8 mb-4 -mt-2'>
         <form className='w-full'>
@@ -218,7 +212,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
             <Button
               buttonText='Add Creditor'
               onClickHandler={(e) => handleSubmit(e)}
-              loading={isLoading}
+              loading={isCreditorBeingAdded}
               type='submit'
             />
           </div>

@@ -24,6 +24,8 @@ import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
 import usePieChart from '../../hooks/Charts/usePieChart';
+import useDeleteSpendingEntry from '../../hooks/Spending/useDeleteSpendingEntry';
+import useGetSpendingData from '../../hooks/Spending/useGetSpendingData';
 import { ISpending } from '../../models/Spending';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
@@ -32,17 +34,10 @@ import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { numberToMonthMapping } from '../../utils/Functions';
 import AddSpendingModal from './AddSpendingModal';
 import SpendingOverviewModal from './SpendingOverviewModal';
-import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import useFirestoreDeleteQuery from '../../hooks/Firestore/useFirestoreDeleteQuery';
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatchContext();
-  const { data: spendingData, isLoading, error } = useFirestoreReadQuery<
-    ISpending
-  >({
-    collection: 'spending',
-    orderByClauses: [['date', 'desc']]
-  });
+  const { data: spendingData, isLoading, error } = useGetSpendingData();
   const {
     formattedData: lineChartData,
     isDataFormatted: lineChartDataFormatted
@@ -59,13 +54,9 @@ const Spending = () => {
   const {
     error: deleteError,
     isLoading: isDocumentBeingDeleted,
-    mutation: deleteSpendingEntryMutation
-  } = useFirestoreDeleteQuery({
-    id: deleteDoc?.id ?? '',
-    collectionName: 'spending',
-    onComplete: () => {
-      setShowDeleteModal(false);
-    }
+    mutation: deleteMutation
+  } = useDeleteSpendingEntry(deleteDoc?.id ?? '', () => {
+    setShowDeleteModal(false);
   });
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
     ISpending | undefined
@@ -493,7 +484,7 @@ const Spending = () => {
         <React.Suspense fallback={<ModalFallback />}>
           <DeleteModal
             onCloseClickHandler={() => setShowDeleteModal(false)}
-            onConfirmClickHandler={() => deleteSpendingEntryMutation()}
+            onConfirmClickHandler={() => deleteMutation()}
             confirmButtonText='Confirm'
             isOpen
             isPerformingAsyncTask={isDocumentBeingDeleted}
