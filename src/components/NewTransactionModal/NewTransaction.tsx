@@ -31,14 +31,12 @@ type NewTransactionProps = {
   transactionEntity?: { name?: string; id?: string };
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  refetchData: () => void;
 };
 
 const NewTransaction: React.FC<NewTransactionProps> = ({
   transactionEntity,
   showModal,
-  setShowModal,
-  refetchData
+  setShowModal
 }) => {
   const { firestoreTimestamp } = useFirebaseContext();
   const { type, entity, amount, date } = useNewTransactionStateContext();
@@ -170,7 +168,6 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
     <Modal
       isOpen={showModal}
       onCloseClickHandler={() => {
-        refetchData();
         setShowModal(false);
       }}
       isPerformingAsyncTask={isLoading}

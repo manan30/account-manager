@@ -12,8 +12,8 @@ const useFirestoreReadQuery = <T>({
 }: {
   collection: CollectionName;
   id?: string;
-  orderByClauses?: Array<[string, OrderByOptions]>;
-  whereClauses?: Array<[string | FieldPath, WhereFilterOp, unknown]>;
+  orderByClauses?: Array<[keyof T, OrderByOptions]>;
+  whereClauses?: Array<[keyof T, WhereFilterOp, unknown]>;
 }) => {
   const { firestore } = useFirebaseContext();
   const [data, setData] = useState<Array<T> | undefined>();
