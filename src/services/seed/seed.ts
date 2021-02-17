@@ -4,13 +4,13 @@ import { ICreditor } from '../../models/Creditor';
 import { ITransaction } from '../../models/Transaction';
 import FirebaseService from '../firebase';
 
-const { firestore, firestoreTimestamp } = FirebaseService();
+const { firestore, firebaseApp } = FirebaseService();
 
 const generateFakeCreditor = (): ICreditor => {
   const name = faker.name.findName();
   const amount = Number(faker.finance.amount(0, 3000));
   const currency = faker.finance.currencyCode();
-  const createdAt = firestoreTimestamp.now();
+  const createdAt = firebaseApp?.firestore.Timestamp.now();
   const accountSettledOn = null;
 
   return {
@@ -32,14 +32,16 @@ const generateFakeTransaction = (
   const type = types[Math.floor(Math.random() * (types.length - 1))];
   const entity = entities[Math.floor(Math.random() * (entities.length - 1))];
   const amount = Number(faker.finance.amount(0, 3000));
-  const date = firestoreTimestamp.fromDate(faker.date.past(2, '12/31/2020'));
+  const date = firebaseApp?.firestore.Timestamp.fromDate(
+    faker.date.past(2, '12/31/2020')
+  );
 
   return {
     transactionType: type,
     transactionEntity: entity,
     amount,
     transactionDate: date,
-    createdAt: firestoreTimestamp.now()
+    createdAt: firebaseApp.firestore.Timestamp.now()
   } as ITransaction;
 };
 
@@ -48,8 +50,10 @@ const generateFakeSpending = (categories: string[]): ISpending => {
   const category =
     categories[Math.floor(Math.random() * (categories.length - 1))];
   const amount = Number(faker.commerce.price());
-  const date = firestoreTimestamp.fromDate(faker.date.past(2, '12/31/2021'));
-  const createdAt = firestoreTimestamp.now();
+  const date = firebaseApp?.firestore.Timestamp.fromDate(
+    faker.date.past(2, '12/31/2021')
+  );
+  const createdAt = firebaseApp?.firestore.Timestamp.now();
 
   return {
     storeName,

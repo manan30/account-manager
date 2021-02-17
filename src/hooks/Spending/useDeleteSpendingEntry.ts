@@ -1,18 +1,8 @@
 import { useCallback, useState } from 'react';
-import { CollectionName } from '../../models/models';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
+import { SPENDING } from '../../models/models';
 
-type DeleteQueryArgs = {
-  id: string;
-  collectionName: CollectionName;
-  onComplete?: () => void;
-};
-
-const useFirestoreDeleteQuery = ({
-  id,
-  collectionName,
-  onComplete
-}: DeleteQueryArgs) => {
+const useDeleteSpendingEntry = (id: string, onComplete?: () => void) => {
   const { firestore } = useFirebaseContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -21,7 +11,7 @@ const useFirestoreDeleteQuery = ({
     try {
       setIsLoading(true);
       setError(false);
-      await firestore.collection(collectionName).doc(id).delete();
+      await firestore.collection(SPENDING).doc(id).delete();
     } catch (err) {
       console.error(err);
       setError(true);
@@ -29,9 +19,9 @@ const useFirestoreDeleteQuery = ({
       setIsLoading(false);
       if (onComplete) onComplete();
     }
-  }, [firestore, id, collectionName, onComplete]);
+  }, [firestore, id, onComplete]);
 
   return { mutation, error, isLoading };
 };
 
-export default useFirestoreDeleteQuery;
+export default useDeleteSpendingEntry;
