@@ -1,32 +1,47 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import cn from 'classnames';
+import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Column } from 'react-table';
-import Loader from '../../components/Loader';
-import Table from '../../components/Table';
-import useGetCreditorById from '../../hooks/Creditors/useGetCreditorById';
-import { RouteParamsInterface } from '../../interfaces/route-interface';
-import { ITransaction } from '../../models/Transaction';
-import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
+import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import NewTransactionModal from '../../components/NewTransactionModal';
-import { Helmet } from 'react-helmet';
-import ErrorModal from '../../components/Modal/CommonModal';
+import Table from '../../components/Table';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
+import { RouteParamsInterface } from '../../interfaces/route-interface';
+import { ICreditor } from '../../models/Creditor';
+import { ITransaction } from '../../models/Transaction';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
 
 const CreditorDetails = () => {
+  const notificationDispatch = useNotificationDispatchContext();
   const [showModal, setShowModal] = useState(false);
-  const [fetchData, setFetchData] = useState(true);
   const { id } = useParams<RouteParamsInterface>();
   const {
-    creditorData: creditor,
-    transactionsData: transactions,
-    error,
-    isLoading,
-    dismissError
-  } = useGetCreditorById(id, fetchData);
+    data: creditorData,
+    isLoading: creditorDataLoading,
+    error: creditorDataError,
+    specificError: creditorNotFound
+  } = useFirestoreReadQuery<ICreditor>({
+    collection: 'creditor',
+    id
+  });
+  const {
+    data: transactionsData,
+    isLoading: transactionsDataLoading,
+    error: transactionsDataError
+  } = useFirestoreReadQuery<ITransaction>({
+    collection: 'transaction',
+    whereClauses: [['transactionEntity', '==', id]],
+    orderByClauses: [['createdAt', 'desc']]
+  });
+
+  const creditor = creditorData?.[0];
 
   const tableColumns = useMemo<Column<Partial<ITransaction>>[]>(
     () => [
@@ -86,24 +101,39 @@ const CreditorDetails = () => {
     []
   );
 
-  const tableData = useMemo(() => transactions, [transactions]);
+  const tableData = useMemo(() => transactionsData, [transactionsData]);
 
   useEffect(() => {
-    if (!isLoading) setFetchData(false);
-  }, [isLoading]);
+    if (creditorNotFound) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: creditorNotFound,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    } else if (creditorDataError) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: `An error occurred while fetching creditor id: ${id}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    }
+  }, [creditorDataError, creditorNotFound, id, notificationDispatch]);
 
-  if (error.status) {
-    return (
-      <React.Suspense fallback={<ModalFallback />}>
-        <ErrorModal
-          isOpen={error.status}
-          message={error.message}
-          closeModal={dismissError}
-          type='ERROR'
-        />
-      </React.Suspense>
-    );
-  }
+  useEffect(() => {
+    if (transactionsDataError) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: `An error occurred while fetching transaction for creditor id: ${id}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    }
+  }, [id, transactionsDataError, notificationDispatch]);
 
   return (
     <>
@@ -130,7 +160,7 @@ const CreditorDetails = () => {
                 Creditor Details
               </span>
               <span className='text-gray-700'>
-                {isLoading ? (
+                {creditorDataLoading ? (
                   <div className='mt-4 h-12 w-12'>
                     <Loader size={36} />
                   </div>
@@ -192,7 +222,7 @@ const CreditorDetails = () => {
                       </span>
                     </div>
                     <div className='text-xs flex items-center'>
-                      <span className='font-bold'>Creditor Added On:</span>
+                      <span className='font-bold mr-1'>Creditor Added On:</span>
                       <span>
                         {new Intl.DateTimeFormat('en-US', {
                           month: 'short',
@@ -223,7 +253,7 @@ const CreditorDetails = () => {
             />
           </span>
         </div>
-        {isLoading && <Loader size={48} />}
+        {transactionsDataLoading && <Loader size={48} />}
         {tableData && (
           <div className='mb-6'>
             <Table columns={tableColumns} data={tableData} paginate />
@@ -235,7 +265,7 @@ const CreditorDetails = () => {
           <NewTransactionModal
             showModal={showModal}
             setShowModal={setShowModal}
-            refetchData={() => setFetchData(true)}
+            // refetchData={() => setFetchData(true)}
             transactionEntity={
               creditor ? { name: creditor?.name, id: creditor.id } : undefined
             }
