@@ -1,7 +1,6 @@
 import { CollectionName } from '../../models/models';
 import { useCallback, useState } from 'react';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { DocumentData, DocumentReference } from '@firebase/firestore-types';
 
 type UpdateQueryArgs = {
   collectionName: CollectionName;

@@ -24,10 +24,6 @@ const useFirestoreReadQuery = <T>({
   useEffect(() => {
     collectionRef.current = firestore.collection(collection);
 
-    // if (id) {
-    //   collectionRef.current = collectionRef.current.doc(id);
-    // }
-
     if (whereClauses?.length) {
       whereClauses.forEach(([field, op, value]) => {
         collectionRef.current = collectionRef.current?.where(field, op, value);
@@ -42,27 +38,23 @@ const useFirestoreReadQuery = <T>({
         );
       });
     }
-  }, [firestore, collection, id, whereClauses, orderByClauses]);
+  }, [firestore, collection, whereClauses, orderByClauses]);
 
   const fetchDocById = useCallback(async () => {
     try {
-      // setIsLoading(true);
-      // setError(false);
-      // const doc = await collectionRef.current?.get();
-      // if (doc?.size) {
-      //   const document = doc?.docs.map(({ id, data }) => ({
-      //     id,
-      //     ...(data() as T)
-      //   }));
-      //   setData(document);
-      // }
+      setIsLoading(true);
+      setError(false);
+      const doc = await firestore.collection(collection).doc(id).get();
+      if (doc?.exists) {
+        setData([{ id: doc.id, ...(doc.data() as T) }]);
+      }
     } catch (err) {
       console.error({ err });
       setError(true);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [firestore, collection, id]);
 
   useEffect(() => {
     if (collectionRef.current) {

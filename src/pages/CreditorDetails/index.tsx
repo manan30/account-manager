@@ -27,7 +27,7 @@ const CreditorDetails = () => {
   // } = useGetCreditorById(id, fetchData);
   const { data: creditorData, error } = useFirestoreReadQuery<ICreditor>({
     collection: 'creditor',
-    whereClauses: [['name', '==', 'ttt']]
+    id
   });
 
   const creditor = creditorData?.[0];
