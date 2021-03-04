@@ -5,24 +5,27 @@ import { useGlobalState } from '../../providers/GlobalStateProvider';
 const Accounts = () => {
   const [linkToken, setLinkToken] = useState<null | string>(null);
   const { user } = useGlobalState();
-  const onSuccess = React.useCallback(async (public_token) => {
-    // send public_token to server
-    const response = await fetch(
-      'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ publicToken: public_token })
-      }
-    );
+  const onSuccess = React.useCallback(
+    async (public_token) => {
+      // send public_token to server
+      const response = await fetch(
+        'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ publicToken: public_token, userId: user?.uid })
+        }
+      );
 
-    const data = await response.json();
+      const data = await response.json();
 
-    console.log({ set: data });
-    // Handle response ...
-  }, []);
+      console.log({ set: data });
+      // Handle response ...
+    },
+    [user]
+  );
 
   const config: Parameters<typeof usePlaidLink>[0] = {
     token: linkToken || '',

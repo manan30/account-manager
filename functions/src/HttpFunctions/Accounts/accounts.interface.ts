@@ -4,4 +4,5 @@ export type CreateLinkTokenRequestBody = {
 
 export type ExchangePublicTokenRequestBody = {
   publicToken: string;
+  userId: string;
 };

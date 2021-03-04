@@ -4,7 +4,7 @@ export interface Account {
   id: string;
   requestId: string;
   accessToken: string;
-  itemId: number;
+  itemId: string;
   userID: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;

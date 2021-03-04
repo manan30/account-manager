@@ -5,7 +5,7 @@ export interface Account extends DocumentSnapshot {
   id: string;
   requestId: string;
   accessToken: string;
-  itemId: number;
+  itemId: string;
   userID: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
