@@ -3,9 +3,9 @@ import { usePlaidLink } from 'react-plaid-link';
 
 const Accounts = () => {
   const [linkToken, setLinkToken] = useState<null | string>(null);
-  const onSuccess = React.useCallback((public_token, metadata) => {
+  const onSuccess = React.useCallback(async (public_token, metadata) => {
     // send public_token to server
-    const response = fetch(
+    const response = await fetch(
       'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
       {
         method: 'POST',
@@ -15,6 +15,10 @@ const Accounts = () => {
         body: JSON.stringify({ public_token })
       }
     );
+
+    const data = await response.json();
+
+    console.log({ set: data });
     // Handle response ...
   }, []);
 
