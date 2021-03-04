@@ -5,7 +5,8 @@ import {
   Client,
   ClientConfigs,
   CreateLinkTokenOptions,
-  environments
+  environments,
+  TokenResponse
 } from 'plaid';
 
 const expressApp = express();
@@ -43,22 +44,25 @@ expressApp.post('/plaid/create-link-token', async (req, res) => {
 
 expressApp.post('/plaid/set-access-token', (req, res) => {
   const PUBLIC_TOKEN = req.body.public_token;
-  plaidClient.exchangePublicToken(PUBLIC_TOKEN, (error, tokenResponse) => {
-    if (error != null) {
-      console.error(error);
-      return res.status(500).send({
-        error
+  plaidClient.exchangePublicToken(
+    PUBLIC_TOKEN,
+    (error: Error, tokenResponse: TokenResponse) => {
+      if (error != null) {
+        console.error(error);
+        return res.status(500).send({
+          error
+        });
+      }
+      const ACCESS_TOKEN = tokenResponse.access_token;
+      const ITEM_ID = tokenResponse.item_id;
+      console.log({ tokenResponse });
+      return res.status(200).send({
+        access_token: ACCESS_TOKEN,
+        item_id: ITEM_ID,
+        error: null
       });
     }
-    const ACCESS_TOKEN = tokenResponse.access_token;
-    const ITEM_ID = tokenResponse.item_id;
-    console.log({ tokenResponse });
-    return res.status(200).send({
-      access_token: ACCESS_TOKEN,
-      item_id: ITEM_ID,
-      error: null
-    });
-  });
+  );
 });
 
 expressApp.get('/all-accounts', (req, res) => {
