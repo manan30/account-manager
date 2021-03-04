@@ -5,8 +5,7 @@ import {
   Client,
   ClientConfigs,
   CreateLinkTokenOptions,
-  environments,
-  TokenResponse
+  environments
 } from 'plaid';
 import {
   CreateLinkTokenRequestBody,
@@ -25,6 +24,7 @@ const plaidClientConfig: ClientConfigs = {
 const plaidClient = new Client(plaidClientConfig);
 
 expressApp.post('/plaid/create-link-token', async (req, res) => {
+  console.log(req.body);
   const { userId } = req.body as CreateLinkTokenRequestBody;
   try {
     const createLinkTokenConfig: CreateLinkTokenOptions = {
@@ -47,9 +47,7 @@ expressApp.post('/plaid/create-link-token', async (req, res) => {
 });
 
 expressApp.post('/plaid/set-access-token', async (req, res) => {
-  const { publicToken } = req.body
-    .publicToken as ExchangePublicTokenRequestBody;
-
+  const { publicToken } = req.body as ExchangePublicTokenRequestBody;
   try {
     const tokenResponse = await plaidClient.exchangePublicToken(publicToken);
     return res.status(200).send(tokenResponse);

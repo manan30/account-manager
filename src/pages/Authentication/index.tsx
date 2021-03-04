@@ -44,7 +44,10 @@ const Authentication = () => {
         }
 
         if (!user) {
-          dispatch({ type: 'ADD_APP_USER', payload: { user: authUser } });
+          dispatch({
+            type: 'ADD_APP_USER',
+            payload: { user: authUser }
+          });
           history.replace(state?.from || '/');
         }
       }

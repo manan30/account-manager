@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import { useGlobalState } from '../../providers/GlobalStateProvider';
 
 const Accounts = () => {
   const [linkToken, setLinkToken] = useState<null | string>(null);
-  const onSuccess = React.useCallback(async (public_token, metadata) => {
+  const { user } = useGlobalState();
+  const onSuccess = React.useCallback(async (public_token) => {
     // send public_token to server
     const response = await fetch(
       'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
@@ -12,7 +14,7 @@ const Accounts = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ public_token })
+        body: JSON.stringify({ publicToken: public_token })
       }
     );
 
@@ -28,19 +30,27 @@ const Accounts = () => {
   };
   const { open, ready } = usePlaidLink(config);
 
-  const generateToken = async () => {
+  const generateToken = useCallback(async () => {
     const response = await fetch(
       'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/create-link-token',
-      { method: 'POST' }
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: user?.uid })
+      }
     );
     const data = await response.json();
     console.log({ data });
     setLinkToken(data.link_token);
-  };
+  }, [user]);
 
   useEffect(() => {
-    generateToken();
-  }, []);
+    if (user) {
+      generateToken();
+    }
+  }, [user, generateToken]);
 
   return (
     <div>
