@@ -8,6 +8,10 @@ import {
   environments,
   TokenResponse
 } from 'plaid';
+import {
+  CreateLinkTokenRequestBody,
+  ExchangePublicTokenRequestBody
+} from './accounts.interface';
 
 const expressApp = express();
 expressApp.use(cors({ origin: true }));
@@ -21,10 +25,11 @@ const plaidClientConfig: ClientConfigs = {
 const plaidClient = new Client(plaidClientConfig);
 
 expressApp.post('/plaid/create-link-token', async (req, res) => {
+  const { userId } = req.body as CreateLinkTokenRequestBody;
   try {
     const createLinkTokenConfig: CreateLinkTokenOptions = {
       client_name: 'Account Manager',
-      user: { client_user_id: 'test-user-123' },
+      user: { client_user_id: userId },
       country_codes: ['US'],
       language: 'en',
       products: ['auth', 'transactions']
@@ -34,7 +39,6 @@ expressApp.post('/plaid/create-link-token', async (req, res) => {
       createLinkTokenConfig
     );
 
-    console.log({ tokenResponse });
     return res.status(200).send(tokenResponse);
   } catch (err) {
     console.error({ err });
@@ -42,27 +46,17 @@ expressApp.post('/plaid/create-link-token', async (req, res) => {
   }
 });
 
-expressApp.post('/plaid/set-access-token', (req, res) => {
-  const PUBLIC_TOKEN = req.body.public_token;
-  plaidClient.exchangePublicToken(
-    PUBLIC_TOKEN,
-    (error: Error, tokenResponse: TokenResponse) => {
-      if (error != null) {
-        console.error(error);
-        return res.status(500).send({
-          error
-        });
-      }
-      const ACCESS_TOKEN = tokenResponse.access_token;
-      const ITEM_ID = tokenResponse.item_id;
-      console.log({ tokenResponse });
-      return res.status(200).send({
-        access_token: ACCESS_TOKEN,
-        item_id: ITEM_ID,
-        error: null
-      });
-    }
-  );
+expressApp.post('/plaid/set-access-token', async (req, res) => {
+  const { publicToken } = req.body
+    .publicToken as ExchangePublicTokenRequestBody;
+
+  try {
+    const tokenResponse = await plaidClient.exchangePublicToken(publicToken);
+    return res.status(200).send(tokenResponse);
+  } catch (err) {
+    console.error({ err });
+    return res.status(500).send({ error: err.toString() });
+  }
 });
 
 expressApp.get('/all-accounts', (req, res) => {
