@@ -118,3 +118,5 @@ dist
 /.vscode
 
 firestore-data/
+
+functions/.runtimeconfig.json

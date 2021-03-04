@@ -1,4 +1,6 @@
 {
-  "PLAID_CLIENT_ID": "60021b5d4717120010c0eb1b",
-  "PLAID_SANDBOX_SECRET": "181d6dfba3cb2e1b87891d24fb6635"
+  "plaid": {
+    "client_id": "60021b5d4717120010c0eb1b",
+    "sandbox_secret": "181d6dfba3cb2e1b87891d24fb6635"
+  }
 }
