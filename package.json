@@ -1,7 +1,7 @@
 {
-  "name": "react-parcel-starter",
+  "name": "account-manager",
   "version": "1.0.0",
-  "description": "A starter repo for creating React applications using Parcel as the module bundler",
+  "description": "Account manager is Manan Joshi's personal finance manager app.",
   "main": "index.js",
   "author": "Manan Joshi",
   "license": "MIT",
