@@ -16,18 +16,13 @@
     "build-functions": "cd functions && npm run build",
     "firebase": "npm run build-functions && firebase emulators:start --import=./firestore-data --export-on-exit --only firestore,functions,auth",
     "deploy-functions": "cd functions && npm run deploy",
-    "compile": "yarn tsc",
-    "test": "jest src"
+    "compile": "yarn tsc"
   },
   "devDependencies": {
-    "@babel/core": "7.12.10",
-    "@babel/plugin-transform-runtime": "7.12.10",
     "@firebase/app-types": "0.6.1",
     "@firebase/firestore-types": "2.0.0",
     "@types/classnames": "2.2.11",
     "@types/faker": "5.1.5",
-    "@types/jest": "26.0.19",
-    "@types/parcel-env": "0.0.0",
     "@types/react": "17.0.0",
     "@types/react-dom": "17.0.0",
     "@types/react-helmet": "^6.1.0",
@@ -48,7 +43,6 @@
     "eslint-plugin-prettier": "3.2.0",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
-    "parcel-bundler": "1.12.4",
     "postcss": "8.1.2",
     "prettier": "2.1.1",
     "tailwindcss": "1.9.5",
@@ -56,16 +50,9 @@
     "vite": "^2.0.5"
   },
   "dependencies": {
-    "@fullhuman/postcss-purgecss": "3.0.0",
-    "@svgr/parcel-plugin-svgr": "^5.5.0",
-    "api": "2.5.0",
     "classnames": "2.2.6",
-    "components": "0.1.0",
     "faker": "5.1.0",
     "firebase": "^8.2.1",
-    "hooks": "0.3.2",
-    "prop-types": "15.7.2",
-    "providers": "0.5.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-helmet": "^6.1.0",
@@ -73,8 +60,6 @@
     "react-query": "3.5.5",
     "react-router-dom": "5.2.0",
     "react-table": "7.6.2",
-    "reducers": "^3.0.0-alpha",
-    "utils": "0.3.1",
     "victory": "^35.4.7"
   },
   "browserslist": [
