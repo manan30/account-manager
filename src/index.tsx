@@ -11,6 +11,6 @@ ReactDOM.render(<App />, document.getElementById('root'));
  * however disabling this will result in full page reloads
  * with every change and the application state will reset every time.
  */
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }

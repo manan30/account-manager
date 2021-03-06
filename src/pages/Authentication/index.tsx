@@ -29,7 +29,7 @@ const Authentication = () => {
       if (authUser) {
         const currentUserEmail = authUser?.email ?? '';
         const authUsers = JSON.parse(
-          process.env.PROD_AUTH_USER_EMAIL ?? ''
+          import.meta.env.VITE_FIREBASE_AUTH_USER_EMAIL ?? ''
         ) as Array<string>;
 
         if (
