@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import VoidIcon from '../../assets/svg/void.svg';
+import { ReactComponent as VoidIcon } from '../../assets/svg/void.svg';
 
 const NotFoundPage = () => {
   return (

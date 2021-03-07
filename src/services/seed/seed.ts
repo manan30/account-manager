@@ -1,6 +1,6 @@
 import faker from 'faker';
-import { ISpending } from 'models/Spending';
 import { ICreditor } from '../../models/Creditor';
+import { ISpending } from '../../models/Spending';
 import { ITransaction } from '../../models/Transaction';
 import FirebaseService from '../firebase';
 

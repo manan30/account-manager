@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ISpending } from '../../models/Spending';
 import { spendingCategoryColorMapping } from '../../utils/Functions';
 

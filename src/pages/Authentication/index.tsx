@@ -29,13 +29,10 @@ const Authentication = () => {
       if (authUser) {
         const currentUserEmail = authUser?.email ?? '';
         const authUsers = JSON.parse(
-          process.env.PROD_AUTH_USER_EMAIL ?? ''
+          import.meta.env.VITE_FIREBASE_AUTH_USER_EMAIL as string
         ) as Array<string>;
 
-        if (
-          process.env.NODE_ENV === 'production' &&
-          !authUsers.includes(currentUserEmail)
-        ) {
+        if (import.meta.env.PROD && !authUsers.includes(currentUserEmail)) {
           dispatch({
             type: 'SET_UNAUTHORIZED_USER'
           });

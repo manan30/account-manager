@@ -1,5 +1,5 @@
-import { ISpending } from 'models/Spending';
 import { useMemo, useState } from 'react';
+import { ISpending } from '../../models/Spending';
 
 const useLineChart = <T extends ISpending>(data?: Array<T>) => {
   const [isDataFormatted, setIsDataFormatted] = useState(false);

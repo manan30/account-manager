@@ -39,7 +39,7 @@ const routes: RouteType[] = [
     path: '/accounts',
     component: React.lazy(() => import('../pages/Accounts'))
   },
-  process.env.NODE_ENV !== 'production' && {
+  !import.meta.env.PROD && {
     path: '/seed',
     component: React.lazy(() => import('../pages/Seed'))
   }
