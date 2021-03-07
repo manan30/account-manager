@@ -1,35 +1,57 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import usePlaidAccessToken from '../../hooks/Plaid/usePlaidAccessToken';
-import axios from 'redaxios';
+import axios, { Response } from 'redaxios';
 import { CreateLinkTokenResponse } from 'plaid';
 import { PLAID_CREATE_LINK_TOKEN_ENDPOINT } from '../../utils/Constants/APIConstants';
+import { useQuery } from 'react-query';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 
 const Accounts = () => {
-  const [linkToken, setLinkToken] = useState<null | string>(null);
+  const notificationDispatch = useNotificationDispatchContext();
   const { user } = useGlobalState();
+  const [linkToken, setLinkToken] = useState<null | string>(null);
   const { open, ready } = usePlaidAccessToken({ linkToken, user });
-
-  const generateToken = useCallback(async () => {
-    const response = await axios.post<CreateLinkTokenResponse>(
-      PLAID_CREATE_LINK_TOKEN_ENDPOINT,
-      {
-        userId: user?.uid
+  const { error } = useQuery<
+    CreateLinkTokenResponse | undefined,
+    Response<Error>
+  >(
+    [user?.uid],
+    async () => {
+      if (user) {
+        const response = await axios.post<CreateLinkTokenResponse>(
+          `${PLAID_CREATE_LINK_TOKEN_ENDPOINT}`,
+          {
+            userId: user?.uid
+          }
+        );
+        return response.data;
       }
-    );
-    const { data } = response;
-    setLinkToken(data.link_token);
-  }, [user]);
+    },
+    {
+      onSuccess: (data) => {
+        setLinkToken((data as CreateLinkTokenResponse).link_token);
+      },
+      retry: 2
+    }
+  );
 
   useEffect(() => {
-    if (user) {
-      generateToken();
+    if (error) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: `Request failed due to ${error.status} : ${error.statusText} error`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
     }
-  }, [user, generateToken]);
+  }, [error, notificationDispatch]);
 
   return (
     <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
