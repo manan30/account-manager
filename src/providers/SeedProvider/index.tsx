@@ -3,7 +3,7 @@ import useSeedReducer from '../../reducers/SeedReducer';
 import {
   ISeedState,
   ISeedAction
-} from 'reducers/SeedReducer/seedReducer.interface';
+} from '../../reducers/SeedReducer/seedReducer.interface';
 
 const SeedStateContext = React.createContext<ISeedState | undefined>(undefined);
 const SeedDispatchContext = React.createContext<
