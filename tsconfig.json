@@ -14,11 +14,12 @@
     "jsx": "react",
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "typeRoots": ["./src/types", "node_modules/@types"]
   },
   "include": [
     "./src",
-    "./src/types/**/*",
+    "./src/types/svg.d.ts",
     "./vite.config.ts",
     "./postcss.config.js",
     "./tailwind.config.js"
