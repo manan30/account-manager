@@ -28,7 +28,10 @@ const TableBody: <T extends Record<string, unknown>>(
             {row.cells.map((cell) => {
               return (
                 <td
-                  {...cell.getCellProps()}
+                  // TODO: Look into using correct declaration merging for react-table
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  {...cell.getCellProps([{ style: cell.column.style }])}
                   key={cell.column.id}
                   className='px-6 py-4 whitespace-no-wrap text-sm'
                 >

@@ -1,9 +1,10 @@
 import React from 'react';
-import Loader from '../Loader';
-import Select, { SelectOption } from '../Select';
-import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
+import { ICreditor } from '../../models/Creditor';
 import { useNewTransactionDispatchContext } from '../../providers/NewTransactionProvider';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
+import Loader from '../Loader';
+import Select, { SelectOption } from '../Select';
 
 type CreditorsSelectProps = {
   resetFormError: (name: string) => void;
@@ -16,7 +17,9 @@ const CreditorsSelect: React.FC<CreditorsSelectProps> = ({
   formError,
   resetForm
 }) => {
-  const { data: creditors, isLoading } = useGetAllCreditors();
+  const { data: creditors, isLoading } = useFirestoreReadQuery<ICreditor>({
+    collection: 'creditor'
+  });
   const dispatch = useNewTransactionDispatchContext();
 
   if (isLoading) return <Loader />;

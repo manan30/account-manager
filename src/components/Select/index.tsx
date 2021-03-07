@@ -4,6 +4,7 @@ import cn from 'classnames';
 import Label from '../Label';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import { isEmptyString } from '../../utils/Functions';
+import Loader from '../Loader';
 
 export type SelectOption = { label: string; value: string };
 
@@ -15,6 +16,8 @@ type SelectProps = {
   subContent?: React.ReactNode;
   theme?: string;
   resetField?: boolean;
+  isLoading?: boolean;
+  defaultValue?: string;
   onSelectValueChange?: (name: string, value: SelectOption) => void;
   resetFormErrors?: (name: string) => void;
   setResetField?: () => void;
@@ -28,13 +31,14 @@ const Select: React.FC<SelectProps> = ({
   subContent,
   theme = '',
   resetField,
+  isLoading,
+  defaultValue,
   onSelectValueChange,
   resetFormErrors,
   setResetField
 }) => {
   const [selectValue, setSelectValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [options] = useState(selectOptions);
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSelectValue(e.target.value);
@@ -58,6 +62,14 @@ const Select: React.FC<SelectProps> = ({
         onSelectValueChange(name, { label: '', value: '' });
     }
   }, [resetField, name, onSelectValueChange, selectValue]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelectValue(defaultValue);
+      if (onSelectValueChange)
+        onSelectValueChange(name, { label: '', value: defaultValue });
+    }
+  }, [defaultValue, onSelectValueChange, name]);
 
   const handleClick = (option: SelectOption) => {
     if (setResetField) setResetField();
@@ -86,13 +98,17 @@ const Select: React.FC<SelectProps> = ({
             onFocus={() => setShowOptions(true)}
             readOnly
           />
-          <button
-            className='border-none text-gray-600'
-            onClick={() => setShowOptions((prevState) => !prevState)}
-            type='button'
-          >
-            <FaChevronDown />
-          </button>
+          {!isLoading ? (
+            <button
+              className='border-none text-gray-600'
+              onClick={() => setShowOptions((prevState) => !prevState)}
+              type='button'
+            >
+              <FaChevronDown />
+            </button>
+          ) : (
+            <Loader />
+          )}
         </div>
       </Label>
       {subContent && (
@@ -107,7 +123,7 @@ const Select: React.FC<SelectProps> = ({
       )}
       {showOptions && (
         <ul className='flex flex-col mt-2 pb-2 rounded-lg border-gray-400 border-solid border overflow-y-auto max-h-select'>
-          {options.map((option, i) => {
+          {selectOptions.map((option, i) => {
             const key = i;
             return (
               <li

@@ -18,6 +18,7 @@ const NewTransactionProvider: React.FC<NewTransactionProviderProps> = ({
   children
 }) => {
   const [state, dispatch] = useTransactionReducer();
+
   return (
     <NewTransactionStateContext.Provider value={state}>
       <NewTransactionDispatchContext.Provider value={dispatch}>

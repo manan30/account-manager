@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,7 @@ import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
-import useGetAllCreditors from '../../hooks/Creditors/useGetAllCreditors';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
@@ -22,8 +23,12 @@ const NewCreditorModal = React.lazy(() => import('./NewCreditorModal'));
 const Creditors = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const [showModal, setShowModal] = useState(false);
-  const [fetchData, setFetchData] = useState(true);
-  const { data: creditors, isLoading, error } = useGetAllCreditors(fetchData);
+  const { data: creditorsData, isLoading, error } = useFirestoreReadQuery<
+    ICreditor
+  >({
+    collection: 'creditor',
+    orderByClauses: [['updatedAt', 'desc']]
+  });
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -150,7 +155,7 @@ const Creditors = () => {
     []
   );
 
-  const tableData = useMemo(() => creditors, [creditors]);
+  const tableData = useMemo(() => creditorsData, [creditorsData]);
 
   useEffect(() => {
     if (error)
@@ -166,9 +171,9 @@ const Creditors = () => {
 
   const topRemainingCreditors = useMemo(() => {
     const remaining = [];
-    if (creditors) {
+    if (creditorsData) {
       remaining.push(
-        ...creditors.map((creditor) => ({
+        ...creditorsData.map((creditor) => ({
           name: creditor.name,
           remainingAmount: creditor.remainingAmount,
           currency: creditor.currency
@@ -178,14 +183,19 @@ const Creditors = () => {
     return remaining
       .sort((a, b) => b.remainingAmount - a.remainingAmount)
       .slice(0, 3);
-  }, [creditors]);
-
-  useEffect(() => {
-    if (!isLoading) setFetchData(false);
-  }, [isLoading]);
+  }, [creditorsData]);
 
   return (
     <>
+      <Helmet>
+        <title>{`Account Manager - Creditors`}</title>
+        <meta name='title' content={`Account Manager - Creditors`} />
+        <meta property='og:title' content={`Account Manager - Creditors`} />
+        <meta
+          property='twitter:title'
+          content={`Account Manager - Creditors`}
+        />
+      </Helmet>
       <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
         <div className='w-full mb-8 flex justify-end'>
           <div className='inline-flex ml-auto'>
@@ -207,7 +217,7 @@ const Creditors = () => {
                     <Loader size={36} />
                   </div>
                 ) : (
-                  creditors?.length
+                  creditorsData?.length
                 )}
               </span>
             </div>
@@ -248,11 +258,7 @@ const Creditors = () => {
       </div>
       {showModal && (
         <React.Suspense fallback={<ModalFallback />}>
-          <NewCreditorModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            refetchData={() => setFetchData(true)}
-          />
+          <NewCreditorModal showModal={showModal} setShowModal={setShowModal} />
         </React.Suspense>
       )}
     </>

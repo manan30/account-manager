@@ -10,6 +10,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
   return (
     <thead>
       {headerGroups.map((headerGroup) => (
+        // TODO: change key to a dynamic value
         <tr {...headerGroup.getHeaderGroupProps()} key='creditors-table-header'>
           {headerGroup.headers.map((column, i) => (
             <th
