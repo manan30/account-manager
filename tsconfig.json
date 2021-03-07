@@ -16,11 +16,6 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-<<<<<<< HEAD
-    "allowJs": true
-  },
-  "include": ["src/**/*", "tailwind.config.js", "postcss.config.js"],
-=======
     "typeRoots": ["./src/types", "node_modules/@types"]
   },
   "include": [
@@ -30,6 +25,5 @@
     "./postcss.config.js",
     "./tailwind.config.js"
   ],
->>>>>>> develop
   "exclude": ["node_modules", "dist"]
 }
