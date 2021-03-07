@@ -19,8 +19,7 @@
     "typeRoots": ["./src/types", "node_modules/@types"]
   },
   "include": [
-    "./src",
-    "./src/types/svg.d.ts",
+    "./src/**/*",
     "./vite.config.ts",
     "./postcss.config.js",
     "./tailwind.config.js"

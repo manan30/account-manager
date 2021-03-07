@@ -1,41 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import cn from 'classnames';
-import { usePlaidLink } from 'react-plaid-link';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
+import usePlaidAccessToken from '../../hooks/Plaid/usePlaidAccessToken';
 
 const Accounts = () => {
   const [linkToken, setLinkToken] = useState<null | string>(null);
   const { user } = useGlobalState();
-  const { open, ready } = usePlaidLink(config);
-  const config: Parameters<typeof usePlaidLink>[0] = {
-    token: linkToken || '',
-    onSuccess
-  };
-
-  const onSuccess = React.useCallback(
-    async (public_token) => {
-      // send public_token to server
-      const response = await fetch(
-        'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ publicToken: public_token, userId: user?.uid })
-        }
-      );
-
-      const data = await response.json();
-
-      console.log({ set: data });
-      // Handle response ...
-    },
-    [user]
-  );
+  const { open, ready } = usePlaidAccessToken({ linkToken, user });
 
   const generateToken = useCallback(async () => {
     const response = await fetch(
@@ -49,7 +23,6 @@ const Accounts = () => {
       }
     );
     const data = await response.json();
-    console.log({ data });
     setLinkToken(data.link_token);
   }, [user]);
 
