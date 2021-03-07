@@ -5,6 +5,9 @@ import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import usePlaidAccessToken from '../../hooks/Plaid/usePlaidAccessToken';
+import axios from 'redaxios';
+import { CreateLinkTokenResponse } from 'plaid';
+import { PLAID_CREATE_LINK_TOKEN_ENDPOINT } from '../../utils/Constants/APIConstants';
 
 const Accounts = () => {
   const [linkToken, setLinkToken] = useState<null | string>(null);
@@ -12,17 +15,13 @@ const Accounts = () => {
   const { open, ready } = usePlaidAccessToken({ linkToken, user });
 
   const generateToken = useCallback(async () => {
-    const response = await fetch(
-      'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/create-link-token',
+    const response = await axios.post<CreateLinkTokenResponse>(
+      PLAID_CREATE_LINK_TOKEN_ENDPOINT,
       {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId: user?.uid })
+        userId: user?.uid
       }
     );
-    const data = await response.json();
+    const { data } = response;
     setLinkToken(data.link_token);
   }, [user]);
 

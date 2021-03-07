@@ -1,6 +1,9 @@
 import firebase from 'firebase';
-import { useCallback } from 'react';
+import axios from 'redaxios';
+import { useCallback, useState } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import { TokenResponse } from 'plaid';
+import { PLAID_SET_ACCESS_TOKEN_ENDPOINT } from '../../utils/Constants/APIConstants';
 
 type usePlaidLinkTokenProps = {
   linkToken: string | null;
@@ -8,22 +11,23 @@ type usePlaidLinkTokenProps = {
 };
 
 const usePlaidAccessToken = ({ linkToken, user }: usePlaidLinkTokenProps) => {
+  const [tokenResponse, setTokenResponse] = useState<
+    TokenResponse | undefined
+  >();
+
   const onSuccess = useCallback(
     async (public_token) => {
-      const response = await fetch(
-        'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
+      const response = await axios.post<TokenResponse>(
+        PLAID_SET_ACCESS_TOKEN_ENDPOINT,
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ publicToken: public_token, userId: user?.uid })
+          publicToken: public_token,
+          userId: user?.uid
         }
       );
 
-      const data = await response.json();
+      const { data } = response;
 
-      console.log({ set: data });
+      setTokenResponse(data);
     },
     [user]
   );
@@ -35,7 +39,7 @@ const usePlaidAccessToken = ({ linkToken, user }: usePlaidLinkTokenProps) => {
 
   const { open, ready } = usePlaidLink(config);
 
-  return { open, ready };
+  return { open, ready, tokenResponse };
 };
 
 export default usePlaidAccessToken;
