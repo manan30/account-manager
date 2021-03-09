@@ -12,3 +12,5 @@ const PLAID_FUNCTIONS = `${ACCOUNT_FUNCTIONS}/plaid`;
 export const PLAID_CREATE_LINK_TOKEN_ENDPOINT = `${PLAID_FUNCTIONS}/create-link-token`;
 
 export const PLAID_SET_ACCESS_TOKEN_ENDPOINT = `${PLAID_FUNCTIONS}/set-access-token`;
+
+export const PLAID_GET_ACCOUNTS_BY_ACCESS_TOKEN = `${PLAID_FUNCTIONS}/all-accounts`;

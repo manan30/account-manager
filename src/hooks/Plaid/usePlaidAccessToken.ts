@@ -37,9 +37,9 @@ const usePlaidAccessToken = ({ linkToken, user }: usePlaidLinkTokenProps) => {
     onSuccess
   };
 
-  const { open, ready } = usePlaidLink(config);
+  const { open, ready, error } = usePlaidLink(config);
 
-  return { open, ready, tokenResponse };
+  return { open, ready, error, tokenResponse };
 };
 
 export default usePlaidAccessToken;

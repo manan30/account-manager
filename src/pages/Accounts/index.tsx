@@ -11,12 +11,28 @@ import { PLAID_CREATE_LINK_TOKEN_ENDPOINT } from '../../utils/Constants/APIConst
 import { useQuery } from 'react-query';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
+import AccountLoadingCard from './AccountsLoading';
+import AccountsLoading from './AccountsLoading';
+import Account from './Account';
+import { Account as AccountData } from '../../models/Account';
 
 const Accounts = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { user } = useGlobalState();
   const [linkToken, setLinkToken] = useState<null | string>(null);
-  const { open, ready } = usePlaidAccessToken({ linkToken, user });
+  const {
+    data: accounts,
+    error: accountsFetchError,
+    isLoading: loadingAccounts
+  } = useFirestoreReadQuery<AccountData>({
+    collection: 'account',
+    whereClauses: [['userID', '==', user?.uid]]
+  });
+  const { open, ready, error: plaidLinkError } = usePlaidAccessToken({
+    linkToken,
+    user
+  });
   const { error } = useQuery<
     CreateLinkTokenResponse | undefined,
     Response<Error>
@@ -53,31 +69,39 @@ const Accounts = () => {
     }
   }, [error, notificationDispatch]);
 
-  return (
-    <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
-      <div className='h-96 w-96 rounded-full bg-indigo-100 grid place-items-center'>
-        <VaultIcon height={220} width={220} />
-      </div>
-      <p>It looks like you have not linked any accounts yet</p>
-      <p>Let&apos;s get started by linking an account</p>
-      <Button
-        disabled={!ready || !linkToken}
-        className={cn(
-          'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
-          (!ready || !linkToken) &&
-            'hover:shadow-none opacity-40 cursor-default'
-        )}
-        onClickHandler={() => {
-          open();
-        }}
-      >
-        <div className='flex items-center space-x-4 whitespace-nowrap'>
-          <p>Link Account</p>
-          {(!ready || !linkToken) && <Loader color='text-gray-100' />}
+  if (loadingAccounts) return <AccountsLoading />;
+
+  if (accounts && accounts.length === 0) {
+    return (
+      <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
+        <div className='h-96 w-96 rounded-full bg-indigo-100 grid place-items-center'>
+          <VaultIcon height={220} width={220} />
         </div>
-      </Button>
-    </div>
-  );
+        <p>It looks like you have not linked any accounts yet</p>
+        <p>Let&apos;s get started by linking an account</p>
+        <Button
+          disabled={!ready || !linkToken}
+          className={cn(
+            'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
+            (!ready || !linkToken) &&
+              'hover:shadow-none opacity-40 cursor-default'
+          )}
+          onClickHandler={() => {
+            open();
+          }}
+        >
+          <div className='flex items-center space-x-4 whitespace-nowrap'>
+            {(!ready || !linkToken) && <Loader color='text-gray-100' />}
+            <p>Link Account</p>
+          </div>
+        </Button>
+      </div>
+    );
+  }
+
+  return accounts
+    ? accounts?.map((account) => <Account key={account.id} account={account} />)
+    : null;
 };
 
 export default Accounts;

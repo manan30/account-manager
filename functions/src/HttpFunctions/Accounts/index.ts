@@ -79,7 +79,8 @@ expressApp.post('/plaid/set-access-token', async (req, res) => {
   }
 });
 
-expressApp.get('/all-accounts', (req, res) => {
+expressApp.get('/plaid/all-accounts', (req, res) => {
+  console.log(req.body);
   const ACCESS_TOKEN = req.body.accessToken;
   plaidClient.getAccounts(ACCESS_TOKEN, (error: any, accountsResponse: any) => {
     if (error != null) {
