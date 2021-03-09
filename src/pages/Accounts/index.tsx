@@ -15,15 +15,15 @@ import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import AccountLoadingCard from './AccountsLoading';
 import AccountsLoading from './AccountsLoading';
 import Account from './Account';
-import { Account as AccountData } from '../../models/Account';
+import { PlaidItem as AccountData } from '../../models/PlaidItem';
 
 const Accounts = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const { user } = useGlobalState();
   const [linkToken, setLinkToken] = useState<null | string>(null);
   const {
-    data: accounts,
-    error: accountsFetchError,
+    data: plaidItems,
+    error: plaidItemsFetchError,
     isLoading: loadingAccounts
   } = useFirestoreReadQuery<AccountData>({
     collection: 'account',
@@ -71,7 +71,7 @@ const Accounts = () => {
 
   if (loadingAccounts) return <AccountsLoading />;
 
-  if (accounts && accounts.length === 0) {
+  if (plaidItems && plaidItems.length === 0) {
     return (
       <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
         <div className='h-96 w-96 rounded-full bg-indigo-100 grid place-items-center'>
@@ -99,8 +99,10 @@ const Accounts = () => {
     );
   }
 
-  return accounts
-    ? accounts?.map((account) => <Account key={account.id} account={account} />)
+  return plaidItems
+    ? plaidItems?.map((account) => (
+        <Account key={account.id} plaidItem={account} />
+      ))
     : null;
 };
 

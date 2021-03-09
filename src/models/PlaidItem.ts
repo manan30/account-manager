@@ -1,6 +1,6 @@
 import { Timestamp } from '@firebase/firestore-types';
 
-export interface Account {
+export interface PlaidItem {
   id: string;
   requestId: string;
   accessToken: string;

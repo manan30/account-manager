@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
 import {
+  AccountsResponse,
   Client,
   ClientConfigs,
   CreateLinkTokenOptions,
@@ -79,18 +80,21 @@ expressApp.post('/plaid/set-access-token', async (req, res) => {
   }
 });
 
-expressApp.get('/plaid/all-accounts', (req, res) => {
+expressApp.post('/plaid/all-accounts', (req, res) => {
   console.log(req.body);
   const ACCESS_TOKEN = req.body.accessToken;
-  plaidClient.getAccounts(ACCESS_TOKEN, (error: any, accountsResponse: any) => {
-    if (error != null) {
-      console.error({ error });
-      return res.status(500).send({
-        error
-      });
+  plaidClient.getAccounts(
+    ACCESS_TOKEN,
+    (error: Error, accountsResponse: AccountsResponse) => {
+      if (error != null) {
+        console.error({ error });
+        return res.status(500).send({
+          error
+        });
+      }
+      return res.status(200).send({ error: null, ...accountsResponse });
     }
-    return res.status(200).send({ error: null, accounts: accountsResponse });
-  });
+  );
 });
 
 export const accounts = functions.https.onRequest(expressApp);
