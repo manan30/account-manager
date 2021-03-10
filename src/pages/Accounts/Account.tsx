@@ -30,7 +30,7 @@ const Account: React.FC<AccountProps> = ({ plaidItem }) => {
   }
 
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 m-16'>
+    <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mx-16'>
       {data?.accounts.map((account) => {
         return (
           <div

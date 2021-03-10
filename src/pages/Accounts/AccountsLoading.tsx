@@ -3,7 +3,7 @@ import { generateRandomKey } from '../../utils/Functions';
 
 const AccountsLoading = () => {
   return (
-    <div className='grid grid-cols-2 grid-rows-4 gap-8 m-16'>
+    <div className='grid grid-cols-2 grid-rows-4 gap-8 mx-16'>
       {new Array(8).fill(0).map(() => {
         return (
           <div

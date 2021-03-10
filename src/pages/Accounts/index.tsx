@@ -100,29 +100,31 @@ const Accounts = () => {
   }
 
   return plaidItems ? (
-    <div className='flex flex-col space-y-4'>
-      <Button
-        disabled={!ready || !linkToken}
-        className={cn(
-          'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
-          (!ready || !linkToken) &&
-            'hover:shadow-none opacity-40 cursor-default'
-        )}
-        onClickHandler={() => {
-          open();
-        }}
-      >
-        <div className='flex items-center space-x-4 whitespace-nowrap'>
-          {(!ready || !linkToken) && <Loader color='text-gray-100' />}
-          <p>Link Account</p>
-        </div>
-      </Button>
+    <>
+      <div className='my-12 flex justify-end mr-16'>
+        <Button
+          disabled={!ready || !linkToken}
+          className={cn(
+            'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
+            (!ready || !linkToken) &&
+              'hover:shadow-none opacity-40 cursor-default'
+          )}
+          onClickHandler={() => {
+            open();
+          }}
+        >
+          <div className='flex items-center space-x-4 whitespace-nowrap'>
+            {(!ready || !linkToken) && <Loader color='text-gray-100' />}
+            <p>Link Account</p>
+          </div>
+        </Button>
+      </div>
       <div className='w-full'>
         {plaidItems?.map((account) => (
           <Account key={account.id} plaidItem={account} />
         ))}
       </div>
-    </div>
+    </>
   ) : null;
 };
 
