@@ -26,8 +26,11 @@ expressApp.use(cors({ origin: true }));
 
 const plaidClientConfig: ClientConfigs = {
   clientID: functions.config().plaid.client_id,
-  secret: functions.config().plaid.sandbox_secret,
-  env: environments.sandbox,
+  secret: functions.config().plaid.secret,
+  env:
+    process.env.NODE_ENV === 'production'
+      ? environments.development
+      : environments.sandbox,
   options: { version: '2020-09-14' }
 };
 const plaidClient = new Client(plaidClientConfig);
@@ -41,7 +44,7 @@ expressApp.post('/plaid/create-link-token', async (req, res) => {
       user: { client_user_id: userId },
       country_codes: ['US'],
       language: 'en',
-      products: ['auth', 'transactions']
+      products: ['auth', 'transactions', 'balance']
     };
 
     const tokenResponse = await plaidClient.createLinkToken(
