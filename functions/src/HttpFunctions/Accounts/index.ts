@@ -33,6 +33,7 @@ const plaidClientConfig: ClientConfigs = {
       : environments.sandbox,
   options: { version: '2020-09-14' }
 };
+console.log({ plaidClientConfig });
 const plaidClient = new Client(plaidClientConfig);
 
 expressApp.post('/plaid/create-link-token', async (req, res) => {
@@ -44,7 +45,7 @@ expressApp.post('/plaid/create-link-token', async (req, res) => {
       user: { client_user_id: userId },
       country_codes: ['US'],
       language: 'en',
-      products: ['auth', 'transactions', 'balance']
+      products: ['auth', 'transactions']
     };
 
     const tokenResponse = await plaidClient.createLinkToken(
