@@ -80,7 +80,7 @@ const Accounts = () => {
 
   if (loadingAccounts) return <AccountsLoading />;
 
-  if (plaidItems && plaidItems.length === 0) {
+  if (!plaidItems || (plaidItems && plaidItems.length === 0)) {
     return (
       <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
         <div className='h-96 w-96 rounded-full bg-indigo-100 grid place-items-center'>
