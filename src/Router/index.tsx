@@ -53,7 +53,7 @@ const Router = () => {
       <BrowserRouter>
         <div className='flex h-full w-full'>
           <SideNav />
-          <div className='w-3/4'>
+          <div className='w-3/4 overflow-y-auto'>
             <Suspense fallback={<Loader size={48} />}>
               <Switch>
                 <Route

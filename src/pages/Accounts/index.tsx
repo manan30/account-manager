@@ -12,7 +12,6 @@ import { useQuery } from 'react-query';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import AccountLoadingCard from './AccountsLoading';
 import AccountsLoading from './AccountsLoading';
 import Account from './Account';
 import { PlaidItem as AccountData } from '../../models/PlaidItem';
@@ -62,12 +61,22 @@ const Accounts = () => {
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
-          content: `Request failed due to ${error.status} : ${error.statusText} error`,
+          content: `Request failed due to ${error.statusText}`,
           theme: NOTIFICATION_THEME_FAILURE
         }
       });
     }
   }, [error, notificationDispatch]);
+
+  if (plaidItemsFetchError) {
+    notificationDispatch({
+      type: 'ADD_NOTIFICATION',
+      payload: {
+        content: 'Something went wrong while fetching the accounts',
+        theme: NOTIFICATION_THEME_FAILURE
+      }
+    });
+  }
 
   if (loadingAccounts) return <AccountsLoading />;
 
