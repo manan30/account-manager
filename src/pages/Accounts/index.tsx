@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'redaxios';
+import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 
 const Accounts = () => {
   const tellerConnectRef = useRef<{ open: () => void | undefined }>();
@@ -27,10 +28,10 @@ const Accounts = () => {
 
   const fetchAccounts = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5001/account-manager-41694/us-central1/accounts/teller-accounts/${accessToken}`
-      );
-      console.log({ res });
+      // const res = await axios.get(
+      //   `${ACCOUNT_FUNCTIONS}/teller-accounts/${accessToken}`
+      // );
+      // console.log({ res });
       // const data = await axios.get(endpoint, {
       //   withCredentials: true,
       //   auth: {
@@ -39,6 +40,15 @@ const Accounts = () => {
       //   }
       // });
       // console.log({ data });
+      const endpoint = 'https://api.teller.io/accounts';
+      const { data } = await axios.get(endpoint, {
+        auth: {
+          username: accessToken,
+          password: ''
+        },
+        withCredentials: true
+      });
+      console.log({ data });
     } catch (e) {
       console.log({ e });
     }
