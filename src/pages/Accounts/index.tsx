@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import React, { useCallback, useEffect } from 'react';
+import axios from 'redaxios';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 import { useTellerConnect } from '../../hooks/useTellerConnect';
 
