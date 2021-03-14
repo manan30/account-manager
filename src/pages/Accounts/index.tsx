@@ -1,69 +1,35 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
-import { useGlobalState } from '../../providers/GlobalStateProvider';
+import React, { useEffect, useRef } from 'react';
 
 const Accounts = () => {
-  const [linkToken, setLinkToken] = useState<null | string>(null);
-  const { user } = useGlobalState();
-  const onSuccess = React.useCallback(
-    async (public_token) => {
-      // send public_token to server
-      const response = await fetch(
-        'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ publicToken: public_token, userId: user?.uid })
-        }
-      );
-
-      const data = await response.json();
-
-      console.log({ set: data });
-      // Handle response ...
-    },
-    [user]
-  );
-
-  const config: Parameters<typeof usePlaidLink>[0] = {
-    token: linkToken || '',
-    onSuccess
-  };
-  const { open, ready } = usePlaidLink(config);
-
-  const generateToken = useCallback(async () => {
-    const response = await fetch(
-      'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/create-link-token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId: user?.uid })
-      }
-    );
-    const data = await response.json();
-    console.log({ data });
-    setLinkToken(data.link_token);
-  }, [user]);
+  const tellerConnectRef = useRef();
 
   useEffect(() => {
-    if (user) {
-      generateToken();
+    if (!tellerConnectRef.current) {
+      tellerConnectRef.current = TellerConnect.setup({
+        applicationId: 'app_ne22ctjh06r2t6156a000',
+        onInit: function () {
+          console.log('Teller Connect has initialized');
+        },
+        // Part 3. Handle a successful enrollment's accessToken
+        onSuccess: function (enrollment) {
+          console.log({ enrollment });
+          console.log('User enrolled successfully', enrollment.accessToken);
+        },
+        onExit: function () {
+          console.log('User closed Teller Connect');
+        }
+      });
     }
-  }, [user, generateToken]);
+  }, []);
 
   return (
-    <div>
+    <button
+      onClick={() => {
+        tellerConnectRef.current.open();
+      }}
+    >
       Accounts Page
-      {linkToken && (
-        <button onClick={() => open()} disabled={!ready}>
-          Link account
-        </button>
-      )}
-    </div>
+    </button>
   );
 };
 
