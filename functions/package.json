@@ -2,7 +2,9 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint \"src/**/*\"",
-    "build": "tsc && mkdir lib/certs && cp -r certs/* lib/certs",
+    "clean": "rm -rfd lib",
+    "copy-certs": "mkdir lib/certs && cp -r certs/* lib/certs",
+    "build": "npm run clean && tsc && npm run copy-certs",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",

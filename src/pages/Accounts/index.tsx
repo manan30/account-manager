@@ -30,7 +30,7 @@ const Accounts = () => {
     try {
       // const endpoint = 'https://api.teller.io/accounts';
       const res = await axios.get(
-        `${ACCOUNT_FUNCTIONS}/teller-accounts/${accessToken}`
+        `${ACCOUNT_FUNCTIONS}/teller-account/${accessToken}`
       );
       console.log({ res });
       // const data = await axios.get(endpoint, {
