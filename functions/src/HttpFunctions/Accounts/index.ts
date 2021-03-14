@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
+import axios from 'axios';
 import {
   Client,
   ClientConfigs,
@@ -90,6 +91,25 @@ expressApp.get('/all-accounts', (req, res) => {
     }
     return res.status(200).send({ error: null, accounts: accountsResponse });
   });
+});
+
+expressApp.get('/teller-accounts/:accessToken', async (req, res) => {
+  try {
+    const accessToken = req.params.accessToken;
+    const endpoint = 'https://api.teller.io/accounts';
+    const { data } = await axios.get(endpoint, {
+      auth: {
+        username: accessToken,
+        password: ''
+      },
+      withCredentials: true
+    });
+    console.log({ data });
+    res.status(200).send(data);
+  } catch (err) {
+    console.error(JSON.stringify(err, null, 2));
+    res.sendStatus(500);
+  }
 });
 
 export const accounts = functions.https.onRequest(expressApp);
