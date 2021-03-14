@@ -3,6 +3,9 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
 import axios from 'axios';
+import { Agent } from 'https';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 import {
   Client,
   ClientConfigs,
@@ -97,12 +100,27 @@ expressApp.get('/teller-accounts/:accessToken', async (req, res) => {
   try {
     const accessToken = req.params.accessToken;
     const endpoint = 'https://api.teller.io/accounts';
+    // console.log(__dirname);
+    if (existsSync(__dirname + '/certificate.pem')) {
+      console.log('exists');
+    }
+    console.log(__dirname);
+    const httpsAgent = new Agent({
+      cert: readFileSync(
+        join(__dirname, '..', '..', '..', 'certs', 'certificate.pem')
+      ),
+      key: readFileSync(
+        join(__dirname, '..', '..', '..', 'certs', 'private_key.pem')
+      )
+      // ca: fs.readFileSync('ca.crt')
+    });
     const { data } = await axios.get(endpoint, {
       auth: {
         username: accessToken,
         password: ''
       },
-      withCredentials: true
+      withCredentials: true,
+      httpsAgent
     });
     console.log({ data });
     res.status(200).send(data);

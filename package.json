@@ -22,6 +22,7 @@
     "@firebase/app-types": "0.6.1",
     "@firebase/firestore-types": "2.0.0",
     "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@types/axios": "^0.14.0",
     "@types/classnames": "2.2.11",
     "@types/faker": "5.1.5",
     "@types/react": "17.0.0",
@@ -52,6 +53,7 @@
     "vite-plugin-svgr": "^0.2.0"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "classnames": "2.2.6",
     "faker": "5.1.0",
     "firebase": "^8.2.1",

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import axios from 'redaxios';
+import axios from 'axios';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 
 const Accounts = () => {
@@ -28,10 +28,11 @@ const Accounts = () => {
 
   const fetchAccounts = useCallback(async () => {
     try {
-      // const res = await axios.get(
-      //   `${ACCOUNT_FUNCTIONS}/teller-accounts/${accessToken}`
-      // );
-      // console.log({ res });
+      // const endpoint = 'https://api.teller.io/accounts';
+      const res = await axios.get(
+        `${ACCOUNT_FUNCTIONS}/teller-accounts/${accessToken}`
+      );
+      console.log({ res });
       // const data = await axios.get(endpoint, {
       //   withCredentials: true,
       //   auth: {
@@ -40,15 +41,19 @@ const Accounts = () => {
       //   }
       // });
       // console.log({ data });
-      const endpoint = 'https://api.teller.io/accounts';
-      const { data } = await axios.get(endpoint, {
-        auth: {
-          username: accessToken,
-          password: ''
-        },
-        withCredentials: true
-      });
-      console.log({ data });
+      // const { data } = await axios.get(endpoint, {
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Credentials': true
+      //   },
+      //   auth: {
+      //     username: accessToken ?? '',
+      //     password: ''
+      //   },
+      //   withCredentials: true
+      // });
+      // console.log({ data });
     } catch (e) {
       console.log({ e });
     }
