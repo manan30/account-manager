@@ -63,6 +63,7 @@
     "react-query": "3.5.5",
     "react-router-dom": "5.2.0",
     "react-table": "7.6.3",
+    "redaxios": "^0.4.1",
     "victory": "^35.4.7"
   },
   "browserslist": [

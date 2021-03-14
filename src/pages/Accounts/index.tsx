@@ -1,69 +1,37 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
-import { useGlobalState } from '../../providers/GlobalStateProvider';
+import React, { useCallback, useEffect } from 'react';
+import axios from 'redaxios';
+import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
+import { useTellerConnect } from '../../hooks/useTellerConnect';
 
 const Accounts = () => {
-  const [linkToken, setLinkToken] = useState<null | string>(null);
-  const { user } = useGlobalState();
-  const onSuccess = React.useCallback(
-    async (public_token) => {
-      // send public_token to server
-      const response = await fetch(
-        'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/set-access-token',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ publicToken: public_token, userId: user?.uid })
-        }
+  const { enrollment, initializing, tellerConnectRef } = useTellerConnect();
+
+  const fetchAccounts = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        `${ACCOUNT_FUNCTIONS}/teller-account/${enrollment?.accessToken}`
       );
-
-      const data = await response.json();
-
-      console.log({ set: data });
-      // Handle response ...
-    },
-    [user]
-  );
-
-  const config: Parameters<typeof usePlaidLink>[0] = {
-    token: linkToken || '',
-    onSuccess
-  };
-  const { open, ready } = usePlaidLink(config);
-
-  const generateToken = useCallback(async () => {
-    const response = await fetch(
-      'http://localhost:5001/account-manager-41694/us-central1/accounts/plaid/create-link-token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId: user?.uid })
-      }
-    );
-    const data = await response.json();
-    console.log({ data });
-    setLinkToken(data.link_token);
-  }, [user]);
+      console.log({ res });
+    } catch (e) {
+      console.log({ e });
+    }
+  }, [enrollment]);
 
   useEffect(() => {
-    if (user) {
-      generateToken();
+    if (enrollment?.accessToken) {
+      fetchAccounts();
     }
-  }, [user, generateToken]);
+  }, [enrollment, fetchAccounts]);
 
   return (
-    <div>
+    <button
+      onClick={() => {
+        console.log(tellerConnectRef.current);
+        tellerConnectRef.current?.open();
+      }}
+    >
       Accounts Page
-      {linkToken && (
-        <button onClick={() => open()} disabled={!ready}>
-          Link account
-        </button>
-      )}
-    </div>
+    </button>
   );
 };
 
