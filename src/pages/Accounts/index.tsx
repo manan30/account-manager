@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 
 const Accounts = () => {
-  const tellerConnectRef = useRef();
+  const tellerConnectRef = useRef<{ open: () => void | undefined }>();
 
   useEffect(() => {
     if (!tellerConnectRef.current) {
       tellerConnectRef.current = TellerConnect.setup({
+        environment: 'development',
         applicationId: 'app_ne22ctjh06r2t6156a000',
         onInit: function () {
           console.log('Teller Connect has initialized');
         },
-        // Part 3. Handle a successful enrollment's accessToken
         onSuccess: function (enrollment) {
           console.log({ enrollment });
           console.log('User enrolled successfully', enrollment.accessToken);
@@ -25,7 +25,7 @@ const Accounts = () => {
   return (
     <button
       onClick={() => {
-        tellerConnectRef.current.open();
+        tellerConnectRef.current?.open();
       }}
     >
       Accounts Page
