@@ -2,103 +2,46 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
-import {
-  AccountsResponse,
-  Client,
-  ClientConfigs,
-  CreateLinkTokenOptions,
-  environments
-} from 'plaid';
-import { ACCOUNT } from '../../../models';
-import { Account as AccountModel } from '../../../models/Account';
-import {
-  CreateLinkTokenRequestBody,
-  ExchangePublicTokenRequestBody
-} from './accounts.interface';
+import axios from 'axios';
+import { Agent } from 'https';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { TELLER_ENDPOINT } from './constants';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
 
-const db = admin.firestore();
-
 const expressApp = express();
 expressApp.use(cors({ origin: true }));
 
-const plaidClientConfig: ClientConfigs = {
-  clientID: functions.config().plaid.client_id,
-  secret: functions.config().plaid.secret,
-  env:
-    process.env.NODE_ENV === 'production'
-      ? environments.development
-      : environments.sandbox,
-  options: { version: '2020-09-14' }
-};
-console.log({ plaidClientConfig });
-const plaidClient = new Client(plaidClientConfig);
-
-expressApp.post('/plaid/create-link-token', async (req, res) => {
-  console.log(req.body);
-  const { userId } = req.body as CreateLinkTokenRequestBody;
-  try {
-    const createLinkTokenConfig: CreateLinkTokenOptions = {
-      client_name: 'Account Manager',
-      user: { client_user_id: userId },
-      country_codes: ['US'],
-      language: 'en',
-      products: ['auth', 'transactions']
-    };
-
-    const tokenResponse = await plaidClient.createLinkToken(
-      createLinkTokenConfig
-    );
-
-    return res.status(200).send(tokenResponse);
-  } catch (err) {
-    console.error({ err });
-    return res.status(500).send({ error: err.toString() });
-  }
+const httpsAgent = new Agent({
+  cert: readFileSync(
+    join(__dirname, '..', '..', '..', 'certs', 'certificate.pem')
+  ),
+  key: readFileSync(
+    join(__dirname, '..', '..', '..', 'certs', 'private_key.pem')
+  )
 });
 
-expressApp.post('/plaid/set-access-token', async (req, res) => {
-  const { publicToken, userId } = req.body as ExchangePublicTokenRequestBody;
+axios.defaults.baseURL = TELLER_ENDPOINT;
+axios.defaults.withCredentials = true;
+axios.defaults.httpsAgent = httpsAgent;
+
+expressApp.get('/teller-account/:accessToken', async (req, res) => {
   try {
-    const tokenResponse = await plaidClient.exchangePublicToken(publicToken);
+    const accessToken = req.params.accessToken;
 
-    const accountsDBRef = db.collection(ACCOUNT);
-
-    if (accountsDBRef) {
-      await accountsDBRef.add({
-        requestId: tokenResponse.request_id,
-        accessToken: tokenResponse.access_token,
-        itemId: tokenResponse.item_id,
-        userID: userId,
-        createdAt: admin.firestore.Timestamp.now(),
-        updatedAt: admin.firestore.Timestamp.now()
-      } as AccountModel);
-    }
-
-    return res.status(200).send(tokenResponse);
-  } catch (err) {
-    console.error({ err });
-    return res.status(500).send({ error: err.toString() });
-  }
-});
-
-expressApp.post('/plaid/all-accounts', (req, res) => {
-  console.log(req.body);
-  const ACCESS_TOKEN = req.body.accessToken;
-  plaidClient.getAccounts(
-    ACCESS_TOKEN,
-    (error: Error, accountsResponse: AccountsResponse) => {
-      if (error != null) {
-        console.error({ error });
-        return res.status(500).send({
-          error
-        });
+    const { data } = await axios.get('/accounts', {
+      auth: {
+        username: accessToken,
+        password: ''
       }
-      return res.status(200).send({ error: null, ...accountsResponse });
-    }
-  );
+    });
+    res.status(200).send(data);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
 export const accounts = functions.https.onRequest(expressApp);

@@ -120,3 +120,4 @@ dist
 firestore-data/
 
 functions/.runtimeconfig.json
+functions/certs
