@@ -1,24 +1,27 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
+import { useTellerConnect } from '../../hooks/useTellerConnect';
 
 const Accounts = () => {
+  const { enrollment, initializing, tellerConnectRef } = useTellerConnect();
+
   const fetchAccounts = useCallback(async () => {
     try {
       const res = await axios.get(
-        `${ACCOUNT_FUNCTIONS}/teller-account/${accessToken}`
+        `${ACCOUNT_FUNCTIONS}/teller-account/${enrollment?.accessToken}`
       );
       console.log({ res });
     } catch (e) {
       console.log({ e });
     }
-  }, [accessToken]);
+  }, [enrollment]);
 
   useEffect(() => {
-    if (accessToken) {
+    if (enrollment?.accessToken) {
       fetchAccounts();
     }
-  }, [accessToken, fetchAccounts]);
+  }, [enrollment, fetchAccounts]);
 
   return (
     <button

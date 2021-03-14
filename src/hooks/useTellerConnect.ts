@@ -1,29 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
-import {} from '';
 
 export const useTellerConnect = () => {
   const tellerConnectRef = useRef<{ open: () => void | undefined }>();
-  const [accessToken, setAccessToken] = useState<Enrollment | null>(null);
+  const [initializing, setInitializing] = useState(true);
+  const [enrollment, setEnrollment] = useState<
+    typeof TellerConnect.EnrollmentResponse | null
+  >(null);
 
   useEffect(() => {
     if (!tellerConnectRef.current) {
       tellerConnectRef.current = TellerConnect.setup({
         environment: 'development',
-        applicationId: 'app_ne22ctjh06r2t6156a000',
-        onInit: function () {
-          console.log('Teller Connect has initialized');
-        },
+        applicationId: `${import.meta.env.VITE_TELLER_APPLICATION_ID}`,
         onSuccess: function (enrollment) {
-          console.log({ enrollment });
-          console.log('User enrolled successfully', enrollment.accessToken);
-          setAccessToken(enrollment.accessToken);
-        },
-        onExit: function () {
-          console.log('User closed Teller Connect');
+          setInitializing(false);
+          setEnrollment(enrollment);
         }
       });
     }
   }, []);
 
-  return { tellerConnectRef, accessToken };
+  return { tellerConnectRef, enrollment, initializing };
 };

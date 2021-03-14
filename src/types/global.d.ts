@@ -1,7 +1,5 @@
-// export type TellerConnect = {};
-
-declare module 'teller-connect' {
-  export type EnrollmentOptions = {
+declare namespace TellerConnect {
+  let EnrollmentResponse: {
     accessToken: string;
     user: {
       id: string;
@@ -14,15 +12,17 @@ declare module 'teller-connect' {
     };
   };
 
-  export type TellerConnectSetupOptions = {
+  let TellerConnectSetupOptions: {
     environment: 'development' | 'production';
     applicationId: string;
     enrollmentId?: string;
     userId?: string;
     onInit?: () => void;
-    onSuccess: (enrollmentOptions: EnrollmentOptions) => void;
+    onSuccess: (enrollmentResponse: typeof EnrollmentResponse) => void;
     onExit?: () => void;
   };
 
-  setup: (options: TellerConnectSetupOptions) => { open: () => void };
+  let setup: (
+    options: typeof TellerConnectSetupOptions
+  ) => { open: () => void };
 }
