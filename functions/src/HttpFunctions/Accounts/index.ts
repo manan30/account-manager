@@ -7,6 +7,8 @@ import { Agent } from 'https';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { TELLER_ENDPOINT } from './constants';
+import { EnrollmentBody } from './accounts.interface';
+import { AccountsResponse } from 'plaid';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -29,17 +31,16 @@ axios.defaults.httpsAgent = httpsAgent;
 
 expressApp.post('/teller-account', async (req, res) => {
   try {
-    const enrollmentResponse = req.body;
+    const enrollmentResponse = req.body as EnrollmentBody;
 
-    console.log({ enrollmentResponse });
+    const { data } = await axios.get<AccountsResponse>('/accounts', {
+      auth: {
+        username: enrollmentResponse.accessToken,
+        password: ''
+      }
+    });
 
-    // const { data } = await axios.get('/accounts', {
-    //   auth: {
-    //     username: accessToken,
-    //     password: ''
-    //   }
-    // });
-    res.sendStatus(200);
+    res.status(200).send(data);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
