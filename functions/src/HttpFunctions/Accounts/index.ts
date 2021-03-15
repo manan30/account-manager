@@ -27,17 +27,19 @@ axios.defaults.baseURL = TELLER_ENDPOINT;
 axios.defaults.withCredentials = true;
 axios.defaults.httpsAgent = httpsAgent;
 
-expressApp.get('/teller-account/:accessToken', async (req, res) => {
+expressApp.post('/teller-account', async (req, res) => {
   try {
-    const accessToken = req.params.accessToken;
+    const enrollmentResponse = req.body;
 
-    const { data } = await axios.get('/accounts', {
-      auth: {
-        username: accessToken,
-        password: ''
-      }
-    });
-    res.status(200).send(data);
+    console.log({ enrollmentResponse });
+
+    // const { data } = await axios.get('/accounts', {
+    //   auth: {
+    //     username: accessToken,
+    //     password: ''
+    //   }
+    // });
+    res.sendStatus(200);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

@@ -1,11 +1,12 @@
 import { Timestamp } from '@firebase/firestore-types';
 
-export interface PlaidItem {
+export interface Account {
   id: string;
-  requestId: string;
+  userId: string;
+  tellerUserId: string;
+  enrollmentId: string;
   accessToken: string;
-  itemId: string;
-  userID: string;
+  institutionName: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

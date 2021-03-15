@@ -4,7 +4,7 @@ import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
-import axios from 'redaxios';
+import axios, { Response } from 'redaxios';
 // import { useQuery } from 'react-query';
 // import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 // import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
@@ -13,11 +13,26 @@ import axios from 'redaxios';
 // import Account from './Account';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 import { useTellerConnect } from '../../hooks/useTellerConnect';
+import { useMutation } from 'react-query';
+import { Account } from '../../models/Account';
 
 const Accounts = () => {
   // const notificationDispatch = useNotificationDispatchContext();
   const { user } = useGlobalState();
-  const { enrollment, initializing, tellerConnectRef } = useTellerConnect();
+  const { enrollment, initializing, openTellerConnect } = useTellerConnect();
+  const { data, isLoading, mutate: addNewAccountMutation } = useMutation<
+    Response<Account>,
+    Error
+  >(
+    async () =>
+      await axios.post<Account>(`${ACCOUNT_FUNCTIONS}/teller-account/`, {
+        enrollment
+      }),
+    {
+      mutationKey: enrollment?.enrollment.id
+    }
+  );
+
   // const [linkToken, setLinkToken] = useState<null | string>(null);
   // const {
   //   data: plaidItems,
@@ -73,22 +88,22 @@ const Accounts = () => {
   //   });
   // }
 
-  const fetchAccounts = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `${ACCOUNT_FUNCTIONS}/teller-account/${enrollment?.accessToken}`
-      );
-      console.log({ res });
-    } catch (e) {
-      console.log({ e });
-    }
-  }, [enrollment]);
+  // const fetchAccounts = useCallback(async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${ACCOUNT_FUNCTIONS}/teller-account/${enrollment?.accessToken}`
+  //     );
+  //     console.log({ res });
+  //   } catch (e) {
+  //     console.log({ e });
+  //   }
+  // }, [enrollment]);
 
   useEffect(() => {
     if (enrollment?.accessToken) {
-      fetchAccounts();
+      addNewAccountMutation();
     }
-  }, [enrollment, fetchAccounts]);
+  }, [enrollment, addNewAccountMutation]);
 
   // if (loadingAccounts) return <AccountsLoading />;
 
@@ -107,7 +122,8 @@ const Accounts = () => {
             initializing && 'hover:shadow-none opacity-40 cursor-default'
           )}
           onClickHandler={() => {
-            open();
+            console.log('Hello');
+            if (openTellerConnect) openTellerConnect();
           }}
         >
           <div className='flex items-center space-x-4 whitespace-nowrap'>
@@ -129,7 +145,8 @@ const Accounts = () => {
             initializing && 'hover:shadow-none opacity-40 cursor-default'
           )}
           onClickHandler={() => {
-            open();
+            console.log('Hello');
+            if (openTellerConnect) openTellerConnect();
           }}
         >
           <div className='flex items-center space-x-4 whitespace-nowrap'>

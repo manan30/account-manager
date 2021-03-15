@@ -12,13 +12,19 @@ export const useTellerConnect = () => {
       tellerConnectRef.current = TellerConnect.setup({
         environment: 'development',
         applicationId: `${import.meta.env.VITE_TELLER_APPLICATION_ID}`,
-        onSuccess: function (enrollment) {
+        onInit: function () {
           setInitializing(false);
+        },
+        onSuccess: function (enrollment) {
           setEnrollment(enrollment);
         }
       });
     }
   }, []);
 
-  return { tellerConnectRef, enrollment, initializing };
+  return {
+    openTellerConnect: tellerConnectRef.current?.open,
+    enrollment,
+    initializing
+  };
 };

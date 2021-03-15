@@ -1,7 +1,7 @@
 import React from 'react';
 import axios, { Response } from 'redaxios';
 import { useQuery } from 'react-query';
-import { PlaidItem } from '../../models/PlaidItem';
+import { PlaidItem } from '../../models/Account';
 import { PLAID_GET_ACCOUNTS_BY_ACCESS_TOKEN } from '../../utils/Constants/APIConstants';
 import { AccountsResponse } from 'plaid';
 import AccountsLoading from './AccountsLoading';
