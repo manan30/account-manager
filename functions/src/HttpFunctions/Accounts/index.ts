@@ -38,8 +38,16 @@ expressApp.post('/add-account', async (req, res) => {
     const accountsDbRef = db.collection(AccountCollection);
     const timestamp = admin.firestore.Timestamp.now();
 
-    // if (accountsDbRef) {
-    // TODO: Check for duplicate account additions
+    if (accountsDbRef) {
+      const existingAccount = (await accountsDbRef.get()).docs.some(
+        (doc) => doc.data().enrollmentId === enrollmentData.enrollment.id
+      );
+      if (existingAccount)
+        return res
+          .status(400)
+          .send('It looks like this account is already linked');
+    }
+
     const docRef = await accountsDbRef.add({
       userId: enrollmentData.userId,
       tellerUserId: enrollmentData.user.id,
@@ -49,14 +57,13 @@ expressApp.post('/add-account', async (req, res) => {
       createdAt: timestamp,
       updatedAt: timestamp
     } as Account);
-    // }
 
-    res
+    return res
       .status(200)
       .send({ success: `Successfully added new account: ${docRef.id}` });
   } catch (err) {
     console.error({ err });
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 

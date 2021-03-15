@@ -48,7 +48,7 @@ const Accounts = () => {
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
         payload: {
-          content: `Failed to add account. Request failed due to ${accountAddingError.statusText}`,
+          content: `Request failed due to ${accountAddingError.data}`,
           theme: NOTIFICATION_THEME_FAILURE
         }
       });
