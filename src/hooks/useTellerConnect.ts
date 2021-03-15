@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export const useTellerConnect = () => {
   const tellerConnectRef = useRef<{ open: () => void | undefined }>();
@@ -22,9 +22,14 @@ export const useTellerConnect = () => {
     }
   }, []);
 
+  const enrollmentCompleted = useCallback(() => {
+    setEnrollment(null);
+  }, []);
+
   return {
     openTellerConnect: tellerConnectRef.current?.open,
     enrollment,
+    enrollmentCompleted,
     initializing
   };
 };

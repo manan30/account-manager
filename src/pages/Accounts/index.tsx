@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import cn from 'classnames';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
@@ -15,68 +15,45 @@ import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 import { useTellerConnect } from '../../hooks/useTellerConnect';
 import { useMutation } from 'react-query';
 import { Account } from '../../models/Account';
+import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 
 const Accounts = () => {
-  // const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatchContext();
   const { user } = useGlobalState();
-  const { enrollment, initializing, openTellerConnect } = useTellerConnect();
-  const { data, isLoading, mutate: addNewAccountMutation } = useMutation<
-    Response<Account>,
-    Error
-  >(
+  const {
+    enrollment,
+    initializing,
+    openTellerConnect,
+    enrollmentCompleted
+  } = useTellerConnect();
+  const {
+    data,
+    isLoading: addingAccount,
+    error: accountAddingError,
+    mutate: addNewAccountMutation
+  } = useMutation<Response<Account>, Response<Error>>(
     async () =>
-      await axios.post<Account>(`${ACCOUNT_FUNCTIONS}/teller-account/`, {
-        enrollment
+      await axios.post<Account>(`${ACCOUNT_FUNCTIONS}/add-account`, {
+        ...enrollment,
+        userId: user?.uid
       }),
     {
       mutationKey: enrollment?.enrollment.id
     }
   );
 
-  // const [linkToken, setLinkToken] = useState<null | string>(null);
-  // const {
-  //   data: plaidItems,
-  //   error: plaidItemsFetchError,
-  //   isLoading: loadingAccounts
-  // } = useFirestoreReadQuery<AccountData>({
-  //   collection: 'account',
-  //   whereClauses: [['userID', '==', user?.uid]]
-  // });
-  // const { error } = useQuery<
-  //   CreateLinkTokenResponse | undefined,
-  //   Response<Error>
-  // >(
-  //   [user?.uid],
-  //   async () => {
-  //     if (user) {
-  //       const response = await axios.post<CreateLinkTokenResponse>(
-  //         `${PLAID_CREATE_LINK_TOKEN_ENDPOINT}`,
-  //         {
-  //           userId: user?.uid
-  //         }
-  //       );
-  //       return response.data;
-  //     }
-  //   },
-  //   {
-  //     onSuccess: (data) => {
-  //       setLinkToken((data as CreateLinkTokenResponse).link_token);
-  //     },
-  //     retry: 2
-  //   }
-  // );
-
-  // useEffect(() => {
-  //   if (error) {
-  //     notificationDispatch({
-  //       type: 'ADD_NOTIFICATION',
-  //       payload: {
-  //         content: `Request failed due to ${error.statusText}`,
-  //         theme: NOTIFICATION_THEME_FAILURE
-  //       }
-  //     });
-  //   }
-  // }, [error, notificationDispatch]);
+  useEffect(() => {
+    if (accountAddingError) {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: `Failed to add account. Request failed due to ${accountAddingError.statusText}`,
+          theme: NOTIFICATION_THEME_FAILURE
+        }
+      });
+    }
+  }, [accountAddingError, notificationDispatch]);
 
   // if (plaidItemsFetchError) {
   //   notificationDispatch({
@@ -102,8 +79,9 @@ const Accounts = () => {
   useEffect(() => {
     if (enrollment?.accessToken) {
       addNewAccountMutation();
+      enrollmentCompleted();
     }
-  }, [enrollment, addNewAccountMutation]);
+  }, [enrollment, addNewAccountMutation, enrollmentCompleted]);
 
   // if (loadingAccounts) return <AccountsLoading />;
 
@@ -116,18 +94,20 @@ const Accounts = () => {
         <p>It looks like you have not linked any accounts yet</p>
         <p>Let&apos;s get started by linking an account</p>
         <Button
-          disabled={initializing}
+          disabled={initializing || addingAccount}
           className={cn(
             'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
-            initializing && 'hover:shadow-none opacity-40 cursor-default'
+            (initializing || addingAccount) &&
+              'hover:shadow-none opacity-40 cursor-default'
           )}
           onClickHandler={() => {
-            console.log('Hello');
             if (openTellerConnect) openTellerConnect();
           }}
         >
           <div className='flex items-center space-x-4 whitespace-nowrap'>
-            {initializing && <Loader color='text-gray-100' />}
+            {(initializing || addingAccount) && (
+              <Loader color='text-gray-100' />
+            )}
             <p>Link Account</p>
           </div>
         </Button>

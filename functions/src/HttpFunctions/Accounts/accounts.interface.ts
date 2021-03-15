@@ -1,4 +1,5 @@
-export interface EnrollmentBody {
+export interface EnrollmentData {
+  userId: string;
   accessToken: string;
   user: {
     id: string;
