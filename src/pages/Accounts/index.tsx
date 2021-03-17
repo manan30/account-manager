@@ -17,43 +17,22 @@ import { useMutation } from 'react-query';
 import { Account } from '../../models/Account';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
+import LinkAccount from './LinkAccount';
+import AccountsLoading from './AccountsLoading';
 
 const Accounts = () => {
-  const notificationDispatch = useNotificationDispatchContext();
-  const { user } = useGlobalState();
   const {
-    enrollment,
-    initializing,
-    openTellerConnect,
-    enrollmentCompleted
-  } = useTellerConnect();
-  const {
-    data,
-    isLoading: addingAccount,
-    error: accountAddingError,
-    mutate: addNewAccountMutation
-  } = useMutation<Response<Account>, Response<Error>>(
-    async () =>
-      await axios.post<Account>(`${ACCOUNT_FUNCTIONS}/add-account`, {
-        ...enrollment,
-        userId: user?.uid
-      }),
-    {
-      mutationKey: enrollment?.enrollment.id
-    }
-  );
+    data: accountsData,
+    error: accountsFetchingError,
+    isLoading: loadingAccounts
+  } = useFirestoreReadQuery<Account>({
+    collection: 'account'
+  });
 
   useEffect(() => {
-    if (accountAddingError) {
-      notificationDispatch({
-        type: 'ADD_NOTIFICATION',
-        payload: {
-          content: `Request failed due to ${accountAddingError.data}`,
-          theme: NOTIFICATION_THEME_FAILURE
-        }
-      });
-    }
-  }, [accountAddingError, notificationDispatch]);
+    console.log({ accountsData });
+  }, [accountsData]);
 
   // if (plaidItemsFetchError) {
   //   notificationDispatch({
@@ -76,16 +55,9 @@ const Accounts = () => {
   //   }
   // }, [enrollment]);
 
-  useEffect(() => {
-    if (enrollment?.accessToken) {
-      addNewAccountMutation();
-      enrollmentCompleted();
-    }
-  }, [enrollment, addNewAccountMutation, enrollmentCompleted]);
-
   // if (loadingAccounts) return <AccountsLoading />;
 
-  if (!enrollment) {
+  if (!loadingAccounts && (!accountsData || accountsData.length === 0)) {
     return (
       <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
         <div className='h-96 w-96 rounded-full bg-indigo-100 grid place-items-center'>
@@ -93,47 +65,15 @@ const Accounts = () => {
         </div>
         <p>It looks like you have not linked any accounts yet</p>
         <p>Let&apos;s get started by linking an account</p>
-        <Button
-          disabled={initializing || addingAccount}
-          className={cn(
-            'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
-            (initializing || addingAccount) &&
-              'hover:shadow-none opacity-40 cursor-default'
-          )}
-          onClickHandler={() => {
-            if (openTellerConnect) openTellerConnect();
-          }}
-        >
-          <div className='flex items-center space-x-4 whitespace-nowrap'>
-            {(initializing || addingAccount) && (
-              <Loader color='text-gray-100' />
-            )}
-            <p>Link Account</p>
-          </div>
-        </Button>
+        <LinkAccount />
       </div>
     );
   }
 
-  return enrollment ? (
+  return accountsData ? (
     <>
       <div className='my-12 flex justify-end mr-16'>
-        <Button
-          disabled={initializing}
-          className={cn(
-            'w-auto px-4 py-3 bg-indigo-600 hover:shadow-md',
-            initializing && 'hover:shadow-none opacity-40 cursor-default'
-          )}
-          onClickHandler={() => {
-            console.log('Hello');
-            if (openTellerConnect) openTellerConnect();
-          }}
-        >
-          <div className='flex items-center space-x-4 whitespace-nowrap'>
-            {initializing && <Loader color='text-gray-100' />}
-            <p>Link Account</p>
-          </div>
-        </Button>
+        <LinkAccount />
       </div>
       {/* <div className='w-full'>
         {plaidItems?.map((account) => (

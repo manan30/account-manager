@@ -10,3 +10,5 @@ export interface Account {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
+
+export const AccountCollection = 'account';
