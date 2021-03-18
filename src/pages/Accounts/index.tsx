@@ -1,32 +1,17 @@
 import React, { useEffect } from 'react';
-import cn from 'classnames';
-import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
-import Button from '../../components/Button';
-import Loader from '../../components/Loader';
-import axios, { Response } from 'redaxios';
-// import { useQuery } from 'react-query';
-// import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
-// import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-// import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-// import AccountsLoading from './AccountsLoading';
-// import Account from './Account';
-import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
-import { useTellerConnect } from '../../hooks/useTellerConnect';
-import { useMutation } from 'react-query';
-import { Account } from '../../models/Account';
-import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import LinkAccount from './LinkAccount';
+import { Account as AccountModel } from '../../models/Account';
+import Account from './Account';
 import AccountsLoading from './AccountsLoading';
+import LinkAccount from './LinkAccount';
 
 const Accounts = () => {
   const {
     data: accountsData,
     error: accountsFetchingError,
     isLoading: loadingAccounts
-  } = useFirestoreReadQuery<Account>({
+  } = useFirestoreReadQuery<AccountModel>({
     collection: 'account'
   });
 
@@ -71,16 +56,16 @@ const Accounts = () => {
   }
 
   return accountsData ? (
-    <>
-      <div className='my-12 flex justify-end mr-16'>
+    <div className='mx-16'>
+      <div className='my-12 flex justify-end'>
         <LinkAccount />
       </div>
-      {/* <div className='w-full'>
-        {plaidItems?.map((account) => (
-          <Account key={account.id} plaidItem={account} />
+      <div className='mt-6 flex flex-col space-y-6'>
+        {accountsData.map((account) => (
+          <Account key={account.id} account={account} />
         ))}
-      </div> */}
-    </>
+      </div>
+    </div>
   ) : null;
 };
 
