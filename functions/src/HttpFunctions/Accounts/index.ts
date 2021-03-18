@@ -70,7 +70,7 @@ expressApp.post('/add-account', async (req, res) => {
 
 expressApp.get('/get-account/:id', async (req, res) => {
   try {
-    const { data } = await axios.get<AccountsResponse>('/accounts', {
+    const { data } = await axios.get<AccountsResponse[]>('/accounts', {
       auth: { username: req.params.id, password: '' }
     });
     return res.status(200).send(data);

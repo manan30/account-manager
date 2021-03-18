@@ -3,7 +3,6 @@ import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Account as AccountModel } from '../../models/Account';
 import Account from './Account';
-import AccountsLoading from './AccountsLoading';
 import LinkAccount from './LinkAccount';
 
 const Accounts = () => {
