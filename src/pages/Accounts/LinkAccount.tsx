@@ -22,7 +22,6 @@ const LinkAccount = () => {
   } = useTellerConnect();
 
   const {
-    data,
     isLoading: addingAccount,
     error: accountAddingError,
     mutate: addNewAccountMutation
