@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'redaxios';
 import cn from 'classnames';
 import Button from '../../components/Button';
-import { useTellerConnect } from '../../hooks/useTellerConnect';
+import { useTellerConnect } from '../../hooks/Teller/useTellerConnect';
 import { useMutation } from 'react-query';
 import { Response } from 'redaxios';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';

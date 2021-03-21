@@ -7,9 +7,12 @@ import { Agent } from 'https';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { TELLER_ENDPOINT } from './constants';
-import { EnrollmentData } from './accounts.interface';
+import {
+  AccountResponse,
+  EnrollmentData,
+  AccountBalance
+} from './accounts.interface';
 import { AccountCollection, Account } from '../../../models/Account';
-import { AccountsResponse } from 'plaid';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -68,11 +71,26 @@ expressApp.post('/add-account', async (req, res) => {
   }
 });
 
-expressApp.get('/get-account/:id', async (req, res) => {
+expressApp.get('/account/:id', async (req, res) => {
   try {
-    const { data } = await axios.get<AccountsResponse[]>('/accounts', {
+    const { data } = await axios.get<AccountResponse[]>('/accounts', {
       auth: { username: req.params.id, password: '' }
     });
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/account/:id', async (req, res) => {
+  try {
+    const { data } = await axios.get<AccountBalance[]>(
+      `/accounts/${req.params.id}/balances`,
+      {
+        auth: { username: req.params.id, password: '' }
+      }
+    );
     return res.status(200).send(data);
   } catch (err) {
     console.error({ err });

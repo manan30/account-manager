@@ -12,26 +12,38 @@ export interface EnrollmentData {
   };
 }
 
-export interface AccountsResponse {
+export interface AccountResponse {
   currency_code: string;
   enrollment_id: string;
   id: string;
-  institution: Institution;
+  institution: AccountInstitution;
   last_four: string;
-  links: Links;
+  links: AccountLinks;
   name: string;
   subtype: string;
   type: string;
 }
 
-export interface Institution {
+export interface AccountInstitution {
   id: string;
   name: string;
 }
 
-export interface Links {
+export interface AccountLinks {
   balances: string;
   details: string;
   self: string;
   transactions: string;
+}
+
+export interface AccountBalance {
+  account_id: string;
+  available: string;
+  ledger: string;
+  links: AccountBalanceLinks;
+}
+
+export interface AccountBalanceLinks {
+  account: string;
+  self: string;
 }

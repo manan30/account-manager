@@ -25,7 +25,7 @@ const Account: React.FC<AccountProps> = ({ account }) => {
   } = useQuery<Response<AccountsResponse[]>, Response<Error>>(
     account.id,
     async () =>
-      await axios.get(`${ACCOUNT_FUNCTIONS}/get-account/${account.accessToken}`)
+      await axios.get(`${ACCOUNT_FUNCTIONS}/account/${account.accessToken}`)
   );
 
   if (accountError) {
@@ -49,7 +49,7 @@ const Account: React.FC<AccountProps> = ({ account }) => {
       {accountResponse?.data && (
         <div className='grid grid-cols-2 gap-8 mb-8 mt-6'>
           {accountResponse.data.map((accountItem) => (
-            <AccountItem key={accountItem.id} />
+            <AccountItem key={accountItem.id} accountDetails={accountItem} />
           ))}
         </div>
       )}
