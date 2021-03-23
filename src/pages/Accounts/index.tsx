@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Account as AccountModel } from '../../models/Account';
@@ -13,31 +13,6 @@ const Accounts = () => {
   } = useFirestoreReadQuery<AccountModel>({
     collection: 'account'
   });
-
-  useEffect(() => {
-    console.log({ accountsData });
-  }, [accountsData]);
-
-  // if (plaidItemsFetchError) {
-  //   notificationDispatch({
-  //     type: 'ADD_NOTIFICATION',
-  //     payload: {
-  //       content: 'Something went wrong while fetching the accounts',
-  //       theme: NOTIFICATION_THEME_FAILURE
-  //     }
-  //   });
-  // }
-
-  // const fetchAccounts = useCallback(async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${ACCOUNT_FUNCTIONS}/teller-account/${enrollment?.accessToken}`
-  //     );
-  //     console.log({ res });
-  //   } catch (e) {
-  //     console.log({ e });
-  //   }
-  // }, [enrollment]);
 
   // if (loadingAccounts) return <AccountsLoading />;
 

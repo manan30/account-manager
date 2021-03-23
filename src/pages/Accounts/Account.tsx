@@ -1,10 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import axios, { Response } from 'redaxios';
-import {
-  Account as AccountModel,
-  AccountsResponse
-} from '../../models/Account';
+import { Account as AccountModel, AccountResponse } from '../../models/Account';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
@@ -22,10 +19,12 @@ const Account: React.FC<AccountProps> = ({ account }) => {
     isLoading: loadingAccount,
     isFetching: fetchingAccount,
     error: accountError
-  } = useQuery<Response<AccountsResponse[]>, Response<Error>>(
+  } = useQuery<Response<AccountResponse[]>, Response<Error>>(
     account.id,
     async () =>
-      await axios.get(`${ACCOUNT_FUNCTIONS}/account/${account.accessToken}`)
+      await axios.get<AccountResponse[]>(
+        `${ACCOUNT_FUNCTIONS}/${account.accessToken}`
+      )
   );
 
   if (accountError) {
@@ -49,7 +48,11 @@ const Account: React.FC<AccountProps> = ({ account }) => {
       {accountResponse?.data && (
         <div className='grid grid-cols-2 gap-8 mb-8 mt-6'>
           {accountResponse.data.map((accountItem) => (
-            <AccountItem key={accountItem.id} accountDetails={accountItem} />
+            <AccountItem
+              key={accountItem.id}
+              accountDetails={accountItem}
+              accessToken={account.accessToken}
+            />
           ))}
         </div>
       )}

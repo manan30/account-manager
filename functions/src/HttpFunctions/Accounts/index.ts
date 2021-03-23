@@ -71,10 +71,10 @@ expressApp.post('/add-account', async (req, res) => {
   }
 });
 
-expressApp.get('/account/:id', async (req, res) => {
+expressApp.get('/:token', async (req, res) => {
   try {
     const { data } = await axios.get<AccountResponse[]>('/accounts', {
-      auth: { username: req.params.id, password: '' }
+      auth: { username: req.params.token, password: '' }
     });
     return res.status(200).send(data);
   } catch (err) {
@@ -83,12 +83,12 @@ expressApp.get('/account/:id', async (req, res) => {
   }
 });
 
-expressApp.get('/account/:id', async (req, res) => {
+expressApp.get('/balances/:token/:id', async (req, res) => {
   try {
     const { data } = await axios.get<AccountBalance[]>(
       `/accounts/${req.params.id}/balances`,
       {
-        auth: { username: req.params.id, password: '' }
+        auth: { username: req.params.token, password: '' }
       }
     );
     return res.status(200).send(data);
