@@ -52,7 +52,7 @@ const Account: React.FC<AccountProps> = ({ account }) => {
           {accountResponse.data.map((accountItem) => (
             <AccountItem
               key={accountItem.id}
-              accountDetails={accountItem}
+              account={accountItem}
               accessToken={account.accessToken}
             />
           ))}
