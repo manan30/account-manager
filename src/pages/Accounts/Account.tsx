@@ -39,7 +39,9 @@ const Account: React.FC<AccountProps> = ({ account }) => {
 
   return (
     <div>
-      <p className='text-3xl font-bold'>{account.institutionName}</p>
+      <p className='text-3xl font-bold text-gray-600'>
+        {account.institutionName}
+      </p>
       {(loadingAccount || fetchingAccount) && (
         <div className='mt-6'>
           <AccountsLoading />

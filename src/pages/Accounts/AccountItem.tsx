@@ -1,4 +1,5 @@
 import React from 'react';
+import { MdArrowForward } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import axios, { Response } from 'redaxios';
 import { AccountResponse, AccountBalance } from '../../models/Account';
@@ -21,14 +22,34 @@ const AccountItem: React.FC<AccountItemsProps> = ({
     async () =>
       await axios.get<AccountBalance>(
         `${ACCOUNT_FUNCTIONS}/balances/${accessToken}/${accountDetails.id}`
-      )
+      ),
+    { staleTime: 600000 }
   );
 
   return (
-    <div className='shadow-md h-48 w-full bg-gray-50 rounded-lg p-6'>
-      <p className='font-medium text-sm'>{accountDetails.name}</p>
-      <p className='text-xs'>{accountDetails.last_four}</p>
-      <p className='text-xs'>{accountDetails.subtype}</p>
+    <div className='shadow-md h-48 w-full bg-gray-50 rounded-lg p-6 flex flex-col'>
+      <p className='font-semibold text-lg text-indigo-700'>
+        {accountDetails.name.split('-')[0].trim()}
+      </p>
+      <p className='mt-3 text-sm capitalize'>
+        Account Type: {accountDetails.subtype.split('_').join(' ')}
+      </p>
+      <div className='flex flex-col mt-auto space-y-2 -mb-2'>
+        <p className='font-medium text-md text-indigo-500'>
+          Available Balance: ${accountBalance?.data.available}
+        </p>
+        <div className='flex items-center text-gray-500'>
+          <div className='flex items-center space-x-2'>
+            <p className='text-sm'>XXXX</p>
+            <p className='text-sm'>XXXX</p>
+            <p className='text-sm'>XXXX</p>
+            <p className='text-sm'>{accountDetails.last_four}</p>
+          </div>
+          <button className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200'>
+            <MdArrowForward size={24} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
