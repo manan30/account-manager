@@ -47,3 +47,19 @@ export interface AccountBalanceLinks {
   account: string;
   self: string;
 }
+
+export interface AccountDetails {
+  account_id: string;
+  account_number: string;
+  links: AccountDetailsLinks;
+  routing_numbers: AccountDetailsRoutingNumbers;
+}
+
+export interface AccountDetailsLinks {
+  account: string;
+  self: string;
+}
+
+export interface AccountDetailsRoutingNumbers {
+  ach: string;
+}

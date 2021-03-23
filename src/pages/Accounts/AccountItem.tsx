@@ -1,4 +1,5 @@
 import React from 'react';
+import cn from 'classnames';
 import { MdArrowForward } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import axios, { Response } from 'redaxios';
@@ -35,7 +36,12 @@ const AccountItem: React.FC<AccountItemsProps> = ({
         Account Type: {accountDetails.subtype.split('_').join(' ')}
       </p>
       <div className='flex flex-col mt-auto space-y-2 -mb-2'>
-        <p className='font-medium text-md text-indigo-500'>
+        <p
+          className={cn(
+            'font-medium text-md text-indigo-500',
+            loadingAccountBalance && 'animate-pulse w-2/3'
+          )}
+        >
           Available Balance: ${accountBalance?.data.available}
         </p>
         <div className='flex items-center text-gray-500'>
@@ -45,7 +51,7 @@ const AccountItem: React.FC<AccountItemsProps> = ({
             <p className='text-sm'>XXXX</p>
             <p className='text-sm'>{accountDetails.last_four}</p>
           </div>
-          <button className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200'>
+          <button className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200 outline-none'>
             <MdArrowForward size={24} />
           </button>
         </div>

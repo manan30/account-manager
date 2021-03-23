@@ -10,7 +10,8 @@ import { TELLER_ENDPOINT } from './constants';
 import {
   AccountResponse,
   EnrollmentData,
-  AccountBalance
+  AccountBalance,
+  AccountDetails
 } from './accounts.interface';
 import { AccountCollection, Account } from '../../../models/Account';
 
@@ -87,6 +88,21 @@ expressApp.get('/balances/:token/:id', async (req, res) => {
   try {
     const { data } = await axios.get<AccountBalance[]>(
       `/accounts/${req.params.id}/balances`,
+      {
+        auth: { username: req.params.token, password: '' }
+      }
+    );
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/details/:token/:id', async (req, res) => {
+  try {
+    const { data } = await axios.get<AccountDetails[]>(
+      `/accounts/${req.params.id}/details`,
       {
         auth: { username: req.params.token, password: '' }
       }
