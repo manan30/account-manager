@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import cn from 'classnames';
 import { MdArrowForward } from 'react-icons/md';
 import { useQuery } from 'react-query';
@@ -9,6 +9,9 @@ import {
   AccountDetails
 } from '../../models/Account';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
+import ModalFallback from '../../components/ModalFallback';
+
+const TransactionsModal = React.lazy(() => import('./TransactionsModal'));
 
 type AccountItemsProps = {
   account: AccountResponse;
@@ -16,6 +19,8 @@ type AccountItemsProps = {
 };
 
 const AccountItem: React.FC<AccountItemsProps> = ({ account, accessToken }) => {
+  const [showModal, setShowModal] = useState(false);
+
   const { data: accountBalance, isLoading: loadingAccountBalance } = useQuery<
     Response<AccountBalance>,
     Response<Error>
@@ -29,35 +34,49 @@ const AccountItem: React.FC<AccountItemsProps> = ({ account, accessToken }) => {
   );
 
   return (
-    <div className='shadow-md h-48 w-full bg-gray-50 rounded-lg p-6 flex flex-col'>
-      <p className='font-semibold text-lg text-indigo-700 mb-2'>
-        {account.name.split('-')[0].trim()}
-      </p>
-      <p className='text-sm capitalize mb-2'>
-        Account Type: {account.subtype.split('_').join(' ')}
-      </p>
-      <div className='flex flex-col mt-auto -mb-2'>
-        <p
-          className={cn(
-            'font-medium text-md text-indigo-500',
-            loadingAccountBalance && 'animate-pulse w-2/3'
-          )}
-        >
-          Available Balance: ${accountBalance?.data.available}
+    <>
+      <div className='shadow-md h-48 w-full bg-gray-50 rounded-lg p-6 flex flex-col'>
+        <p className='font-semibold text-lg text-indigo-700 mb-2'>
+          {account.name.split('-')[0].trim()}
         </p>
-        <div className='flex items-center text-gray-500'>
-          <div className='flex items-center space-x-2'>
-            <p className='text-sm'>XXXX</p>
-            <p className='text-sm'>XXXX</p>
-            <p className='text-sm'>XXXX</p>
-            <p className='text-sm'>{account.last_four}</p>
+        <p className='text-sm capitalize mb-2'>
+          Account Type: {account.subtype.split('_').join(' ')}
+        </p>
+        <div className='flex flex-col mt-auto -mb-2'>
+          <p
+            className={cn(
+              'font-medium text-md text-indigo-500',
+              loadingAccountBalance && 'animate-pulse w-2/3'
+            )}
+          >
+            Available Balance: ${accountBalance?.data.available}
+          </p>
+          <div className='flex items-center text-gray-500'>
+            <div className='flex items-center space-x-2'>
+              <p className='text-sm'>XXXX</p>
+              <p className='text-sm'>XXXX</p>
+              <p className='text-sm'>XXXX</p>
+              <p className='text-sm'>{account.last_four}</p>
+            </div>
+            <button
+              className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200 outline-none'
+              onClick={() => setShowModal(true)}
+            >
+              <MdArrowForward size={24} />
+            </button>
           </div>
-          <button className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200 outline-none'>
-            <MdArrowForward size={24} />
-          </button>
         </div>
       </div>
-    </div>
+      {showModal && (
+        <React.Suspense fallback={<ModalFallback />}>
+          <TransactionsModal
+            accessToken={accessToken}
+            accountId={account.id}
+            onModalCloseHandler={() => setShowModal(false)}
+          />
+        </React.Suspense>
+      )}
+    </>
   );
 };
 

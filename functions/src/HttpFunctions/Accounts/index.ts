@@ -115,9 +115,9 @@ expressApp.get('/details/:token/:id', async (req, res) => {
   }
 });
 
-expressApp.get('/transactions/:token/:id/:count', async (req, res) => {
+expressApp.get('/transactions/:token/:id', async (req, res) => {
   try {
-    const count = req.params.count ?? 10;
+    const count = req.query.count ?? 10;
     const { data } = await axios.get<Transaction[]>(
       `/accounts/${req.params.id}/transactions?count=${count}`,
       {
