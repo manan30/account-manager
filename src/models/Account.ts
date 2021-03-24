@@ -63,4 +63,21 @@ export interface AccountDetailsRoutingNumbers {
   ach: string;
 }
 
+export interface Transaction {
+  account_id: string;
+  amount: string;
+  date: string;
+  description: string;
+  id: string;
+  links: TransactionLinks;
+  running_balance: string;
+  status: string;
+  type: string;
+}
+
+export interface TransactionLinks {
+  account: string;
+  self: string;
+}
+
 export const AccountCollection = 'account';

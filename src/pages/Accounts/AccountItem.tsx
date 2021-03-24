@@ -30,13 +30,13 @@ const AccountItem: React.FC<AccountItemsProps> = ({ account, accessToken }) => {
 
   return (
     <div className='shadow-md h-48 w-full bg-gray-50 rounded-lg p-6 flex flex-col'>
-      <p className='font-semibold text-lg text-indigo-700'>
+      <p className='font-semibold text-lg text-indigo-700 mb-2'>
         {account.name.split('-')[0].trim()}
       </p>
-      <p className='mt-3 text-sm capitalize'>
+      <p className='text-sm capitalize mb-2'>
         Account Type: {account.subtype.split('_').join(' ')}
       </p>
-      <div className='flex flex-col mt-auto space-y-2 -mb-2'>
+      <div className='flex flex-col mt-auto -mb-2'>
         <p
           className={cn(
             'font-medium text-md text-indigo-500',

@@ -11,7 +11,8 @@ import {
   AccountResponse,
   EnrollmentData,
   AccountBalance,
-  AccountDetails
+  AccountDetails,
+  Transaction
 } from './accounts.interface';
 import { AccountCollection, Account } from '../../../models/Account';
 
@@ -103,6 +104,22 @@ expressApp.get('/details/:token/:id', async (req, res) => {
   try {
     const { data } = await axios.get<AccountDetails[]>(
       `/accounts/${req.params.id}/details`,
+      {
+        auth: { username: req.params.token, password: '' }
+      }
+    );
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/transactions/:token/:id/:count', async (req, res) => {
+  try {
+    const count = req.params.count ?? 10;
+    const { data } = await axios.get<Transaction[]>(
+      `/accounts/${req.params.id}/transactions?count=${count}`,
       {
         auth: { username: req.params.token, password: '' }
       }
