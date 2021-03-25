@@ -58,29 +58,7 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
         Header: 'Amount',
         accessor: 'amount',
         Cell: ({ row }) =>
-          `${NumberWithCommasFormatter.format(
-            `${Math.abs(Number(row.original.amount))}`
-          )}`
-      },
-      {
-        Header: 'Type',
-        accessor: undefined,
-        Cell: ({ row }: { row: Row<Partial<Transaction>> }) => {
-          console.log(row.original.amount);
-          const debit = Number(row.original.amount) < 0;
-          return (
-            <div
-              className={cn(
-                'rounded-2xl text-center py-1 px-2 text-xxs tracking-wider font-bold',
-                debit
-                  ? 'bg-red-200 text-red-600'
-                  : 'bg-green-300 text-green-700'
-              )}
-            >
-              {debit ? 'Debit' : 'Credit'}
-            </div>
-          );
-        }
+          `$ ${NumberWithCommasFormatter.format(row.original.amount)}`
       },
       {
         Header: 'Status',
