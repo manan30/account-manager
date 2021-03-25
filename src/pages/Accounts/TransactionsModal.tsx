@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { MdClose } from 'react-icons/md';
 import { useQuery } from 'react-query';
+import { Column } from 'react-table';
 import axios, { Response } from 'redaxios';
 import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import { Transaction } from '../../models/Account';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
+import { NumberWithCommasFormatter } from '../../utils/Formatters';
 
 type TransactionModalProps = {
   accessToken: string;
@@ -29,6 +32,45 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
     { staleTime: 600000 }
   );
 
+  const tableColumns = useMemo<Column<Partial<Transaction>>[]>(
+    () => [
+      {
+        Header: 'Date',
+        accessor: 'date',
+        Cell: ({ row }) => (
+          <p className=''>
+            {new Intl.DateTimeFormat('en-US', {
+              weekday: 'short',
+              month: 'short',
+              year: 'numeric',
+              day: 'numeric'
+            }).format(new Date(row.original.date ?? ''))}
+          </p>
+        )
+      },
+      {
+        Header: 'Name',
+        accessor: 'description',
+        Cell: ({ row }) => row.original.description?.slice(0, 35)
+      },
+      {
+        Header: 'Amount',
+        accessor: 'amount',
+        Cell: ({ row }) => NumberWithCommasFormatter.format(row.original.amount)
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+        Cell: ({ row }) => <p className='capitalize'>{row.original.status}</p>
+      }
+    ],
+    []
+  );
+
+  const tableData = useMemo(() => transactionsData?.data, [
+    transactionsData?.data
+  ]);
+
   return (
     <div className='fixed z-10 inset-0 overflow-y-auto grid place-items-center'>
       <div
@@ -36,7 +78,7 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
         aria-hidden='true'
       />
       <div
-        className='w-2/3 p-4 rounded-md shadow-xl bg-gray-50 z-40'
+        className='w-2/3 py-8 px-12 rounded-md shadow-xl bg-gray-50 z-40'
         role='dialog'
         aria-modal='true'
         aria-labelledby='modal-headline'
@@ -46,11 +88,21 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
             Transactions
           </div>
           <button
-            className='ml-auto p-1 mr-1 rounded-full hover:bg-gray-200'
+            className='ml-auto p-1 rounded-full hover:bg-gray-200'
             onClick={onModalCloseHandler}
           >
             <MdClose className='text-gray-500' size={20} />
           </button>
+        </div>
+        <div className='mt-6'>
+          {tableData && (
+            <>
+              <p className='mb-4 font-semibold text-gray-700'>
+                Showing last {tableData.length} transactions
+              </p>
+              <Table columns={tableColumns} data={tableData} paginate={false} />
+            </>
+          )}
         </div>
       </div>
     </div>
