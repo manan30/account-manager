@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
+import cn from 'classnames';
 import { MdClose } from 'react-icons/md';
 import { useQuery } from 'react-query';
-import { Column } from 'react-table';
+import { Column, Row } from 'react-table';
 import axios, { Response } from 'redaxios';
-import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { Transaction } from '../../models/Account';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { generateRandomKey } from '../../utils/Functions';
 
 type TransactionModalProps = {
   accessToken: string;
@@ -56,7 +57,30 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
       {
         Header: 'Amount',
         accessor: 'amount',
-        Cell: ({ row }) => NumberWithCommasFormatter.format(row.original.amount)
+        Cell: ({ row }) =>
+          `${NumberWithCommasFormatter.format(
+            `${Math.abs(Number(row.original.amount))}`
+          )}`
+      },
+      {
+        Header: 'Type',
+        accessor: undefined,
+        Cell: ({ row }: { row: Row<Partial<Transaction>> }) => {
+          console.log(row.original.amount);
+          const debit = Number(row.original.amount) < 0;
+          return (
+            <div
+              className={cn(
+                'rounded-2xl text-center py-1 px-2 text-xxs tracking-wider font-bold',
+                debit
+                  ? 'bg-red-200 text-red-600'
+                  : 'bg-green-300 text-green-700'
+              )}
+            >
+              {debit ? 'Debit' : 'Credit'}
+            </div>
+          );
+        }
       },
       {
         Header: 'Status',
@@ -95,7 +119,18 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
           </button>
         </div>
         <div className='mt-6'>
-          {tableData && (
+          {loadingTransactions || !tableData ? (
+            new Array(10).fill(0).map(() => (
+              <div key={generateRandomKey()} className='p-4 w-full bg-gray-50'>
+                <div className='animate-pulse flex space-x-4'>
+                  <div className='h-4 bg-gray-200 rounded w-3/4'></div>
+                  <div className='h-4 bg-gray-200 rounded w-3/4'></div>
+                  <div className='h-4 bg-gray-200 rounded w-3/4'></div>
+                  <div className='h-4 bg-gray-200 rounded w-3/4'></div>
+                </div>
+              </div>
+            ))
+          ) : (
             <>
               <p className='mb-4 font-semibold text-gray-700'>
                 Showing last {tableData.length} transactions
