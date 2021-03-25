@@ -8,7 +8,7 @@ import LinkAccount from './LinkAccount';
 const Accounts = () => {
   const {
     data: accountsData,
-    error: accountsFetchingError,
+    // error: accountsFetchingError,
     isLoading: loadingAccounts
   } = useFirestoreReadQuery<AccountModel>({
     collection: 'account'

@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
-import cn from 'classnames';
 import { MdClose } from 'react-icons/md';
 import { useQuery } from 'react-query';
-import { Column, Row } from 'react-table';
+import { Column } from 'react-table';
 import axios, { Response } from 'redaxios';
 import Table from '../../components/Table';
 import { Transaction } from '../../models/Account';

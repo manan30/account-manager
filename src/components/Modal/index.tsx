@@ -29,10 +29,8 @@ const Modal: React.FC<ModalProps> = ({
   onCloseClickHandler,
   onConfirmClickHandler
 }) => {
-  const [animationType, setAnimationType] = useState<AnimationTypes>();
-  const [confirmButtonClicked, setConfirmButtonClicked] = useState<
-    boolean | undefined
-  >(false);
+  const [, setAnimationType] = useState<AnimationTypes>();
+  const [, setConfirmButtonClicked] = useState<boolean | undefined>(false);
 
   useEffect(() => {
     if (shouldCloseOnEscape) {

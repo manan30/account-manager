@@ -1,6 +1,5 @@
 import React from 'react';
 import cn from 'classnames';
-import Loader from '../Loader';
 
 type ButtonProps = {
   buttonText?: string;
@@ -13,7 +12,7 @@ type ButtonProps = {
 };
 
 const Button: React.FC<ButtonProps> = ({
-  buttonText,
+  // buttonText,
   className: classes,
   onClickHandler,
   type = 'button',
