@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState
-} from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import cn from 'classnames';
 import { MdClose } from 'react-icons/md';
 import Loader from '../Loader';

@@ -3,11 +3,7 @@ import cn from 'classnames';
 import { MdArrowForward } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import axios, { Response } from 'redaxios';
-import {
-  AccountResponse,
-  AccountBalance,
-  AccountDetails
-} from '../../models/Account';
+import { AccountResponse, AccountBalance } from '../../models/Account';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
 import ModalFallback from '../../components/ModalFallback';
 
