@@ -16,7 +16,9 @@
     "build-functions": "cd functions && npm run build",
     "firebase": "npm run build-functions && firebase emulators:start --import=./firestore-data --export-on-exit --only firestore,functions,auth",
     "deploy-functions": "cd functions && npm run deploy",
-    "compile": "yarn tsc"
+    "compile": "yarn tsc",
+    "prepare": "husky install",
+    "pre-commit": "yarn lint && yarn format:check"
   },
   "devDependencies": {
     "@firebase/app-types": "0.6.1",
@@ -44,6 +46,7 @@
     "eslint-plugin-prettier": "3.2.0",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
+    "husky": "^5.2.0",
     "postcss": "^8.2.7",
     "prettier": "2.1.1",
     "tailwindcss": "^2.0.3",
