@@ -3,10 +3,13 @@ import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
 export interface Account extends DocumentSnapshot {
   id: string;
-  requestId: string;
+  userId: string;
+  tellerUserId: string;
+  enrollmentId: string;
   accessToken: string;
-  itemId: string;
-  userID: string;
+  institutionName: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
+
+export const AccountCollection = 'account';

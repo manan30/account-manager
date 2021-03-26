@@ -7,9 +7,19 @@ import { Agent } from 'https';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { TELLER_ENDPOINT } from './constants';
+import {
+  AccountResponse,
+  EnrollmentData,
+  AccountBalance,
+  AccountDetails,
+  Transaction
+} from './accounts.interface';
+import { AccountCollection, Account } from '../../../models/Account';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
+
+const db = admin.firestore();
 
 const expressApp = express();
 expressApp.use(cors({ origin: true }));
@@ -27,20 +37,97 @@ axios.defaults.baseURL = TELLER_ENDPOINT;
 axios.defaults.withCredentials = true;
 axios.defaults.httpsAgent = httpsAgent;
 
-expressApp.get('/teller-account/:accessToken', async (req, res) => {
+expressApp.post('/add-account', async (req, res) => {
   try {
-    const accessToken = req.params.accessToken;
+    const enrollmentData = req.body as EnrollmentData;
 
-    const { data } = await axios.get('/accounts', {
-      auth: {
-        username: accessToken,
-        password: ''
-      }
-    });
-    res.status(200).send(data);
+    const accountsDbRef = db.collection(AccountCollection);
+    const timestamp = admin.firestore.Timestamp.now();
+
+    if (accountsDbRef) {
+      const existingAccount = (await accountsDbRef.get()).docs.some(
+        (doc) => doc.data().enrollmentId === enrollmentData.enrollment.id
+      );
+      if (existingAccount)
+        return res
+          .status(400)
+          .send('It looks like this account is already linked');
+    }
+
+    const docRef = await accountsDbRef.add({
+      userId: enrollmentData.userId,
+      tellerUserId: enrollmentData.user.id,
+      enrollmentId: enrollmentData.enrollment.id,
+      accessToken: enrollmentData.accessToken,
+      institutionName: enrollmentData.enrollment.institution.name,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    } as Account);
+
+    return res
+      .status(200)
+      .send({ success: `Successfully added new account: ${docRef.id}` });
   } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/:token', async (req, res) => {
+  try {
+    const { data } = await axios.get<AccountResponse[]>('/accounts', {
+      auth: { username: req.params.token, password: '' }
+    });
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/balances/:token/:id', async (req, res) => {
+  try {
+    const { data } = await axios.get<AccountBalance[]>(
+      `/accounts/${req.params.id}/balances`,
+      {
+        auth: { username: req.params.token, password: '' }
+      }
+    );
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/details/:token/:id', async (req, res) => {
+  try {
+    const { data } = await axios.get<AccountDetails[]>(
+      `/accounts/${req.params.id}/details`,
+      {
+        auth: { username: req.params.token, password: '' }
+      }
+    );
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
+  }
+});
+
+expressApp.get('/transactions/:token/:id', async (req, res) => {
+  try {
+    const count = req.query.count ?? 10;
+    const { data } = await axios.get<Transaction[]>(
+      `/accounts/${req.params.id}/transactions?count=${count}`,
+      {
+        auth: { username: req.params.token, password: '' }
+      }
+    );
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error({ err });
+    return res.sendStatus(500);
   }
 });
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export const useTellerConnect = () => {
   const tellerConnectRef = useRef<{ open: () => void | undefined }>();
@@ -12,13 +12,24 @@ export const useTellerConnect = () => {
       tellerConnectRef.current = TellerConnect.setup({
         environment: 'development',
         applicationId: `${import.meta.env.VITE_TELLER_APPLICATION_ID}`,
-        onSuccess: function (enrollment) {
+        onInit: function () {
           setInitializing(false);
+        },
+        onSuccess: function (enrollment) {
           setEnrollment(enrollment);
         }
       });
     }
   }, []);
 
-  return { tellerConnectRef, enrollment, initializing };
+  const enrollmentCompleted = useCallback(() => {
+    setEnrollment(null);
+  }, []);
+
+  return {
+    openTellerConnect: tellerConnectRef.current?.open,
+    enrollment,
+    enrollmentCompleted,
+    initializing
+  };
 };

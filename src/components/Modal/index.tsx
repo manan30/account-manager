@@ -17,6 +17,7 @@ type ModalProps = {
 
 type AnimationTypes = 'Enter' | 'Exit';
 
+// TODO: Put animations back in, but in a longer run refactor this entire component
 const Modal: React.FC<ModalProps> = ({
   isOpen = false,
   modalTitle,
@@ -28,15 +29,15 @@ const Modal: React.FC<ModalProps> = ({
   onCloseClickHandler,
   onConfirmClickHandler
 }) => {
-  const [animationType, setAnimationType] = useState<AnimationTypes>();
-  const [confirmButtonClicked, setConfirmButtonClicked] = useState<
-    boolean | undefined
-  >(false);
+  const [, setAnimationType] = useState<AnimationTypes>();
+  const [, setConfirmButtonClicked] = useState<boolean | undefined>(false);
 
   useEffect(() => {
     if (shouldCloseOnEscape) {
       const escapeKeyHandler = (e: KeyboardEvent) => {
-        if (e.code === 'Escape') buttonClickHandler(false);
+        if (e.code === 'Escape') {
+          // buttonClickHandler(false);
+        }
       };
       window.addEventListener('keyup', escapeKeyHandler);
       return () => window.removeEventListener('keyup', escapeKeyHandler);
@@ -50,18 +51,23 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [isOpen]);
 
-  const animationEndHandler = () => {
-    if (animationType === 'Exit') {
-      confirmButtonClicked && onConfirmClickHandler
-        ? onConfirmClickHandler()
-        : onCloseClickHandler();
-    }
-  };
+  // const animationEndHandler = useCallback(() => {
+  //   if (animationType === 'Exit') {
+  //     confirmButtonClicked && onConfirmClickHandler
+  //       ? onConfirmClickHandler()
+  //       : onCloseClickHandler();
+  //   }
+  // }, [
+  //   animationType,
+  //   confirmButtonClicked,
+  //   onCloseClickHandler,
+  //   onConfirmClickHandler
+  // ]);
 
-  const buttonClickHandler = (confirmButtonClick: boolean) => {
-    setAnimationType('Exit');
-    setConfirmButtonClicked(confirmButtonClick);
-  };
+  // const buttonClickHandler = (confirmButtonClick: boolean) => {
+  //   setAnimationType('Exit');
+  //   setConfirmButtonClicked(confirmButtonClick);
+  // };
 
   return isOpen ? (
     <div className='fixed z-10 inset-0 overflow-y-auto grid place-items-center'>
@@ -70,15 +76,15 @@ const Modal: React.FC<ModalProps> = ({
       </div>
       <div
         className={cn(
-          'bg-white rounded-lg text-left overflow-hidden overflow-y-auto shadow-xl transform transition-all w-full max-w-lg min-h-c-8 max-h-table flex flex-col p-4',
-          animationType === 'Enter'
-            ? 'animate-modal-entry'
-            : 'animate-modal-exit'
+          'bg-white rounded-lg text-left overflow-hidden overflow-y-auto shadow-xl transform transition-all w-full max-w-lg min-h-c-8 max-h-table flex flex-col p-4'
+          // animationType === 'Enter'
+          //   ? 'animate-modal-entry'
+          //   : 'animate-modal-exit'
         )}
         role='dialog'
         aria-modal='true'
         aria-labelledby='modal-headline'
-        onAnimationEnd={() => animationEndHandler()}
+        // onAnimationEnd={() => animationEndHandler()}
       >
         <div className='flex items-center mb-3'>
           <div className='text-xl text-indigo-600 tracking-wide font-bold'>
@@ -88,7 +94,7 @@ const Modal: React.FC<ModalProps> = ({
             <button
               className='ml-auto p-1 mr-1 rounded-full hover:bg-gray-200'
               disabled={isPerformingAsyncTask}
-              onClick={() => buttonClickHandler(false)}
+              onClick={onCloseClickHandler}
             >
               <MdClose className='text-gray-500' size={20} />
             </button>
@@ -113,7 +119,7 @@ const Modal: React.FC<ModalProps> = ({
               type='button'
               className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
               disabled={isPerformingAsyncTask}
-              onClick={() => buttonClickHandler(false)}
+              // onClick={() => buttonClickHandler(false)}
             >
               Cancel
             </button>

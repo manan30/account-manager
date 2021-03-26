@@ -2224,6 +2224,11 @@ https-proxy-agent@^5.0.0:
     agent-base "6"
     debug "4"
 
+husky@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-5.2.0.tgz#fc5e1c2300d34855d47de4753607d00943fc0802"
+  integrity sha512-AM8T/auHXRBxlrfPVLKP6jt49GCM2Zz47m8G3FOMsLmTv8Dj/fKVWE0Rh2d4Qrvmy131xEsdQnb3OXRib67PGg==
+
 idb@3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/idb/-/idb-3.0.2.tgz#c8e9122d5ddd40f13b60ae665e4862f8b13fa384"
@@ -3062,14 +3067,6 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-plaid-link@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-plaid-link/-/react-plaid-link-3.1.0.tgz#585bda7f8d64689478ed6339c0b111643fd34066"
-  integrity sha512-jTbThGcka3YjpKntGquzmfMXpEhENdbpiGJ97W33McPcqAosdOUCdbBJmm2Ih6hE56exTrISxzpdhOpLD4/emA==
-  dependencies:
-    prop-types "^15.7.2"
-    react-script-hook "1.1.0"
-
 react-query@3.5.5:
   version "3.5.5"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.5.5.tgz#50bae84066e1f61dc9a14ee7db8ea1a224535698"
@@ -3111,11 +3108,6 @@ react-router@5.2.0:
     react-is "^16.6.0"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
-
-react-script-hook@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-script-hook/-/react-script-hook-1.1.0.tgz#f88bb74b1c89250d7577e6cd5472f10992190706"
-  integrity sha512-swEdGFIOgG4lfi1gdYzFNV28uKuowzbgEGb8Lwi/yp696BVa6RvvuW4a7FY9mic+SecojVlHMWcllygmAg6EJg==
 
 react-side-effect@^2.1.0:
   version "2.1.1"
