@@ -53,8 +53,9 @@ export const syncTransactions = functions.pubsub
             >(`/accounts/${acc.id}/transactions`, {
               auth: { username: data.accessToken, password: '' }
             });
-            const batch = db.batch();
+            console.log('Syncing teller transactions');
 
+            const batch = db.batch();
             accountTransactions.reverse().forEach((transaction) => {
               const timestamp = admin.firestore.Timestamp.now();
               const bankTransactionDocId = bankTransactionsDbRef.doc().id;
@@ -70,6 +71,8 @@ export const syncTransactions = functions.pubsub
             });
 
             await batch.commit();
+
+            console.log('Syncing teller transactions ended');
           });
         });
       }
