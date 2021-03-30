@@ -14,7 +14,7 @@
     "format": "prettier --write 'src/**/*.{ts,tsx,css}'",
     "format:check": "prettier --check 'src/**/*.{ts,tsx,css}'",
     "build-functions": "cd functions && npm run build",
-    "firebase": "npm run build-functions && firebase emulators:start --import=./firestore-data --export-on-exit --only firestore,functions,auth",
+    "firebase": "npm run build-functions && firebase emulators:start --import=./firestore-data --export-on-exit",
     "deploy-functions": "cd functions && npm run deploy",
     "compile": "yarn tsc",
     "prepare": "husky install",

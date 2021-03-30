@@ -3,7 +3,7 @@ import * as CreditorFunctions from './Creditor';
 import * as SpendingFunctions from './Spending';
 import { addNewStore } from './HttpFunctions/addNewStore';
 import { addNewSpendingCategory } from './HttpFunctions/addNewSpendingCategory';
-import { accounts } from './HttpFunctions/Accounts';
+import { AccountsEndpoint, SyncTransactionsCron } from './Accounts';
 
 export {
   TransactionFunctions,
@@ -11,5 +11,6 @@ export {
   SpendingFunctions,
   addNewStore,
   addNewSpendingCategory,
-  accounts
+  AccountsEndpoint,
+  SyncTransactionsCron
 };

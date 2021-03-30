@@ -6,15 +6,15 @@ import axios from 'axios';
 import { Agent } from 'https';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { TELLER_ENDPOINT } from './constants';
+import { TELLER_ENDPOINT } from '../utils/constants';
 import {
   AccountResponse,
   EnrollmentData,
   AccountBalance,
   AccountDetails,
   Transaction
-} from './accounts.interface';
-import { AccountCollection, Account } from '../../../models/Account';
+} from '../utils/accounts.interface';
+import { AccountCollection, Account } from '../utils/accounts.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
