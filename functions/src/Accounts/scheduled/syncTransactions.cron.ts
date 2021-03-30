@@ -7,6 +7,10 @@ import { join } from 'path';
 import { TELLER_ENDPOINT } from '../utils/constants';
 import { Account, AccountCollection } from '../utils/accounts.model';
 import { AccountResponse, Transaction } from '../utils/accounts.interface';
+import {
+  BankTransaction,
+  BankTransactionCollection
+} from '../../BankTransactions/utils/bankTransaction.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -31,7 +35,7 @@ export const syncTransactions = functions.pubsub
   .onRun(async (context) => {
     try {
       const accountsDbRef = db.collection(AccountCollection);
-      // const timestamp = admin.firestore.Timestamp.now();
+      const bankTransactionsDbRef = db.collection(BankTransactionCollection);
 
       if (accountsDbRef) {
         const snapshot = await accountsDbRef.get();
@@ -46,10 +50,26 @@ export const syncTransactions = functions.pubsub
           tellerAccounts.forEach(async (acc) => {
             const { data: accountTransactions } = await axios.get<
               Transaction[]
-            >(`/accounts/${acc.id}/transactions?count=10`, {
+            >(`/accounts/${acc.id}/transactions`, {
               auth: { username: data.accessToken, password: '' }
             });
-            console.log({ accountTransactions });
+            const batch = db.batch();
+
+            accountTransactions.reverse().forEach((transaction) => {
+              const timestamp = admin.firestore.Timestamp.now();
+              const bankTransactionDocId = bankTransactionsDbRef.doc().id;
+              const bankTransactionDoc = bankTransactionsDbRef.doc(
+                bankTransactionDocId
+              );
+
+              batch.set(bankTransactionDoc, {
+                transaction,
+                createdAt: timestamp,
+                updatedAt: timestamp
+              } as BankTransaction);
+            });
+
+            await batch.commit();
           });
         });
       }
