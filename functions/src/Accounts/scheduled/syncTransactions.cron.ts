@@ -64,6 +64,7 @@ export const syncTransactions = functions.pubsub
               );
 
               batch.set(bankTransactionDoc, {
+                id: bankTransactionDocId,
                 transaction,
                 createdAt: timestamp,
                 updatedAt: timestamp
