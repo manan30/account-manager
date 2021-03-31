@@ -4,6 +4,7 @@ import * as SpendingFunctions from './Spending';
 import { addNewStore } from './HttpFunctions/addNewStore';
 import { addNewSpendingCategory } from './HttpFunctions/addNewSpendingCategory';
 import { accounts, SyncTransactionsCron } from './Accounts';
+import { seed } from './Seed';
 
 export {
   TransactionFunctions,
@@ -12,5 +13,6 @@ export {
   addNewStore,
   addNewSpendingCategory,
   accounts,
-  SyncTransactionsCron
+  SyncTransactionsCron,
+  seed
 };

@@ -4,13 +4,13 @@ import axios from 'axios';
 import { Agent } from 'https';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { TELLER_ENDPOINT } from '../utils/constants';
-import { Account, AccountCollection } from '../utils/accounts.model';
-import { AccountResponse, Transaction } from '../utils/accounts.interface';
+import { TELLER_ENDPOINT } from '../interfaces/constants';
+import { Account, AccountCollection } from '../interfaces/accounts.model';
+import { AccountResponse, Transaction } from '../interfaces/accounts.interface';
 import {
   BankTransaction,
   BankTransactionCollection
-} from '../../BankTransactions/utils/bankTransaction.model';
+} from '../../BankTransactions/interfaces/bankTransaction.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -47,6 +47,13 @@ export const syncTransactions = functions.pubsub
               auth: { username: data.accessToken, password: '' }
             }
           );
+
+          // const existingBankTransactions = [] as BankTransaction[];
+
+          // (await bankTransactionsDbRef.get()).forEach((doc) => {
+          //   existingBankTransactions.push(doc.data() as BankTransaction);
+          // });
+
           tellerAccounts.forEach(async (acc) => {
             const { data: accountTransactions } = await axios.get<
               Transaction[]
