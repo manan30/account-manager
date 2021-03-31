@@ -39,8 +39,10 @@ export const syncTransactions = functions.pubsub
 
       if (accountsDbRef) {
         const snapshot = await accountsDbRef.get();
+
         snapshot.forEach(async (doc) => {
           const data = doc.data() as Account;
+          console.log({ data });
           const { data: tellerAccounts } = await axios.get<AccountResponse[]>(
             '/accounts',
             {
@@ -54,15 +56,19 @@ export const syncTransactions = functions.pubsub
           //   existingBankTransactions.push(doc.data() as BankTransaction);
           // });
 
+          console.log('Syncing teller transactions');
+
           tellerAccounts.forEach(async (acc) => {
             const { data: accountTransactions } = await axios.get<
               Transaction[]
-            >(`/accounts/${acc.id}/transactions`, {
+            >(`/accounts/${acc.id}/transactions?count=5`, {
               auth: { username: data.accessToken, password: '' }
             });
-            console.log('Syncing teller transactions');
 
             const batch = db.batch();
+
+            console.log(accountTransactions.reverse());
+
             accountTransactions.reverse().forEach((transaction) => {
               const timestamp = admin.firestore.Timestamp.now();
               const bankTransactionDocId = bankTransactionsDbRef.doc().id;
@@ -79,9 +85,9 @@ export const syncTransactions = functions.pubsub
             });
 
             await batch.commit();
-
-            console.log('Syncing teller transactions ended');
           });
+
+          console.log('Syncing teller transactions ended');
         });
       }
 
