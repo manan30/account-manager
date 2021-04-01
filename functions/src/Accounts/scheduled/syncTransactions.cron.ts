@@ -50,11 +50,15 @@ export const syncTransactions = functions.pubsub
             }
           );
 
-          // const existingBankTransactions = [] as BankTransaction[];
+          const lastTransaction = (
+            await bankTransactionsDbRef
+            .where("transaction.", opStr, value)
+              .orderBy('transaction.date', 'desc')
+              .limit(1)
+              .get()
+          ).docs[0].data() as BankTransaction;
 
-          // (await bankTransactionsDbRef.get()).forEach((doc) => {
-          //   existingBankTransactions.push(doc.data() as BankTransaction);
-          // });
+          // const pendingTransactions = ;
 
           console.log('Syncing teller transactions');
 
@@ -66,8 +70,6 @@ export const syncTransactions = functions.pubsub
             });
 
             const batch = db.batch();
-
-            console.log(accountTransactions.reverse());
 
             accountTransactions.reverse().forEach((transaction) => {
               const timestamp = admin.firestore.Timestamp.now();
