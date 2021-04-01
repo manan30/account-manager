@@ -52,13 +52,26 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
         Header: 'Name',
         accessor: 'details',
         Cell: ({ row }) => {
-          if (row.original.details?.counterparty) {
-            return typeof row.original.details.counterparty === 'object'
-              ? row.original.details.counterparty.name
-              : row.original.details.counterparty;
-          }
+          const detailsPresent = row.original.details?.counterparty;
+          const formattedName =
+            typeof row.original.details?.counterparty === 'object'
+              ? row.original.details?.counterparty?.name
+              : row.original.details?.counterparty;
 
-          return row.original.description?.slice(0, 35);
+          return (
+            <div className='flex flex-col space-y-1'>
+              <div className='font-medium text-gray-700'>
+                {detailsPresent
+                  ? formattedName
+                  : row.original.description?.slice(0, 35)}
+              </div>
+              {detailsPresent && (
+                <div className='font-light text-gray-500'>
+                  {row.original.description?.slice(0, 35)}
+                </div>
+              )}
+            </div>
+          );
         }
       },
       {
@@ -87,7 +100,7 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
         aria-hidden='true'
       />
       <div
-        className='w-2/3 py-8 px-12 rounded-md shadow-xl bg-gray-50 z-40'
+        className='w-2/3 py-8 px-12 rounded-md shadow-xl bg-gray-50 z-40 overflow-hidden overflow-y-auto max-h-modal'
         role='dialog'
         aria-modal='true'
         aria-labelledby='modal-headline'
