@@ -42,7 +42,7 @@ export const syncTransactions = functions.pubsub
 
         snapshot.forEach(async (doc) => {
           const data = doc.data() as Account;
-          console.log({ data });
+
           const { data: tellerAccounts } = await axios.get<AccountResponse[]>(
             '/accounts',
             {
@@ -50,28 +50,38 @@ export const syncTransactions = functions.pubsub
             }
           );
 
-          const lastTransaction = (
-            await bankTransactionsDbRef
-            .where("transaction.", opStr, value)
-              .orderBy('transaction.date', 'desc')
-              .limit(1)
-              .get()
-          ).docs[0].data() as BankTransaction;
-
-          // const pendingTransactions = ;
-
-          console.log('Syncing teller transactions');
-
           tellerAccounts.forEach(async (acc) => {
             const { data: accountTransactions } = await axios.get<
               Transaction[]
-            >(`/accounts/${acc.id}/transactions?count=5`, {
+            >(`/accounts/${acc.id}/transactions`, {
               auth: { username: data.accessToken, password: '' }
             });
 
+            console.log(`Syncing teller transactions for ${acc.name}`);
+
+            const snapshot = await bankTransactionsDbRef
+              .where('transaction.account_id', '==', acc.id)
+              .orderBy('transaction.date', 'desc')
+              .limit(1)
+              .get();
+
+            const lastTransactionIdx = (() => {
+              if (snapshot.size) {
+                const lastTransaction = snapshot.docs[0].data() as BankTransaction;
+                return accountTransactions.findIndex(
+                  (txn) => txn.id === lastTransaction.transaction.id
+                );
+              }
+              return accountTransactions.length;
+            })();
+
+            const pendingTransactions = accountTransactions
+              .slice(0, lastTransactionIdx)
+              .reverse();
+
             const batch = db.batch();
 
-            accountTransactions.reverse().forEach((transaction) => {
+            pendingTransactions.reverse().forEach((transaction) => {
               const timestamp = admin.firestore.Timestamp.now();
               const bankTransactionDocId = bankTransactionsDbRef.doc().id;
               const bankTransactionDoc = bankTransactionsDbRef.doc(
@@ -87,9 +97,11 @@ export const syncTransactions = functions.pubsub
             });
 
             await batch.commit();
-          });
 
-          console.log('Syncing teller transactions ended');
+            console.log(
+              `Syncing teller transactions for ${acc.name} completed`
+            );
+          });
         });
       }
 
