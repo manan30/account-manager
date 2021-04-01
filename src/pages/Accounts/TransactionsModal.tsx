@@ -50,8 +50,16 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
       },
       {
         Header: 'Name',
-        accessor: 'description',
-        Cell: ({ row }) => row.original.description?.slice(0, 35)
+        accessor: 'details',
+        Cell: ({ row }) => {
+          if (row.original.details?.counterparty) {
+            return typeof row.original.details.counterparty === 'object'
+              ? row.original.details.counterparty.name
+              : row.original.details.counterparty;
+          }
+
+          return row.original.description?.slice(0, 35);
+        }
       },
       {
         Header: 'Amount',
