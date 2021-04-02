@@ -18,11 +18,10 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 export const onCreateAddToSpending = functions.firestore
-  .document(`${BankTransactionCollection}/id`)
+  .document(`${BankTransactionCollection}/{id}`)
   .onCreate(async (snapshot) => {
     try {
       const data = snapshot.data() as BankTransaction;
-      const id = snapshot.id;
 
       const detailsPresent = data.transaction.details?.counterparty;
       const formattedName =
