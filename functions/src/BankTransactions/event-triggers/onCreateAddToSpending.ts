@@ -8,6 +8,7 @@ import {
   Spending,
   SpendingCollection
 } from '../../Spending/interfaces/spending.model';
+import { chargesType } from '../utils';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -31,20 +32,22 @@ export const onCreateAddToSpending = functions.firestore
 
       const timestamp = admin.firestore.Timestamp.now();
 
-      const spendingEntry = {
-        date: admin.firestore.Timestamp.fromDate(
-          new Date(data.transaction.date)
-        ),
-        category: data.transaction?.details?.category ?? 'Other',
-        amount: Math.abs(Number(data.transaction.amount)),
-        storeName: detailsPresent
-          ? formattedName
-          : data.transaction.description,
-        createdAt: timestamp,
-        updatedAt: timestamp
-      } as Spending;
+      if (chargesType.includes(data.transaction.type)) {
+        const spendingEntry = {
+          date: admin.firestore.Timestamp.fromDate(
+            new Date(data.transaction.date)
+          ),
+          category: data.transaction?.details?.category ?? 'Other',
+          amount: Math.abs(Number(data.transaction.amount)),
+          storeName: detailsPresent
+            ? formattedName
+            : data.transaction.description,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        } as Spending;
 
-      await db.collection(SpendingCollection).add(spendingEntry);
+        await db.collection(SpendingCollection).add(spendingEntry);
+      }
     } catch (e) {
       console.error(e);
     }
