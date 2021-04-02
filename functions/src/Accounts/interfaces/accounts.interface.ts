@@ -80,7 +80,7 @@ export interface Transaction {
 export interface TransactionDetails {
   processing_status: string;
   category?: string;
-  counterparty?: string;
+  counterparty?: string | { name: string; type: string };
 }
 
 export interface TransactionLinks {
