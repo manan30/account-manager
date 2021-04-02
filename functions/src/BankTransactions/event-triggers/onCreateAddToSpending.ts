@@ -4,7 +4,10 @@ import {
   BankTransaction,
   BankTransactionCollection
 } from '../interfaces/bankTransaction.model';
-import { Spending } from '../../Spending/interfaces/spending.model';
+import {
+  Spending,
+  SpendingCollection
+} from '../../Spending/interfaces/spending.model';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -42,16 +45,8 @@ export const onCreateAddToSpending = functions.firestore
         updatedAt: timestamp
       } as Spending;
 
-      await db.collection()
-      // await db.collection('transaction').add({
-      //   transactionType: 'Spending',
-      //   transactionEntity: id,
-      //   amount: data.amount,
-      //   transactionDate: data.createdAt,
-      //   createdAt: admin.firestore.Timestamp.now()
-      // } as ITransaction);
+      await db.collection(SpendingCollection).add(spendingEntry);
     } catch (e) {
-      // TODO: Send some notification when this happens
       console.error(e);
     }
   });
