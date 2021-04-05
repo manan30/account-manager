@@ -3,4 +3,5 @@ export type CollectionName =
   | 'creditor'
   | 'spending-categories'
   | 'stores'
-  | 'transaction';
+  | 'transaction'
+  | 'account';

@@ -17,7 +17,7 @@ const globalStateReducer = (
     case 'ADD_APP_USER':
       return {
         ...state,
-        user: action.payload,
+        ...action.payload,
         unauthorizedUser: false
       } as IGlobalState;
     case 'SET_UNAUTHORIZED_USER':
