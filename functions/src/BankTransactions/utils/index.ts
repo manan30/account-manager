@@ -1,0 +1,40 @@
+export const chargesType = [
+  'ach',
+  'transfer',
+  'card_payment',
+  'check',
+  'payment',
+  'transfer'
+];
+
+export const chargesCategory = [
+  'accommodation',
+  'advertising',
+  'bar',
+  'charity',
+  'clothing',
+  'dining',
+  'education',
+  'electronics',
+  'entertainment',
+  'fuel',
+  'groceries',
+  'grocieries',
+  'health',
+  'home',
+  'income',
+  'insurance',
+  'investment',
+  'loan',
+  'office',
+  'phone',
+  'service',
+  'shopping',
+  'software',
+  'sofwtare',
+  'sport',
+  'tax',
+  'transport',
+  'transportation',
+  'utilities'
+];

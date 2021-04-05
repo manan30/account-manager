@@ -74,6 +74,13 @@ export interface Transaction {
   running_balance: string;
   status: string;
   type: string;
+  details: TransactionDetails;
+}
+
+export interface TransactionDetails {
+  processing_status: string;
+  category?: string;
+  counterparty?: string | { name: string; type: string };
 }
 
 export interface TransactionLinks {
