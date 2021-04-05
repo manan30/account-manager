@@ -4,12 +4,12 @@ import cn from 'classnames';
 
 const links = [
   { to: '/', linkText: 'Overview' },
-  // { to: '/accounts', linkText: 'Accounts' },
   // { to: '/debt', linkText: 'Debt' },
   // TODO: Rename spending to expenses
+  { to: '/accounts', linkText: 'Accounts' },
   { to: '/spending', linkText: 'Spending' },
   { to: '/creditors', linkText: 'Creditors' },
-  { to: '/transaction', linkText: 'Transactions' }
+  { to: '/transactions', linkText: 'Transactions' }
 ];
 
 const SideNav = () => {

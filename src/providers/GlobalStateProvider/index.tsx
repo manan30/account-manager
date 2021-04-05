@@ -3,7 +3,7 @@ import useGlobalStateReducer from '../../reducers/GlobalStateReducer';
 import {
   IGlobalState,
   IGlobalStateAction
-} from 'reducers/GlobalStateReducer/globalStateReducer.interface';
+} from '../../reducers/GlobalStateReducer/globalStateReducer.interface';
 
 const GlobalStateContext = React.createContext<IGlobalState | undefined>(
   undefined

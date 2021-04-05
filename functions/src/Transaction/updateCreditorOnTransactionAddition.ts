@@ -31,7 +31,7 @@ export const updateCreditorOnTransactionAddition = functions.firestore
             accountSettledOn: null,
             updatedAt: admin.firestore.Timestamp.now()
           } as ICreditor);
-        } else {
+        } else if (data.transactionType === 'Debit') {
           const newRemAmount = Math.abs(creditor.remainingAmount - data.amount);
           const settledCheck = Number(newRemAmount.toFixed(0)) === 0;
           const accountSettledOn = settledCheck
@@ -55,7 +55,6 @@ export const updateCreditorOnTransactionAddition = functions.firestore
         }
       }
     } catch (e) {
-      // TODO: Send some notification when this happens
       console.error(e);
     }
   });
