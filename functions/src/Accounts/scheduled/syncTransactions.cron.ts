@@ -38,9 +38,9 @@ export const syncTransactions = functions.pubsub
       const bankTransactionsDbRef = db.collection(BankTransactionCollection);
 
       if (accountsDbRef) {
-        const snapshot = await accountsDbRef.get();
+        const accountsDbSnapshot = await accountsDbRef.get();
 
-        snapshot.forEach(async (doc) => {
+        accountsDbSnapshot.forEach(async (doc) => {
           const data = doc.data() as Account;
 
           const { data: tellerAccounts } = await axios.get<AccountResponse[]>(
@@ -59,15 +59,15 @@ export const syncTransactions = functions.pubsub
 
             console.log(`Syncing teller transactions for ${acc.name}`);
 
-            const snapshot = await bankTransactionsDbRef
+            const bankTransactionsDbSnapshot = await bankTransactionsDbRef
               .where('transaction.account_id', '==', acc.id)
               .orderBy('transaction.date', 'desc')
               .limit(1)
               .get();
 
             const lastTransactionIdx = (() => {
-              if (snapshot.size) {
-                const lastTransaction = snapshot.docs[0].data() as BankTransaction;
+              if (bankTransactionsDbSnapshot.size) {
+                const lastTransaction = bankTransactionsDbSnapshot.docs[0].data() as BankTransaction;
                 return accountTransactions.findIndex(
                   (txn) => txn.id === lastTransaction.transaction.id
                 );

@@ -1,5 +1,4 @@
-import { Timestamp } from '@firebase/firestore-types';
-import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import { DocumentSnapshot, Timestamp } from '@firebase/firestore-types';
 
 export interface Account extends DocumentSnapshot {
   id: string;

@@ -1,5 +1,4 @@
-import { Timestamp } from '@firebase/firestore-types';
-import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import { DocumentSnapshot, Timestamp } from '@firebase/firestore-types';
 import { Transaction } from '../../Accounts/interfaces/accounts.interface';
 
 export interface BankTransaction extends DocumentSnapshot {
