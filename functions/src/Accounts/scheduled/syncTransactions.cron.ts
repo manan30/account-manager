@@ -79,6 +79,10 @@ export const syncTransactions = functions.pubsub
               .slice(0, lastTransactionIdx)
               .reverse();
 
+            console.log(
+              `${pendingTransactions.length} new transactions being synced for ${acc.name}`
+            );
+
             const batch = db.batch();
 
             pendingTransactions.reverse().forEach((transaction) => {
