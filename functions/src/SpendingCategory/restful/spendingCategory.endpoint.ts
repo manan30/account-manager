@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
+import { SpendingCategoryCollection } from '../interfaces/spendingCategory.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -17,7 +18,7 @@ expressApp.post('/', async (req, res) => {
     if (!categoryName || categoryName.trim() === '')
       return res.status(400).send({ error: 'Category name cannot be empty' });
 
-    const spendingCategoriesDocRef = db.collection('spending-categories');
+    const spendingCategoriesDocRef = db.collection(SpendingCategoryCollection);
 
     if (spendingCategoriesDocRef) {
       const existingCategory = (await spendingCategoriesDocRef.get()).docs.some(
@@ -38,4 +39,4 @@ expressApp.post('/', async (req, res) => {
   }
 });
 
-export const addNewSpendingCategory = functions.https.onRequest(expressApp);
+export const spendingCategory = functions.https.onRequest(expressApp);

@@ -1,7 +1,7 @@
 import * as TransactionFunctions from './Transaction';
 import * as CreditorFunctions from './Creditor';
+import * as SpendingCategoryFunctions from './SpendingCategory';
 import { addNewStore } from './HttpFunctions/addNewStore';
-import { addNewSpendingCategory } from './HttpFunctions/addNewSpendingCategory';
 import { accounts, SyncTransactionsCron } from './Accounts';
 import { onCreateAddToSpendingTrigger } from './BankTransactions';
 import { seed } from './Seed';
@@ -9,8 +9,8 @@ import { seed } from './Seed';
 export {
   TransactionFunctions,
   CreditorFunctions,
+  SpendingCategoryFunctions,
   addNewStore,
-  addNewSpendingCategory,
   onCreateAddToSpendingTrigger,
   accounts,
   SyncTransactionsCron,
