@@ -38,12 +38,8 @@ const routes: RouteType[] = [
   {
     path: '/accounts',
     component: React.lazy(() => import('../pages/Accounts'))
-  },
-  !import.meta.env.PROD && {
-    path: '/seed',
-    component: React.lazy(() => import('../pages/Seed'))
   }
-].filter(Boolean) as RouteType[];
+] as RouteType[];
 
 const Router = () => {
   const { user, unauthorizedUser } = useGlobalState();
