@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-export interface ICreditor {
+export interface Creditor {
   id?: string;
   name: string;
   amount: number;
