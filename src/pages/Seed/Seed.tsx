@@ -110,11 +110,9 @@ const Seed = () => {
         })}
       </div>
       <div className='w-1/4 mt-8'>
-        <Button
-          buttonText='Seed Data'
-          onClickHandler={handleClick}
-          loading={loading}
-        />
+        <Button onClickHandler={handleClick} loading={loading}>
+          Seed Data
+        </Button>
       </div>
     </div>
   );

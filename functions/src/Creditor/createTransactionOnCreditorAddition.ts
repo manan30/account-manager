@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor, CreditorCollection } from './interfaces/creditor.model';
 import { ITransaction } from '../../models/Transaction';
 
 if (!admin.apps.length) {
@@ -12,10 +12,10 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 export const createTransactionOnCreditorAddition = functions.firestore
-  .document('creditor/{id}')
+  .document(`${CreditorCollection}/{id}`)
   .onCreate(async (snapshot) => {
     try {
-      const data = snapshot.data() as ICreditor;
+      const data = snapshot.data() as Creditor;
       const id = snapshot.id;
 
       await db.collection('transaction').add({

@@ -12,7 +12,7 @@ import NewTransactionModal from '../../components/NewTransactionModal';
 import Table from '../../components/Table';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { RouteParamsInterface } from '../../interfaces/route-interface';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor } from '../../models/Creditor';
 import { ITransaction } from '../../models/Transaction';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
@@ -27,7 +27,7 @@ const CreditorDetails = () => {
     isLoading: creditorDataLoading,
     error: creditorDataError,
     specificError: creditorNotFound
-  } = useFirestoreReadQuery<ICreditor>({
+  } = useFirestoreReadQuery<Creditor>({
     collection: 'creditor',
     id
   });

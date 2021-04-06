@@ -5,7 +5,7 @@ import Modal from '../../components/Modal/index';
 import Select, { SelectOption } from '../../components/Select';
 import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import {
@@ -34,11 +34,11 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
 }) => {
   const notificationDispatch = useNotificationDispatchContext();
   const { firestoreTimestamp } = useFirebaseContext();
-  const { data: creditorsData } = useFirestoreReadQuery<ICreditor>({
+  const { data: creditorsData } = useFirestoreReadQuery<Creditor>({
     collection: 'creditor'
   });
   const [addNewCreditorMutation, { isLoading }] = useFirestoreCreateQuery<
-    ICreditor
+    Creditor
   >({
     collectionName: 'creditor'
   });
@@ -117,7 +117,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
         accountSettled: false,
         createdAt: timestamp,
         updatedAt: timestamp
-      } as ICreditor);
+      } as Creditor);
 
       notificationDispatch({
         type: 'ADD_NOTIFICATION',

@@ -1,12 +1,12 @@
 import faker from 'faker';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor } from '../../models/Creditor';
 import { ISpending } from '../../models/Spending';
 import { ITransaction } from '../../models/Transaction';
 import FirebaseService from '../firebase';
 
 const { firestore, firestoreTimestamp } = FirebaseService();
 
-const generateFakeCreditor = (): ICreditor => {
+const generateFakeCreditor = (): Creditor => {
   const name = faker.name.findName();
   const amount = Number(faker.finance.amount(0, 3000));
   const currency = faker.finance.currencyCode();
@@ -22,7 +22,7 @@ const generateFakeCreditor = (): ICreditor => {
     accountSettledOn,
     accountSettled: false,
     updatedAt: createdAt
-  } as ICreditor;
+  } as Creditor;
 };
 
 const generateFakeTransaction = (

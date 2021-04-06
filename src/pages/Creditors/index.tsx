@@ -11,7 +11,7 @@ import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor } from '../../models/Creditor';
 import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
@@ -24,13 +24,13 @@ const Creditors = () => {
   const notificationDispatch = useNotificationDispatchContext();
   const [showModal, setShowModal] = useState(false);
   const { data: creditorsData, isLoading, error } = useFirestoreReadQuery<
-    ICreditor
+    Creditor
   >({
     collection: 'creditor',
     orderByClauses: [['updatedAt', 'desc']]
   });
 
-  const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
+  const tableColumns = useMemo<Column<Partial<Creditor>>[]>(
     () => [
       {
         Header: ({ column }) => {

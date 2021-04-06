@@ -1,7 +1,6 @@
-import { Timestamp } from '@firebase/firestore-types';
-import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import { Timestamp, DocumentSnapshot } from '@firebase/firestore-types';
 
-export interface ICreditor extends DocumentSnapshot {
+export interface Creditor extends DocumentSnapshot {
   id: string;
   name: string;
   amount: number;
@@ -12,3 +11,5 @@ export interface ICreditor extends DocumentSnapshot {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
+
+export const CreditorCollection = 'creditor';
