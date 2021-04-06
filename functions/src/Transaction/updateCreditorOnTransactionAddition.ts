@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor } from '../Creditor/interfaces/creditor.model';
 import { ITransaction } from '../../models/Transaction';
 
 admin.initializeApp();
@@ -19,7 +19,7 @@ export const updateCreditorOnTransactionAddition = functions.firestore
         const creditorRef = db
           .collection(`creditor`)
           .doc(data.transactionEntity);
-        const creditor = (await creditorRef.get()).data() as ICreditor;
+        const creditor = (await creditorRef.get()).data() as Creditor;
 
         if (data.transactionType === 'Credit') {
           const newAmount = creditor.amount + data.amount;
@@ -30,7 +30,7 @@ export const updateCreditorOnTransactionAddition = functions.firestore
             accountSettled: false,
             accountSettledOn: null,
             updatedAt: admin.firestore.Timestamp.now()
-          } as ICreditor);
+          } as Creditor);
         } else if (data.transactionType === 'Debit') {
           const newRemAmount = Math.abs(creditor.remainingAmount - data.amount);
           const settledCheck = Number(newRemAmount.toFixed(0)) === 0;
@@ -43,7 +43,7 @@ export const updateCreditorOnTransactionAddition = functions.firestore
             accountSettled: settledCheck,
             accountSettledOn,
             updatedAt
-          } as ICreditor);
+          } as Creditor);
           if (settledCheck)
             await db.collection('transaction').add({
               amount: 0,

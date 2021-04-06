@@ -1,6 +1,6 @@
 import React from 'react';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import { ICreditor } from '../../models/Creditor';
+import { Creditor } from '../../models/Creditor';
 import { useNewTransactionDispatchContext } from '../../providers/NewTransactionProvider';
 import { INPUT_THEME_ERROR } from '../../utils/Constants/ThemeConstants';
 import Loader from '../Loader';
@@ -17,7 +17,7 @@ const CreditorsSelect: React.FC<CreditorsSelectProps> = ({
   formError,
   resetForm
 }) => {
-  const { data: creditors, isLoading } = useFirestoreReadQuery<ICreditor>({
+  const { data: creditors, isLoading } = useFirestoreReadQuery<Creditor>({
     collection: 'creditor'
   });
   const dispatch = useNewTransactionDispatchContext();
