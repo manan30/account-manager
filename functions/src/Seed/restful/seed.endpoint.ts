@@ -3,8 +3,10 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
 import { SeedRequestBody } from '../interfaces/seed.interface';
+import { generateFakeCreditor } from '../utils/generateFakeData';
 import { BankTransactionCollection } from '../../BankTransactions/interfaces/bankTransaction.model';
 import { SpendingCollection } from '../../Spending/interfaces/spending.model';
+import { CreditorCollection } from '../../Creditor/interfaces/creditor.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -15,6 +17,12 @@ const expressApp = express();
 expressApp.use(cors({ origin: true }));
 
 expressApp.post('/', async (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res
+      .status(500)
+      .send({ message: 'Seeding is not allowed in production' });
+  }
+
   try {
     const seedOptions = req.body as SeedRequestBody;
 
@@ -26,6 +34,32 @@ expressApp.post('/', async (req, res) => {
       return res.status(400).send({
         message: 'No seed options present. Firestore seeding not executed'
       });
+    }
+
+    if (seedOptions.creditor) {
+      const { clear: clearCreditors, count } = seedOptions.creditor;
+      const creditorDbRef = db.collection(CreditorCollection);
+      const creditorDbSnapshot = await creditorDbRef.get();
+
+      if (clearCreditors) {
+        const batch = db.batch();
+        creditorDbSnapshot.docs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+      }
+
+      const creditorsCount = count ?? 10;
+      const batch = db.batch();
+
+      for (let i = 0; i < creditorsCount; i += 1) {
+        const creditor = generateFakeCreditor();
+        const id = db.collection(CreditorCollection).doc().id;
+        const docRef = db.collection(CreditorCollection).doc(id);
+        batch.set(docRef, creditor);
+      }
+
+      await batch.commit();
     }
 
     if (seedOptions.bankTransactions) {
