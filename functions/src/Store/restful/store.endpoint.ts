@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
+import { StoreCollection } from '../interfaces/store.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -17,7 +18,7 @@ expressApp.post('/', async (req, res) => {
     if (!storeName || storeName.trim() === '')
       return res.status(400).send({ error: 'Store name cannot be empty' });
 
-    const storesDocRef = db.collection('stores');
+    const storesDocRef = db.collection(StoreCollection);
 
     if (storesDocRef) {
       const existingStore = (await storesDocRef.get()).docs.some(
@@ -38,4 +39,4 @@ expressApp.post('/', async (req, res) => {
   }
 });
 
-export const addNewStore = functions.https.onRequest(expressApp);
+export const store = functions.https.onRequest(expressApp);

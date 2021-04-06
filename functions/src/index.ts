@@ -1,7 +1,7 @@
 import { updateCreditorOnTransactionAddition } from './Transaction';
 import { onCreateAddToTransaction } from './Creditor';
 import { spendingCategory } from './SpendingCategory';
-import { addNewStore } from './HttpFunctions/addNewStore';
+import { store } from './Store';
 import { accounts, SyncTransactionsCron } from './Accounts';
 import { onCreateAddToSpendingTrigger } from './BankTransactions';
 import { seed } from './Seed';
@@ -10,7 +10,7 @@ export {
   updateCreditorOnTransactionAddition,
   onCreateAddToTransaction,
   spendingCategory,
-  addNewStore,
+  store,
   onCreateAddToSpendingTrigger,
   accounts,
   SyncTransactionsCron,
