@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { Creditor, CreditorCollection } from './interfaces/creditor.model';
-import { ITransaction } from '../../models/Transaction';
+import { Creditor, CreditorCollection } from '../interfaces/creditor.model';
+import { ITransaction } from '../../../models/Transaction';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -11,7 +11,7 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-export const createTransactionOnCreditorAddition = functions.firestore
+export const onCreateAddToTransaction = functions.firestore
   .document(`${CreditorCollection}/{id}`)
   .onCreate(async (snapshot) => {
     try {

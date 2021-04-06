@@ -1,3 +1,3 @@
-import { createTransactionOnCreditorAddition } from './createTransactionOnCreditorAddition';
+import { onCreateAddToTransaction } from './event-triggers/onCreateAddToTransaction';
 
-export { createTransactionOnCreditorAddition };
+export { onCreateAddToTransaction };
