@@ -5,6 +5,8 @@ import * as cors from 'cors';
 import { SeedRequestBody } from '../interfaces/seed.interface';
 import { BankTransactionCollection } from '../../BankTransactions/interfaces/bankTransaction.model';
 import { SpendingCollection } from '../../Spending/interfaces/spending.model';
+import { RecurringCollection } from '../../Recurring/interfaces/recurring.model';
+import { generateFakeRecurringRecord } from '../../Recurring/utils';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -53,6 +55,36 @@ expressApp.post('/', async (req, res) => {
         snapshot.docs.forEach((doc) => {
           batch.delete(doc.ref);
         });
+        await batch.commit();
+      }
+    }
+
+    if (seedOptions.recurring) {
+      const {
+        clear: clearRecurring,
+        count: recurringCount
+      } = seedOptions.recurring;
+
+      const recurringDbRef = db.collection(RecurringCollection);
+
+      const snapshot = await recurringDbRef.get();
+
+      if (clearRecurring) {
+        const batch = db.batch();
+        snapshot.docs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+      }
+
+      if (recurringCount) {
+        const batch = db.batch();
+        for (let i = 0; i < recurringCount; i += 1) {
+          const record = generateFakeRecurringRecord();
+          const id = recurringDbRef.doc().id;
+          const docRef = recurringDbRef.doc(id);
+          batch.set(docRef, record);
+        }
         await batch.commit();
       }
     }
