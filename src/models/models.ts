@@ -4,4 +4,5 @@ export type CollectionName =
   | 'spending-categories'
   | 'stores'
   | 'transaction'
-  | 'account';
+  | 'account'
+  | 'recurring';
