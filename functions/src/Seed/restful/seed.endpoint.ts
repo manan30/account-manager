@@ -5,6 +5,7 @@ import * as cors from 'cors';
 import { SeedRequestBody } from '../interfaces/seed.interface';
 import { BankTransactionCollection } from '../../BankTransactions/interfaces/bankTransaction.model';
 import { SpendingCollection } from '../../Spending/interfaces/spending.model';
+import { RecurringCollection } from '../../Recurring/interfaces/recurring.model';
 
 if (!admin.apps.length) admin.initializeApp();
 else admin.app();
@@ -49,6 +50,25 @@ expressApp.post('/', async (req, res) => {
       const snapshot = await spendingDbRef.get();
 
       if (clearSpending) {
+        const batch = db.batch();
+        snapshot.docs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+      }
+    }
+
+    if (seedOptions.recurring) {
+      const {
+        clear: clearRecurring,
+        count: recurringCount
+      } = seedOptions.recurring;
+
+      const spendingDbRef = db.collection(RecurringCollection);
+
+      const snapshot = await spendingDbRef.get();
+
+      if (clearRecurring) {
         const batch = db.batch();
         snapshot.docs.forEach((doc) => {
           batch.delete(doc.ref);
