@@ -64,9 +64,9 @@ expressApp.post('/', async (req, res) => {
         count: recurringCount
       } = seedOptions.recurring;
 
-      const spendingDbRef = db.collection(RecurringCollection);
+      const recurringDbRef = db.collection(RecurringCollection);
 
-      const snapshot = await spendingDbRef.get();
+      const snapshot = await recurringDbRef.get();
 
       if (clearRecurring) {
         const batch = db.batch();
@@ -74,6 +74,11 @@ expressApp.post('/', async (req, res) => {
           batch.delete(doc.ref);
         });
         await batch.commit();
+      }
+
+      if (recurringCount) {
+        const batch = db.batch();
+        for (let i = 0; i < recurringCount; i += 1) {}
       }
     }
 
