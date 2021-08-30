@@ -1,4 +1,7 @@
 import { Timestamp } from '@firebase/firestore-types';
+
+export const RecurringCollection = 'recurring';
+
 export interface Recurring {
   id: string;
   amount: number;
