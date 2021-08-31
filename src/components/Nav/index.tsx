@@ -13,7 +13,7 @@ const SideNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className={'flex items-center px-6 py-4'}>
+    <nav className={'flex items-center p-6'}>
       <Link to='/'>
         <h1 className='text-xl font-medium text-indigo-600'>Account Manager</h1>
       </Link>

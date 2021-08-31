@@ -54,7 +54,7 @@ const Creditors = () => {
         accessor: 'name',
         Cell: ({ row }) => (
           <Link
-            className='text-indigo-500 font-medium hover:text-indigo-700'
+            className='font-medium text-indigo-500 hover:text-indigo-700'
             to={`/creditor/${row.original.id}`}
           >
             {row.original.name}
@@ -113,11 +113,11 @@ const Creditors = () => {
         accessor: 'accountSettled',
         Cell: ({ row }) =>
           row.original.accountSettled ? (
-            <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800'>
+            <span className='inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-200 rounded-full'>
               Settled
             </span>
           ) : (
-            <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-200 text-red-800'>
+            <span className='inline-flex px-2 text-xs font-semibold leading-5 text-red-800 bg-red-200 rounded-full'>
               Not Settled
             </span>
           ),
@@ -196,66 +196,63 @@ const Creditors = () => {
           content={`Account Manager - Creditors`}
         />
       </Helmet>
-      <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
-        <div className='w-full mb-8 flex justify-end'>
-          <div className='inline-flex ml-auto'>
-            <Button
-              buttonText='Add New Creditor'
-              onClickHandler={() => setShowModal(true)}
-            />
-          </div>
+      <div className='flex justify-end w-full mb-8'>
+        <div className='inline-flex ml-auto'>
+          <Button onClickHandler={() => setShowModal(true)}>
+            Add new creditor
+          </Button>
         </div>
-        <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
-          <Card className='p-4 shadow-md bg-gray-100'>
-            <div className='flex flex-col'>
-              <span className='font-bold text-lg mb-2 text-indigo-600'>
-                Total Creditors
-              </span>
-              <span className='text-gray-700 font-semibold text-4xl tracking-wider'>
-                {isLoading ? (
-                  <div className='mt-4 h-12 w-12'>
-                    <Loader size={36} />
-                  </div>
-                ) : (
-                  creditorsData?.length
-                )}
-              </span>
-            </div>
-          </Card>
-          <Card className='p-4 shadow-md bg-gray-100'>
-            <div className='flex flex-col'>
-              <span className='text-indigo-600 font-bold text-lg mb-2'>
-                {`Top ${topRemainingCreditors.length} Remaining Creditors`}
-              </span>
+      </div>
+      <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
+        <Card className='p-4 bg-gray-100 shadow-md'>
+          <div className='flex flex-col'>
+            <span className='mb-2 text-lg font-bold text-indigo-600'>
+              Total Creditors
+            </span>
+            <span className='text-4xl font-semibold tracking-wider text-gray-700'>
               {isLoading ? (
-                <div className='mt-4 h-12 w-12'>
+                <div className='w-12 h-12 mt-4'>
                   <Loader size={36} />
                 </div>
               ) : (
-                <ul className='text-gray-700 mt-2'>
-                  {topRemainingCreditors.map((cb) => (
-                    <li key={generateRandomKey()} className='mb-2 flex'>
-                      <div className='text-sm font-semibold'>{cb.name}</div>
-                      <div className='text-sm ml-auto'>
-                        {NumberWithCommasFormatter.format(
-                          `${cb.remainingAmount}`
-                        )}{' '}
-                        {cb.currency}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                creditorsData?.length
               )}
-            </div>
-          </Card>
-        </div>
-        {isLoading && <Loader size={48} />}
-        {tableData && (
-          <div className='mb-6'>
-            <Table columns={tableColumns} data={tableData} paginate />
+            </span>
           </div>
-        )}
+        </Card>
+        <Card className='p-4 bg-gray-100 shadow-md'>
+          <div className='flex flex-col'>
+            <span className='mb-2 text-lg font-bold text-indigo-600'>
+              {`Top ${topRemainingCreditors.length} Remaining Creditors`}
+            </span>
+            {isLoading ? (
+              <div className='w-12 h-12 mt-4'>
+                <Loader size={36} />
+              </div>
+            ) : (
+              <ul className='mt-2 text-gray-700'>
+                {topRemainingCreditors.map((cb) => (
+                  <li key={generateRandomKey()} className='flex mb-2'>
+                    <div className='text-sm font-semibold'>{cb.name}</div>
+                    <div className='ml-auto text-sm'>
+                      {NumberWithCommasFormatter.format(
+                        `${cb.remainingAmount}`
+                      )}{' '}
+                      {cb.currency}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </Card>
       </div>
+      {isLoading && <Loader size={48} />}
+      {tableData && (
+        <div className='mb-6'>
+          <Table columns={tableColumns} data={tableData} paginate />
+        </div>
+      )}
       {showModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <NewCreditorModal showModal={showModal} setShowModal={setShowModal} />

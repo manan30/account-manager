@@ -57,7 +57,7 @@ const Router = () => {
       <BrowserRouter>
         <Nav />
         <Suspense fallback={<Loader size={48} />}>
-          <main className='mt-8'>
+          <main>
             <Switch>
               <Route
                 path='/authentication'
