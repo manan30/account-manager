@@ -4,6 +4,7 @@ export const RecurringCollection = 'recurring';
 
 export interface Recurring {
   id: string;
+  name: string;
   amount: number;
   imageIcon?: string;
   metadata?: { monthlyPaymentsRemaining?: number };

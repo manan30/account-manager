@@ -2,6 +2,7 @@ import { Timestamp } from '@firebase/firestore-types';
 
 export interface Recurring {
   id: string;
+  name: string;
   amount: number;
   imageIcon?: string;
   metadata?: { monthlyPaymentsRemaining?: number };
