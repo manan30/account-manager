@@ -5,6 +5,7 @@ import NotificationManager from '../components/NotificationManager';
 import Nav from '../components/Nav';
 import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
+import Helmet from '../components/Helmet';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 const UnauthorizedUserModal = React.lazy(
@@ -55,6 +56,7 @@ const Router = () => {
   return (
     <>
       <BrowserRouter>
+        <Helmet />
         <Nav />
         <Suspense fallback={<Loader size={48} />}>
           <main>

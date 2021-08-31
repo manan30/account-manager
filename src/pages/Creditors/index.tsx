@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import { Link } from 'react-router-dom';
@@ -187,15 +186,6 @@ const Creditors = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{`Account Manager - Creditors`}</title>
-        <meta name='title' content={`Account Manager - Creditors`} />
-        <meta property='og:title' content={`Account Manager - Creditors`} />
-        <meta
-          property='twitter:title'
-          content={`Account Manager - Creditors`}
-        />
-      </Helmet>
       <div className='flex justify-end w-full mb-8'>
         <div className='inline-flex ml-auto'>
           <Button onClickHandler={() => setShowModal(true)}>
