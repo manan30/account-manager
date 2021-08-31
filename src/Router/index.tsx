@@ -32,7 +32,7 @@ const routes: RouteType[] = [
     component: React.lazy(() => import('../pages/CreditorDetails'))
   },
   {
-    path: '/spending',
+    path: '/expenses',
     component: React.lazy(() => import('../pages/Spending'))
   },
   {
@@ -57,38 +57,40 @@ const Router = () => {
       <BrowserRouter>
         <Nav />
         <Suspense fallback={<Loader size={48} />}>
-          <Switch>
-            <Route
-              path='/authentication'
-              component={AuthenticationPage}
-              exact
-            />
-            <Route
-              path='/unauthorized'
-              component={UnauthorizedUserModal}
-              exact
-            />
-            {routes.map(({ path, component: Component }) => (
+          <main className='mt-8'>
+            <Switch>
               <Route
-                key={generateRandomKey()}
-                path={path}
-                render={({ location }) => {
-                  return user && !unauthorizedUser ? (
-                    <Component />
-                  ) : (
-                    <Redirect
-                      to={{
-                        pathname: '/authentication',
-                        state: { from: location }
-                      }}
-                    />
-                  );
-                }}
+                path='/authentication'
+                component={AuthenticationPage}
                 exact
               />
-            ))}
-            <Route component={NotFoundPage} />
-          </Switch>
+              <Route
+                path='/unauthorized'
+                component={UnauthorizedUserModal}
+                exact
+              />
+              {routes.map(({ path, component: Component }) => (
+                <Route
+                  key={generateRandomKey()}
+                  path={path}
+                  render={({ location }) => {
+                    return user && !unauthorizedUser ? (
+                      <Component />
+                    ) : (
+                      <Redirect
+                        to={{
+                          pathname: '/authentication',
+                          state: { from: location }
+                        }}
+                      />
+                    );
+                  }}
+                  exact
+                />
+              ))}
+              <Route component={NotFoundPage} />
+            </Switch>
+          </main>
         </Suspense>
       </BrowserRouter>
       <NotificationManager />

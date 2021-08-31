@@ -3,13 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 
 const links = [
-  { to: '/', linkText: 'Overview' },
-  // { to: '/debt', linkText: 'Debt' },
   { to: '/accounts', linkText: 'Accounts' },
-  // TODO: Rename spending to expenses
-  { to: '/spending', linkText: 'Spending' },
+  { to: '/expenses', linkText: 'Expenses' },
   { to: '/creditors', linkText: 'Creditors' },
-  { to: '/transactions', linkText: 'Transactions' },
   { to: '/recurring', linkText: 'Recurring' }
 ];
 
@@ -17,32 +13,27 @@ const SideNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className={'border-red-500'}>
-      <h2>Account Manager</h2>
-      <nav>
-        {links.map((link, i) => {
-          const key = i;
+    <nav className={'flex items-center px-6 py-4'}>
+      <Link to='/'>
+        <h1 className='text-xl font-medium text-indigo-600'>Account Manager</h1>
+      </Link>
+      <ul className='flex items-center ml-auto space-x-3'>
+        {links.map((link) => {
           return (
             <Link
-              key={key}
+              key={link.linkText}
               to={link.to}
               className={cn(
-                'mt-5 text-xl text-indigo-600',
+                'text-base text-indigo-600',
                 'hover:opacity-100',
                 pathname !== link.to && 'opacity-50'
               )}
             >
-              {link.linkText}
+              <li>{link.linkText}</li>
             </Link>
           );
         })}
-      </nav>
-      {/* <Link
-        to='/new-transaction'
-        className='block w-full p-1 mb-3 text-xl text-center text-gray-300 bg-gray-700 rounded'
-      >
-        New Transaction
-      </Link> */}
+      </ul>
     </nav>
   );
 };
