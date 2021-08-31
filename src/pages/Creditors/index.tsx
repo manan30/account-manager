@@ -238,11 +238,7 @@ const Creditors = () => {
         </Card>
       </div>
       {isLoading && <Loader size={48} />}
-      {tableData && (
-        <div className='mb-6'>
-          <Table columns={tableColumns} data={tableData} paginate />
-        </div>
-      )}
+      {tableData && <Table columns={tableColumns} data={tableData} paginate />}
       {showModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <NewCreditorModal showModal={showModal} setShowModal={setShowModal} />

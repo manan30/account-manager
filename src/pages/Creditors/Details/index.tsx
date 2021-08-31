@@ -152,40 +152,40 @@ const CreditorDetails = () => {
           content={`Creditor Details${' - '.concat(creditor?.name ?? '')}`}
         />
       </Helmet>
-      <div className='p-8 bg-gray-100 h-full overflow-y-auto'>
+      <div className='h-full p-8 overflow-y-auto bg-gray-100'>
         <div className='flex mb-8'>
-          <Card className='p-4 shadow-md bg-gray-100 mr-6 w-3/5'>
+          <Card className='w-3/5 p-4 mr-6 bg-gray-100 shadow-md'>
             <div className='flex flex-col'>
-              <span className='font-bold text-2xl mb-2 text-indigo-600'>
+              <span className='mb-2 text-2xl font-bold text-indigo-600'>
                 Creditor Details
               </span>
               <span className='text-gray-700'>
                 {creditorDataLoading ? (
-                  <div className='mt-4 h-12 w-12'>
+                  <div className='w-12 h-12 mt-4'>
                     <Loader size={36} />
                   </div>
                 ) : (
-                  <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-3 text-sm font-normal'>
-                    <div className='col-start-1 col-end-3 flex items-center'>
-                      <span className='font-bold mr-1'>Name:</span>
+                  <div className='grid grid-cols-1 gap-3 text-sm font-normal lg:grid-cols-2 xl:grid-cols-2'>
+                    <div className='flex items-center col-start-1 col-end-3'>
+                      <span className='mr-1 font-bold'>Name:</span>
                       <span>{creditor?.name}</span>
                     </div>
                     <div className='flex items-center'>
-                      <span className='font-bold mr-1'>Account Settled:</span>
+                      <span className='mr-1 font-bold'>Account Settled:</span>
                       <span>
                         {creditor?.accountSettled ? (
-                          <div className='bg-green-200 text-green-800 rounded-full font-medium inline-flex px-2 text-xs'>
+                          <div className='inline-flex px-2 text-xs font-medium text-green-800 bg-green-200 rounded-full'>
                             Settled
                           </div>
                         ) : (
-                          <div className='bg-red-200 text-red-800 rounded-full font-medium inline-flex px-2 text-xs'>
+                          <div className='inline-flex px-2 text-xs font-medium text-red-800 bg-red-200 rounded-full'>
                             Not Settled
                           </div>
                         )}
                       </span>
                     </div>
                     <div className='flex items-center'>
-                      <span className='font-bold mr-1'>
+                      <span className='mr-1 font-bold'>
                         Account Settled On:
                       </span>
                       <span>
@@ -199,19 +199,19 @@ const CreditorDetails = () => {
                       </span>
                     </div>
                     <div className='flex items-center'>
-                      <span className='font-bold mr-1'>Remaining Amount:</span>
+                      <span className='mr-1 font-bold'>Remaining Amount:</span>
                       <span>{creditor?.remainingAmount}</span>
                     </div>
                     <div className='flex items-center'>
-                      <span className='font-bold mr-1'>Credit Amount:</span>
+                      <span className='mr-1 font-bold'>Credit Amount:</span>
                       <span>{creditor?.amount}</span>
                     </div>
                     <div className='flex items-center'>
-                      <span className='font-bold mr-1'>Currency:</span>
+                      <span className='mr-1 font-bold'>Currency:</span>
                       <span>{creditor?.currency}</span>
                     </div>
                     <div className='flex items-center'>
-                      <span className='font-bold mr-1'>Amount in USD:</span>
+                      <span className='mr-1 font-bold'>Amount in USD:</span>
                       <span>
                         {creditor && (
                           <CurrencyConversionCell
@@ -221,8 +221,8 @@ const CreditorDetails = () => {
                         )}
                       </span>
                     </div>
-                    <div className='text-xs flex items-center'>
-                      <span className='font-bold mr-1'>Creditor Added On:</span>
+                    <div className='flex items-center text-xs'>
+                      <span className='mr-1 font-bold'>Creditor Added On:</span>
                       <span>
                         {new Intl.DateTimeFormat('en-US', {
                           month: 'short',
@@ -231,8 +231,8 @@ const CreditorDetails = () => {
                         }).format(creditor?.createdAt.toDate())}
                       </span>
                     </div>
-                    <div className='text-xs flex items-center'>
-                      <span className='font-bold mr-1'>Last Updated On:</span>
+                    <div className='flex items-center text-xs'>
+                      <span className='mr-1 font-bold'>Last Updated On:</span>
                       <span>
                         {new Intl.DateTimeFormat('en-US', {
                           month: 'short',
@@ -247,10 +247,9 @@ const CreditorDetails = () => {
             </div>
           </Card>
           <span className='ml-auto'>
-            <Button
-              buttonText='Add Transaction'
-              onClickHandler={() => setShowModal(true)}
-            />
+            <Button onClickHandler={() => setShowModal(true)}>
+              Add Transaction
+            </Button>
           </span>
         </div>
         {transactionsDataLoading && <Loader size={48} />}
