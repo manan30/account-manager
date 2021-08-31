@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Loader from '../components/Loader';
 import NotificationManager from '../components/NotificationManager';
-import SideNav from '../components/SideNav';
+import Nav from '../components/Nav';
 import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
 
@@ -55,45 +55,41 @@ const Router = () => {
   return (
     <>
       <BrowserRouter>
-        <div className='flex w-full h-full'>
-          <SideNav />
-          <div className='w-3/4 overflow-y-auto'>
-            <Suspense fallback={<Loader size={48} />}>
-              <Switch>
-                <Route
-                  path='/authentication'
-                  component={AuthenticationPage}
-                  exact
-                />
-                <Route
-                  path='/unauthorized'
-                  component={UnauthorizedUserModal}
-                  exact
-                />
-                {routes.map(({ path, component: Component }) => (
-                  <Route
-                    key={generateRandomKey()}
-                    path={path}
-                    render={({ location }) => {
-                      return user && !unauthorizedUser ? (
-                        <Component />
-                      ) : (
-                        <Redirect
-                          to={{
-                            pathname: '/authentication',
-                            state: { from: location }
-                          }}
-                        />
-                      );
-                    }}
-                    exact
-                  />
-                ))}
-                <Route component={NotFoundPage} />
-              </Switch>
-            </Suspense>
-          </div>
-        </div>
+        <Nav />
+        <Suspense fallback={<Loader size={48} />}>
+          <Switch>
+            <Route
+              path='/authentication'
+              component={AuthenticationPage}
+              exact
+            />
+            <Route
+              path='/unauthorized'
+              component={UnauthorizedUserModal}
+              exact
+            />
+            {routes.map(({ path, component: Component }) => (
+              <Route
+                key={generateRandomKey()}
+                path={path}
+                render={({ location }) => {
+                  return user && !unauthorizedUser ? (
+                    <Component />
+                  ) : (
+                    <Redirect
+                      to={{
+                        pathname: '/authentication',
+                        state: { from: location }
+                      }}
+                    />
+                  );
+                }}
+                exact
+              />
+            ))}
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Suspense>
       </BrowserRouter>
       <NotificationManager />
     </>

@@ -5,8 +5,8 @@ import cn from 'classnames';
 const links = [
   { to: '/', linkText: 'Overview' },
   // { to: '/debt', linkText: 'Debt' },
-  // TODO: Rename spending to expenses
   { to: '/accounts', linkText: 'Accounts' },
+  // TODO: Rename spending to expenses
   { to: '/spending', linkText: 'Spending' },
   { to: '/creditors', linkText: 'Creditors' },
   { to: '/transactions', linkText: 'Transactions' },
@@ -17,9 +17,9 @@ const SideNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className='flex flex-col w-1/4 px-8 bg-gray-300 md:flex-shrink-0 lg:flex-shrink-0 xl:flex-shrink-0'>
-      <h2 className='mt-6 text-3xl text-gray-800'>Account Manager</h2>
-      <nav className='flex flex-col flex-auto'>
+    <nav className={'border-red-500'}>
+      <h2>Account Manager</h2>
+      <nav>
         {links.map((link, i) => {
           const key = i;
           return (
@@ -43,7 +43,7 @@ const SideNav = () => {
       >
         New Transaction
       </Link> */}
-    </div>
+    </nav>
   );
 };
 
