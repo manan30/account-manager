@@ -39,6 +39,10 @@ const routes: RouteType[] = [
     path: '/accounts',
     component: React.lazy(() => import('../pages/Accounts'))
   },
+  {
+    path: '/recurring',
+    component: React.lazy(() => import('../pages/Recurring'))
+  },
   !import.meta.env.PROD && {
     path: '/seed',
     component: React.lazy(() => import('../pages/Seed'))
@@ -51,7 +55,7 @@ const Router = () => {
   return (
     <>
       <BrowserRouter>
-        <div className='flex h-full w-full'>
+        <div className='flex w-full h-full'>
           <SideNav />
           <div className='w-3/4 overflow-y-auto'>
             <Suspense fallback={<Loader size={48} />}>

@@ -9,15 +9,16 @@ const links = [
   { to: '/accounts', linkText: 'Accounts' },
   { to: '/spending', linkText: 'Spending' },
   { to: '/creditors', linkText: 'Creditors' },
-  { to: '/transactions', linkText: 'Transactions' }
+  { to: '/transactions', linkText: 'Transactions' },
+  { to: '/recurring', linkText: 'Recurring' }
 ];
 
 const SideNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className='bg-gray-300 px-8 flex flex-col md:flex-shrink-0 lg:flex-shrink-0 xl:flex-shrink-0 w-1/4'>
-      <h2 className='text-3xl mt-6 text-gray-800'>Account Manager</h2>
+    <div className='flex flex-col w-1/4 px-8 bg-gray-300 md:flex-shrink-0 lg:flex-shrink-0 xl:flex-shrink-0'>
+      <h2 className='mt-6 text-3xl text-gray-800'>Account Manager</h2>
       <nav className='flex flex-col flex-auto'>
         {links.map((link, i) => {
           const key = i;
@@ -38,7 +39,7 @@ const SideNav = () => {
       </nav>
       {/* <Link
         to='/new-transaction'
-        className='w-full block text-center text-xl text-gray-300 mb-3 bg-gray-700 p-1 rounded'
+        className='block w-full p-1 mb-3 text-xl text-center text-gray-300 bg-gray-700 rounded'
       >
         New Transaction
       </Link> */}
