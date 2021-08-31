@@ -4,6 +4,7 @@ import { Recurring } from '../interfaces/recurring.model';
 
 export const generateFakeRecurringRecord = (): Recurring => {
   const types = ['credit', 'debit'];
+  const name = faker.company.companyName();
   const amount = Number(faker.commerce.price());
   const recurringDate = admin.firestore.Timestamp.fromDate(
     faker.date.past(2, '12/31/2021')
@@ -12,6 +13,7 @@ export const generateFakeRecurringRecord = (): Recurring => {
   const createdAt = admin.firestore.Timestamp.now();
 
   return {
+    name,
     amount,
     createdAt,
     updatedAt: createdAt,
