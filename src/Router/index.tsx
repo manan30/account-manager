@@ -59,7 +59,7 @@ const Router = () => {
         <Helmet />
         <Nav />
         <Suspense fallback={<Loader size={48} />}>
-          <main>
+          <main className='w-full p-4 pt-8 mx-auto overflow-y-auto sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-6xl 2xl:max-w-7xl h-main'>
             <Switch>
               <Route
                 path='/authentication'

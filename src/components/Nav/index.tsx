@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const links = [
   { to: '/accounts', linkText: 'Accounts' },
@@ -9,11 +11,33 @@ const links = [
   { to: '/recurring', linkText: 'Recurring' }
 ];
 
-const SideNav = () => {
+const Nav = () => {
   const { pathname } = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const mainElement = document.querySelector('main');
+
+    const scrollHandler = () => {
+      if (mainElement && mainElement?.scrollTop > 50) {
+        setScrolled(true);
+        return;
+      }
+      setScrolled(false);
+    };
+
+    mainElement?.addEventListener('scroll', scrollHandler);
+
+    return () => mainElement?.removeEventListener('scroll', scrollHandler);
+  }, []);
 
   return (
-    <nav className={'flex items-center p-6'}>
+    <nav
+      className={cn(
+        'flex items-center p-6 transition-shadow z-50',
+        scrolled && 'shadow-md'
+      )}
+    >
       <Link to='/'>
         <h1 className='text-xl font-medium text-indigo-600'>Account Manager</h1>
       </Link>
@@ -38,4 +62,4 @@ const SideNav = () => {
   );
 };
 
-export default SideNav;
+export default Nav;

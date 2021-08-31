@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       maxHeight: {
         modal: '66.666667%'
+      },
+      height: {
+        main: 'calc(100% - 4.8rem)'
       }
     }
   },
