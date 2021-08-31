@@ -39,10 +39,6 @@ const routes: RouteType[] = [
   {
     path: '/recurring',
     component: React.lazy(() => import('../pages/Recurring'))
-  },
-  !import.meta.env.PROD && {
-    path: '/seed',
-    component: React.lazy(() => import('../pages/Seed'))
   }
 ].filter(Boolean) as RouteType[];
 
