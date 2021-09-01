@@ -31,7 +31,9 @@ function FirebaseService(): IFirebaseContext {
 
   if (window.location.hostname === 'localhost') {
     firestore.useEmulator('localhost', 8080);
-    auth.useEmulator('http://localhost:9001');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    auth.useEmulator('http://localhost:9001', { disableWarnings: true });
   }
 
   return {
