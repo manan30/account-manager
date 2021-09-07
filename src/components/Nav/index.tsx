@@ -34,12 +34,12 @@ const Nav = () => {
   return (
     <nav
       className={cn(
-        'flex items-center p-6 transition-shadow z-50',
-        scrolled && 'shadow-md'
+        'flex items-center p-6 transition-shadow z-50 bg-indigo-600 text-gray-100',
+        scrolled && 'shadow-xl'
       )}
     >
       <Link to='/'>
-        <h1 className='text-xl font-medium text-indigo-600'>Account Manager</h1>
+        <h1 className='text-xl font-medium'>Account Manager</h1>
       </Link>
       <ul className='flex items-center ml-auto space-x-3'>
         {links.map((link) => {
@@ -48,7 +48,7 @@ const Nav = () => {
               key={link.linkText}
               to={link.to}
               className={cn(
-                'text-base text-indigo-600',
+                'text-base',
                 'hover:opacity-100',
                 pathname !== link.to && 'opacity-50'
               )}
