@@ -55,6 +55,7 @@
     "vite-plugin-svgr": "^0.2.0"
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.4",
     "classnames": "2.2.6",
     "faker": "5.1.0",
     "firebase": "^8.2.1",
