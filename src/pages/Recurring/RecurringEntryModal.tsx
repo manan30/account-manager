@@ -1,5 +1,6 @@
 import React from 'react';
 import Input from '../../components/Input/Input';
+import { InputType } from '../../components/Input/interfaces';
 import Modal from '../../components/Modal/Modal';
 import Select from '../../components/Select/Select';
 import { useFormState } from '../../hooks/Form/useFormState';
@@ -8,6 +9,7 @@ type FormField = {
   name: string;
   label: string;
   placeholder: string;
+  inputType?: InputType;
   type?: string;
 };
 
@@ -17,13 +19,20 @@ const formFields: ReadonlyArray<FormField> = [
   {
     name: 'date',
     label: 'Recurring Date',
-    placeholder: 'Enter Recurring Date'
+    placeholder: 'Enter Recurring Date',
+    inputType: 'date'
   },
   {
     name: 'type',
     label: 'Transaction Type',
     placeholder: 'Select Transaction Type',
     type: 'select'
+  },
+  {
+    name: 'endingDate',
+    label: 'Ending Date',
+    placeholder: 'Enter Ending Date',
+    inputType: 'date'
   }
 ] as const;
 
@@ -73,6 +82,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                     label={field.label}
                     value={values[field.name]}
                     error={errors[field.name]}
+                    type={field?.inputType}
                     placeholder={field.placeholder}
                     onChange={(name, value) =>
                       setFormValues(name as FormState, value)
