@@ -1,6 +1,7 @@
 import React from 'react';
 import { PlusIcon } from '@heroicons/react/solid';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
+import RecurringEntryModal from './RecurringEntryModal';
 
 const Recurring = () => {
   return (
@@ -13,6 +14,7 @@ const Recurring = () => {
           }}
         />
       </div>
+      <RecurringEntryModal />
     </>
   );
 };
