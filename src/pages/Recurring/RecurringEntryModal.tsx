@@ -1,62 +1,57 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Input from '../../components/Input/Input';
-import { InputType } from '../../components/Input/interfaces';
 import Modal from '../../components/Modal/Modal';
 import Select from '../../components/Select/Select';
 import { useFormState } from '../../hooks/Form/useFormState';
-
-type FormField = {
-  name: string;
-  label: string;
-  placeholder: string;
-  inputType?: InputType;
-  type?: string;
-};
-
-const formFields: ReadonlyArray<FormField> = [
-  { name: 'name', label: 'Name', placeholder: 'Enter Name' },
-  { name: 'amount', label: 'Amount', placeholder: 'Enter Amount' },
-  {
-    name: 'date',
-    label: 'Recurring Date',
-    placeholder: 'Enter Recurring Date',
-    inputType: 'date'
-  },
-  {
-    name: 'type',
-    label: 'Transaction Type',
-    placeholder: 'Select Transaction Type',
-    type: 'select'
-  },
-  {
-    name: 'endingDate',
-    label: 'Ending Date',
-    placeholder: 'Enter Ending Date',
-    inputType: 'date'
-  }
-] as const;
-
-type FormState = typeof formFields[number]['name'];
+import { formFields } from './utils/constants';
+import { FormState } from './utils/types';
 
 type RecurringEntryModalProps = {
+  handleSubmit: (formValues: Record<FormState, string>) => void;
   handleClose: () => void;
 };
 
 const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
+  handleSubmit,
   handleClose
 }) => {
-  const { values, errors, setFormValues } = useFormState<
+  const { values, errors, setFormValues, setFormErrors } = useFormState<
     Record<FormState, string>,
     Record<FormState, boolean>
   >({
-    initialValues: { name: '', amount: '', date: '', type: '' },
-    initialErrors: { name: false, amount: false, date: false, type: false }
+    initialValues: { name: '', amount: '', date: '', type: '', endingDate: '' },
+    initialErrors: {
+      name: false,
+      amount: false,
+      date: false,
+      type: false,
+      endingDate: false
+    }
   });
+
+  const handleFormSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const formErrors: Array<string> = [];
+      Object.entries(values).forEach(([key, value]) => {
+        if (!value || value.trim() === '') formErrors.push(key);
+      });
+      if (formErrors.length) {
+        setFormErrors(formErrors);
+        return;
+      }
+      handleSubmit(values);
+    },
+    [values, handleSubmit, setFormErrors]
+  );
 
   return (
     <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
       <div className='mb-4'>
-        <form className='flex flex-col p-1 space-y-4'>
+        <form
+          className='flex flex-col p-1 space-y-4'
+          onSubmit={handleFormSubmit}
+        >
           {formFields.map((field) => {
             switch (field.type) {
               case 'select':
@@ -91,6 +86,11 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                 );
             }
           })}
+          <input
+            type='submit'
+            className='w-full mt-4 btn btn-primary'
+            value='Login'
+          />
         </form>
       </div>
     </Modal>

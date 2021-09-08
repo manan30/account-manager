@@ -7,7 +7,6 @@ type SelectProps = {
   value: string;
   options: Array<string>;
   placeholder?: string;
-  required?: boolean;
   disabled?: boolean;
   error?: boolean;
   errorText?: string;
@@ -20,7 +19,6 @@ const Select: React.FC<SelectProps> = ({
   value,
   options,
   placeholder,
-  required = true,
   disabled = false,
   error = false,
   errorText,
@@ -35,9 +33,7 @@ const Select: React.FC<SelectProps> = ({
         name={name}
         id={name}
         value={value}
-        required={required}
         disabled={disabled}
-        placeholder={placeholder}
         onBlur={(e) => {
           onChange(name, e.target.value);
         }}
@@ -49,6 +45,9 @@ const Select: React.FC<SelectProps> = ({
           error && 'border-red-500 focus:border-red-500 focus:ring-red-500'
         )}
       >
+        <option value='' selected disabled hidden>
+          {placeholder}
+        </option>
         {options.map((option) => (
           <option key={option} value={option.toLowerCase()}>
             {option}

@@ -8,7 +8,6 @@ type InputProps = {
   value: string;
   type?: InputType;
   placeholder?: string;
-  required?: boolean;
   disabled?: boolean;
   error?: boolean;
   errorText?: string;
@@ -21,7 +20,6 @@ const Input: React.FC<InputProps> = ({
   value,
   type = 'text',
   placeholder,
-  required = true,
   disabled = false,
   error = false,
   errorText,
@@ -38,7 +36,6 @@ const Input: React.FC<InputProps> = ({
         value={value}
         type={type}
         autoComplete={type}
-        required={required}
         disabled={disabled}
         placeholder={placeholder}
         onChange={(e) => {

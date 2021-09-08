@@ -27,10 +27,10 @@ export const useFormState = <FormValues, FormErrors>(formState: {
 
   const handleFormErrorsChange = useCallback(
     (errorKeys: Array<string>) => {
-      const updatedErrorState = (Object.keys(formErrors).map((key) => {
-        if (errorKeys.includes(key)) return { [key]: true };
-        return { [key]: false };
-      }) as unknown) as FormErrors;
+      const updatedErrorState = { ...formErrors };
+      errorKeys.forEach((key) => {
+        (updatedErrorState[key as keyof FormErrors] as unknown) = true;
+      });
       setFormErrors(updatedErrorState);
     },
     [formErrors]
