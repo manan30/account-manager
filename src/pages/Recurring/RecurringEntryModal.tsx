@@ -3,8 +3,8 @@ import Input from '../../components/Input/Input';
 import Modal from '../../components/Modal/Modal';
 
 const formFields = [
-  { name: 'name', label: 'Name' },
-  { name: 'amount', label: 'Amount' }
+  { name: 'name', label: 'Name', placeholder: 'Enter Name' },
+  { name: 'amount', label: 'Amount', placeholder: 'Enter Amount' }
 ] as const;
 
 type FormState = typeof formFields[number]['name'];
@@ -29,6 +29,7 @@ const RecurringEntryModal = () => {
               name={field.name}
               label={field.label}
               value={formState[field.name]}
+              placeholder={field.placeholder}
               onChange={handleFormStateChange}
             />
           ))}

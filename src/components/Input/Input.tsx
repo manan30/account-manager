@@ -17,13 +17,14 @@ type InputProps = {
 
 const Input: React.FC<InputProps> = ({
   name,
-  value,
   label,
+  value,
+  type = 'text',
+  placeholder,
   required = true,
   disabled = false,
   error = false,
   errorText,
-  type = 'text',
   onChange
 }) => {
   return (
@@ -39,11 +40,12 @@ const Input: React.FC<InputProps> = ({
         autoComplete={type}
         required={required}
         disabled={disabled}
+        placeholder={placeholder}
         onChange={(e) => {
           onChange(name, e.target.value);
         }}
         className={cn(
-          'w-full px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600',
+          'w-full text-sm text-gray-600 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600',
           error && 'border-red-500 focus:border-red-500 focus:ring-red-500'
         )}
       />
