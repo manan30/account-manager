@@ -11,7 +11,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 }) => {
   return (
     <button
-      className='p-4 transition-all transform bg-indigo-600 rounded-full hover:shadow-lg hover:-translate-y-1'
+      className='p-4 transition-all transform bg-indigo-600 rounded-full hover:shadow-lg hover:-translate-y-1 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-offset-indigo-700 focus:ring-offset-2'
       onClick={onClickHandler}
     >
       {icon}

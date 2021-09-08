@@ -10,7 +10,13 @@ const formFields = [
 
 type FormState = typeof formFields[number]['name'];
 
-const RecurringEntryModal = () => {
+type RecurringEntryModalProps = {
+  handleClose: () => void;
+};
+
+const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
+  handleClose
+}) => {
   const { values, errors, setFormValues } = useFormState<
     Record<FormState, string>,
     Record<FormState, boolean>
@@ -20,7 +26,7 @@ const RecurringEntryModal = () => {
   });
 
   return (
-    <Modal title='Add Recurring Transaction'>
+    <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
       <div>
         <form className='flex flex-col p-1 space-y-4'>
           {formFields.map((field) => (
