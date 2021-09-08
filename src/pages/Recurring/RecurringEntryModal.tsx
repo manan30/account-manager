@@ -92,9 +92,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         <Button layout='secondary' onClick={handleClose}>
           Cancel
         </Button>
-        <Button onClick={handleFormSubmit} loading>
-          Add
-        </Button>
+        <Button onClick={handleFormSubmit}>Add</Button>
       </div>
     </Modal>
   );
