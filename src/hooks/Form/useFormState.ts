@@ -1,23 +1,23 @@
 import { useCallback, useState } from 'react';
 
-export const useFormState = <FormState>(formState: {
-  initialValues: FormState;
-  initialErrors: FormState;
+export const useFormState = <FormValues, FormErrors>(formState: {
+  initialValues: FormValues;
+  initialErrors: FormErrors;
 }): {
-  values: FormState;
-  errors: FormState;
-  setFormValues: (name: keyof FormState, value: string) => void;
+  values: FormValues;
+  errors: FormErrors;
+  setFormValues: (name: keyof FormErrors, value: string) => void;
   setFormErrors: (errorKeys: Array<string>) => void;
 } => {
-  const [formValues, setFormValues] = useState<FormState>(
+  const [formValues, setFormValues] = useState<FormValues>(
     formState.initialValues
   );
-  const [formErrors, setFormErrors] = useState<FormState>(
+  const [formErrors, setFormErrors] = useState<FormErrors>(
     formState.initialErrors
   );
 
   const handleFormValueChange = useCallback(
-    (name: keyof FormState, value: string) => {
+    (name: keyof FormErrors, value: string) => {
       if (formErrors[name])
         setFormErrors((prevState) => ({ ...prevState, [name]: false }));
       setFormValues((prevState) => ({ ...prevState, [name]: value }));
@@ -30,7 +30,7 @@ export const useFormState = <FormState>(formState: {
       const updatedErrorState = (Object.keys(formErrors).map((key) => {
         if (errorKeys.includes(key)) return { [key]: true };
         return { [key]: false };
-      }) as unknown) as FormState;
+      }) as unknown) as FormErrors;
       setFormErrors(updatedErrorState);
     },
     [formErrors]

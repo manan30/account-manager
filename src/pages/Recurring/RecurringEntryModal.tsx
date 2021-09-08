@@ -31,7 +31,9 @@ const RecurringEntryModal = () => {
               value={values[field.name]}
               error={errors[field.name]}
               placeholder={field.placeholder}
-              onChange={setFormValues}
+              onChange={(name, value) =>
+                setFormValues(name as FormState, value)
+              }
             />
           ))}
         </form>
