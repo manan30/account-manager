@@ -1,0 +1,1 @@
+export type InputType = 'email' | 'number' | 'password' | 'text';
