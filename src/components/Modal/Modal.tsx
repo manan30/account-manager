@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({
               {title}
             </div>
             <button
-              className='ml-auto'
+              className='ml-auto focus:outline-none focus:ring-2 focus:ring-indigo-600'
               onClick={onCloseIconClick}
               disabled={disableClose}
             >

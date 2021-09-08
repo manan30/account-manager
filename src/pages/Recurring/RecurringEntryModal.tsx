@@ -5,7 +5,8 @@ import { useFormState } from '../../hooks/Form/useFormState';
 
 const formFields = [
   { name: 'name', label: 'Name', placeholder: 'Enter Name' },
-  { name: 'amount', label: 'Amount', placeholder: 'Enter Amount' }
+  { name: 'amount', label: 'Amount', placeholder: 'Enter Amount' },
+  { name: 'date', label: 'Recurring Date', placeholder: 'Enter Recurring Date' }
 ] as const;
 
 type FormState = typeof formFields[number]['name'];
@@ -21,8 +22,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
     Record<FormState, string>,
     Record<FormState, boolean>
   >({
-    initialValues: { name: '', amount: '' },
-    initialErrors: { name: false, amount: false }
+    initialValues: { name: '', amount: '', date: '' },
+    initialErrors: { name: false, amount: false, date: false }
   });
 
   return (
