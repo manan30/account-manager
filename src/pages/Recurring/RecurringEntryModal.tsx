@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import Button from '../../components/Button';
 import Input from '../../components/Input/Input';
 import Modal from '../../components/Modal/Modal';
 import Select from '../../components/Select/Select';
@@ -30,7 +31,11 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
   });
 
   const handleFormSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    (
+      e:
+        | React.FormEvent<HTMLFormElement>
+        | React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
       e.preventDefault();
       const formErrors: Array<string> = [];
       Object.entries(values).forEach(([key, value]) => {
@@ -47,51 +52,49 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
 
   return (
     <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
-      <div className='mb-4'>
-        <form
-          className='flex flex-col p-1 space-y-4'
-          onSubmit={handleFormSubmit}
-        >
-          {formFields.map((field) => {
-            switch (field.type) {
-              case 'select':
-                return (
-                  <Select
-                    key={field.name}
-                    name={field.name}
-                    label={field.label}
-                    value={values[field.name]}
-                    error={errors[field.name]}
-                    placeholder={field.placeholder}
-                    options={['Credit', 'Debit']}
-                    onChange={(name, value) =>
-                      setFormValues(name as FormState, value)
-                    }
-                  />
-                );
-              default:
-                return (
-                  <Input
-                    key={field.name}
-                    name={field.name}
-                    label={field.label}
-                    value={values[field.name]}
-                    error={errors[field.name]}
-                    type={field?.inputType}
-                    placeholder={field.placeholder}
-                    onChange={(name, value) =>
-                      setFormValues(name as FormState, value)
-                    }
-                  />
-                );
-            }
-          })}
-          <input
-            type='submit'
-            className='w-full mt-4 btn btn-primary'
-            value='Login'
-          />
-        </form>
+      <form className='flex flex-col p-1 space-y-4' onSubmit={handleFormSubmit}>
+        {formFields.map((field) => {
+          switch (field.type) {
+            case 'select':
+              return (
+                <Select
+                  key={field.name}
+                  name={field.name}
+                  label={field.label}
+                  value={values[field.name]}
+                  error={errors[field.name]}
+                  placeholder={field.placeholder}
+                  options={['Credit', 'Debit']}
+                  onChange={(name, value) =>
+                    setFormValues(name as FormState, value)
+                  }
+                />
+              );
+            default:
+              return (
+                <Input
+                  key={field.name}
+                  name={field.name}
+                  label={field.label}
+                  value={values[field.name]}
+                  error={errors[field.name]}
+                  type={field?.inputType}
+                  placeholder={field.placeholder}
+                  onChange={(name, value) =>
+                    setFormValues(name as FormState, value)
+                  }
+                />
+              );
+          }
+        })}
+      </form>
+      <div className='flex items-center justify-end w-full pr-1 mt-8 mb-2 space-x-3'>
+        <Button layout='secondary' onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button onClick={handleFormSubmit} loading>
+          Add
+        </Button>
       </div>
     </Modal>
   );
