@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import Input from '../../components/Input/Input';
 import Modal from '../../components/Modal/Modal';
+import { useFormState } from '../../hooks/Form/useFormState';
 
 const formFields = [
   { name: 'name', label: 'Name', placeholder: 'Enter Name' },
@@ -10,14 +11,13 @@ const formFields = [
 type FormState = typeof formFields[number]['name'];
 
 const RecurringEntryModal = () => {
-  const [formState, setFormState] = useState<Record<FormState, string>>({
-    name: '',
-    amount: ''
+  const { values, errors, setFormValues } = useFormState<
+    Record<FormState, string>,
+    Record<FormState, boolean>
+  >({
+    initialValues: { name: '', amount: '' },
+    initialErrors: { name: false, amount: false }
   });
-
-  const handleFormStateChange = useCallback((name: string, value: string) => {
-    setFormState((prevState) => ({ ...prevState, [name]: value }));
-  }, []);
 
   return (
     <Modal title='Add Recurring Transaction'>
@@ -28,9 +28,10 @@ const RecurringEntryModal = () => {
               key={field.name}
               name={field.name}
               label={field.label}
-              value={formState[field.name]}
+              value={values[field.name]}
+              error={errors[field.name]}
               placeholder={field.placeholder}
-              onChange={handleFormStateChange}
+              onChange={setFormValues}
             />
           ))}
         </form>
