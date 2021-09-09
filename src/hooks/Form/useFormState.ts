@@ -8,6 +8,7 @@ export const useFormState = <FormValues, FormErrors>(formState: {
   errors: FormErrors;
   setFormValues: (name: keyof FormErrors, value: string) => void;
   setFormErrors: (errorKeys: Array<string>) => void;
+  resetForm: () => void;
 } => {
   const [formValues, setFormValues] = useState<FormValues>(
     formState.initialValues
@@ -36,10 +37,16 @@ export const useFormState = <FormValues, FormErrors>(formState: {
     [formErrors]
   );
 
+  const resetForm = useCallback(() => {
+    setFormValues(formState.initialValues);
+    setFormErrors(formState.initialErrors);
+  }, [formState]);
+
   return {
     values: formValues,
     errors: formErrors,
     setFormValues: handleFormValueChange,
-    setFormErrors: handleFormErrorsChange
+    setFormErrors: handleFormErrorsChange,
+    resetForm
   };
 };

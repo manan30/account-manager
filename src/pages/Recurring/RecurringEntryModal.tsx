@@ -17,20 +17,21 @@ import { formFields } from './utils/constants';
 import { FormState } from './utils/types';
 
 type RecurringEntryModalProps = {
-  handleSubmit: (formValues: Record<FormState, string>) => void;
   handleClose: () => void;
 };
 
 const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
-  handleSubmit,
   handleClose
 }) => {
   const { firestoreTimestamp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatch();
-  const { values, errors, setFormValues, setFormErrors } = useFormState<
-    Record<FormState, string>,
-    Record<FormState, boolean>
-  >({
+  const {
+    values,
+    errors,
+    setFormValues,
+    setFormErrors,
+    resetForm
+  } = useFormState<Record<FormState, string>, Record<FormState, boolean>>({
     initialValues: { name: '', amount: '', date: '', type: '', endingDate: '' },
     initialErrors: {
       name: false,
@@ -111,6 +112,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
           }
         });
         console.error({ err });
+      } finally {
+        resetForm();
       }
     },
     [
@@ -118,7 +121,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
       firestoreTimestamp,
       setFormErrors,
       addNewRecurringTransactionMutation,
-      notificationDispatch
+      notificationDispatch,
+      resetForm
     ]
   );
 

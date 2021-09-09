@@ -46,6 +46,7 @@ export const spendingCategoryColorMapping = (category: string) => {
 };
 
 export const monthDiffBetweenTwoDates = (dateFrom: string, dateTo: string) => {
+  // TODO: Check for exact diff in months between 2 dates
   const date1 = new Date(dateTo);
   const date2 = new Date(dateFrom);
   return (
