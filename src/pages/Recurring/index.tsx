@@ -1,10 +1,12 @@
 import React, { Suspense, useMemo, useState } from 'react';
+import cn from 'classnames';
 import { PlusIcon } from '@heroicons/react/solid';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import RecurringEntryModal from './RecurringEntryModal';
 import ModalFallback from '../../components/ModalFallback';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Recurring as RecurringModel } from '../../models/Recurring';
+import Card from '../../components/Card';
 
 const Recurring = () => {
   const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
@@ -35,12 +37,24 @@ const Recurring = () => {
 
   return (
     <>
-      <section className='my-6'>
+      <section className='mt-6 mb-12'>
         <h2 className='mb-6 text-xl font-semibold tracking-wide text-indigo-600'>
           Upcoming
         </h2>
-        <pre>{JSON.stringify(upcomingTransactions.length, null, 2)}</pre>
-        {/* <div>{recurringTransactions?.map((transaction) => )}</div> */}
+        <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
+          {upcomingTransactions.map((transaction) => (
+            <Card key={transaction.id}>
+              <div className='flex items-center h-12'>
+                <div
+                  className={cn(
+                    'w-12 h-12 rounded-full',
+                    transaction.type === 'debit' ? 'bg-green-500' : 'bg-red-500'
+                  )}
+                ></div>
+              </div>
+            </Card>
+          ))}
+        </div>
       </section>
       <section className='my-6'>
         <h2 className='mb-6 text-xl font-semibold tracking-wide text-indigo-600'>
