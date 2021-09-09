@@ -24,7 +24,7 @@ import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
 import usePieChart from '../../hooks/Charts/usePieChart';
 import { ISpending } from '../../models/Spending';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
@@ -35,7 +35,7 @@ import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import useFirestoreDeleteQuery from '../../hooks/Firestore/useFirestoreDeleteQuery';
 
 const Spending = () => {
-  const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatch();
   const { data: spendingData, isLoading, error } = useFirestoreReadQuery<
     ISpending
   >({

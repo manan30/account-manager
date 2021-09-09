@@ -10,7 +10,7 @@ import { ISpending } from '../../models/Spending';
 import { ISpendingCategory } from '../../models/SpendingCategory';
 import { IStore } from '../../models/Store';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import {
   INPUT_THEME_ERROR,
   NOTIFICATION_THEME_FAILURE,
@@ -37,7 +37,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
   currentTransaction
 }) => {
   const { firestoreTimestamp } = useFirebaseContext();
-  const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatch();
   const {
     data: storeNamesData,
     isLoading: fetchingStores
@@ -247,7 +247,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
       }}
     >
       <div className='flex justify-center mx-8'>
-        <form className='mb-8 w-full'>
+        <form className='w-full mb-8'>
           {!currentTransaction ? (
             <Select
               name='storeName'

@@ -14,12 +14,12 @@ import useFirestoreReadQuery from '../../../hooks/Firestore/useFirestoreReadQuer
 import { RouteParamsInterface } from '../../../interfaces/route-interface';
 import { ICreditor } from '../../../models/Creditor';
 import { ITransaction } from '../../../models/Transaction';
-import { useNotificationDispatchContext } from '../../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_FAILURE } from '../../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../../utils/Formatters';
 
 const CreditorDetails = () => {
-  const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatch();
   const [showModal, setShowModal] = useState(false);
   const { id } = useParams<RouteParamsInterface>();
   const {
