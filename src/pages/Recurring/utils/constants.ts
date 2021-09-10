@@ -1,5 +1,23 @@
+export const RecurringTransactionType = ['Debit', 'Credit'] as const;
+
+export const RecurringTransactionCategory = [
+  'Bills',
+  'Rent',
+  'Payment',
+  'Income',
+  'Subscriptions',
+  'Other'
+] as const;
+
+export const RecurringTransactionFrequency = [
+  'Bi-Weekly',
+  'Bi-Monthly',
+  'Monthly',
+  'Custom'
+] as const;
+
 // TODO: Find out how to use a type for the array
-export const formFields = [
+export const FormFields = [
   {
     name: 'name',
     label: 'Name',
@@ -34,7 +52,7 @@ export const formFields = [
     placeholder: 'Select frequency',
     type: 'select',
     inputType: 'text',
-    options: ['Bi-Weekly', 'Bi-Monthly', 'Monthly', 'Custom']
+    options: RecurringTransactionFrequency
   },
   {
     name: 'customFrequency',
@@ -49,7 +67,7 @@ export const formFields = [
     placeholder: 'Select Category',
     type: 'select',
     inputType: 'text',
-    options: ['Bills', 'Rent', 'Payment', 'Income', 'Other']
+    options: RecurringTransactionCategory
   },
   {
     name: 'type',
@@ -57,6 +75,6 @@ export const formFields = [
     placeholder: 'Select Transaction Type',
     type: 'select',
     inputType: 'text',
-    options: ['Credit', 'Debit']
+    options: RecurringTransactionType
   }
 ] as const;

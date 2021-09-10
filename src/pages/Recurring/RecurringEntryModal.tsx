@@ -6,7 +6,7 @@ import Modal from '../../components/Modal/Modal';
 import Select from '../../components/Select/Select';
 import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
 import { useFormState } from '../../hooks/Form/useFormState';
-import { Recurring, RecurringTransactionType } from './interfaces/Recurring';
+import { Recurring } from './interfaces/Recurring';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import {
@@ -14,7 +14,7 @@ import {
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
 import { monthDiffBetweenTwoDates } from '../../utils/Functions';
-import { formFields } from './utils/constants';
+import { FormFields } from './utils/constants';
 import { FormState } from './interfaces/types';
 
 type RecurringEntryModalProps = {
@@ -77,7 +77,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         return;
       }
       try {
-        const { amount, date, endingDate, name, type } = values;
+        const { amount, date, endingDate, name, type, category } = values;
         const timestamp = firestoreTimestamp.now();
 
         // TODO: Set error for incorrect amount
@@ -93,7 +93,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
           amount: Number(amount),
           createdAt: timestamp,
           updatedAt: timestamp,
-          type: type as RecurringTransactionType,
+          type,
+          category,
           recurringDate: firestoreTimestamp.fromDate(new Date(date))
         } as Recurring;
 
@@ -144,7 +145,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         className='grid gap-4 p-1 xl:grid-cols-2'
         onSubmit={handleFormSubmit}
       >
-        {formFields.map((field) => {
+        {FormFields.map((field) => {
           switch (field.type) {
             case 'select':
               return (

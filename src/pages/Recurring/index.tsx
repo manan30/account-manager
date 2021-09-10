@@ -48,7 +48,7 @@ const Recurring = () => {
                 <div
                   className={cn(
                     'w-12 h-12 rounded-full text-center text-gray-100 text-2xl flex items-center justify-center',
-                    transaction.type === 'debit' ? 'bg-green-500' : 'bg-red-500'
+                    transaction.type === 'Debit' ? 'bg-green-500' : 'bg-red-500'
                   )}
                 >
                   {transaction.imageIcon
