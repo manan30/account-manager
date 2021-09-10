@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import cn from 'classnames';
 import Button from '../../components/Button';
 import Input from '../../components/Input/Input';
 import Modal from '../../components/Modal/Modal';
@@ -147,19 +148,27 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
           switch (field.type) {
             case 'select':
               return (
-                <Select
+                <div
                   key={field.name}
-                  name={field.name}
-                  label={field.label}
-                  value={values[field.name]}
-                  error={errors[field.name]}
-                  placeholder={field.placeholder}
-                  disabled={isLoading}
-                  options={(field.options as unknown) as string[]}
-                  onChange={(name, value) =>
-                    setFormValues(name as FormState, value)
-                  }
-                />
+                  className={cn(
+                    field.name === 'frequency' &&
+                      values.frequency !== 'custom' &&
+                      ''
+                  )}
+                >
+                  <Select
+                    name={field.name}
+                    label={field.label}
+                    value={values[field.name]}
+                    error={errors[field.name]}
+                    placeholder={field.placeholder}
+                    disabled={isLoading}
+                    options={(field.options as unknown) as string[]}
+                    onChange={(name, value) =>
+                      setFormValues(name as FormState, value)
+                    }
+                  />
+                </div>
               );
             default:
               return field.name !== 'customFrequency' ||
