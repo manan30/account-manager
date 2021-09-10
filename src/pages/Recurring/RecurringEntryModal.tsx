@@ -69,44 +69,69 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
     ) => {
       e.preventDefault();
       const formErrors: Array<string> = [];
-      Object.entries(values).forEach(([key, value]) => {
-        if (!value || value.trim() === '') formErrors.push(key);
+      const {
+        amount,
+        date,
+        endingDate,
+        name,
+        type,
+        category,
+        customFrequency,
+        frequency
+      } = values;
+
+      // Required fields check
+      [
+        { amount },
+        { date },
+        { name },
+        { type },
+        { category },
+        { frequency }
+      ].forEach((item) => {
+        const [key, value] = Object.entries(item)[0];
+        if (value.trim() === '') formErrors.push(key);
       });
+
+      // TODO: Set error for incorrect amount
+      // if (Number.isNaN(parseInt(amount))) {
+      // }
+
+      // TODO: Set error for incorrect date
+      // if (!isValidDate(date) || !isValidDate(endingDate)) {
+      // }
+
+      if (frequency === 'Custom' && customFrequency.trim() === '') {
+        formErrors.push('customFrequency');
+      }
+
       if (formErrors.length) {
         setFormErrors(formErrors);
         return;
       }
+
+      const timestamp = firestoreTimestamp.now();
+
+      const newTransaction = {
+        name,
+        amount: Number(amount),
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        type,
+        category,
+        recurringDate: firestoreTimestamp.fromDate(new Date(date))
+      } as Recurring;
+
+      if (endingDate) {
+        newTransaction.metadata = {
+          monthlyPaymentsRemaining: monthDiffBetweenTwoDates(
+            new Date().toISOString(),
+            endingDate
+          )
+        };
+      }
+
       try {
-        const { amount, date, endingDate, name, type, category } = values;
-        const timestamp = firestoreTimestamp.now();
-
-        // TODO: Set error for incorrect amount
-        // if (Number.isNaN(parseInt(amount))) {
-        // }
-
-        // TODO: Set error for incorrect date
-        // if (!isValidDate(date) || !isValidDate(endingDate)) {
-        // }
-
-        const newTransaction = {
-          name,
-          amount: Number(amount),
-          createdAt: timestamp,
-          updatedAt: timestamp,
-          type,
-          category,
-          recurringDate: firestoreTimestamp.fromDate(new Date(date))
-        } as Recurring;
-
-        if (endingDate) {
-          newTransaction.metadata = {
-            monthlyPaymentsRemaining: monthDiffBetweenTwoDates(
-              new Date().toISOString(),
-              endingDate
-            )
-          };
-        }
-
         await addNewRecurringTransactionMutation(newTransaction);
 
         notificationDispatch({
@@ -117,6 +142,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
           }
         });
       } catch (err) {
+        console.log({ err });
         notificationDispatch({
           type: 'ADD_NOTIFICATION',
           payload: {
@@ -153,7 +179,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                   key={field.name}
                   className={cn(
                     field.name === 'frequency' &&
-                      values.frequency !== 'custom' &&
+                      values.frequency !== 'Custom' &&
                       ''
                   )}
                 >
@@ -173,7 +199,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
               );
             default:
               return field.name !== 'customFrequency' ||
-                values.frequency === 'custom' ? (
+                values.frequency === 'Custom' ? (
                 <Input
                   key={field.name}
                   name={field.name}
@@ -187,7 +213,10 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                     setFormValues(name as FormState, value)
                   }
                 />
-              ) : null;
+              ) : (
+                // TODO: See how to extend the select without this
+                <div key='hidden' />
+              );
           }
         })}
       </form>

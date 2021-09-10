@@ -49,7 +49,7 @@ const Select: React.FC<SelectProps> = ({
           {placeholder}
         </option>
         {options.map((option) => (
-          <option key={option} value={option.toLowerCase()}>
+          <option key={option} value={option}>
             {option}
           </option>
         ))}
