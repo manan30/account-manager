@@ -5,7 +5,7 @@ import Modal from '../../components/Modal/Modal';
 import Select from '../../components/Select/Select';
 import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
 import { useFormState } from '../../hooks/Form/useFormState';
-import { Recurring, RecurringTransactionType } from '../../models/Recurring';
+import { Recurring, RecurringTransactionType } from './interfaces/Recurring';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../../utils/Constants/ThemeConstants';
 import { monthDiffBetweenTwoDates } from '../../utils/Functions';
 import { formFields } from './utils/constants';
-import { FormState } from './utils/types';
+import { FormState } from './interfaces/types';
 
 type RecurringEntryModalProps = {
   handleClose: () => void;
@@ -85,7 +85,6 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         } as Recurring;
 
         if (endingDate) {
-          newTransaction.monthlyPayment = true;
           newTransaction.metadata = {
             monthlyPaymentsRemaining: monthDiffBetweenTwoDates(
               new Date().toISOString(),
@@ -128,7 +127,10 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
 
   return (
     <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
-      <form className='flex flex-col p-1 space-y-4' onSubmit={handleFormSubmit}>
+      <form
+        className='grid gap-4 p-1 lg:grid-cols-2'
+        onSubmit={handleFormSubmit}
+      >
         {formFields.map((field) => {
           switch (field.type) {
             case 'select':

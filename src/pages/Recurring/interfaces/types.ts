@@ -1,3 +1,3 @@
-import { formFields } from './constants';
+import { formFields } from '../utils/constants';
 
 export type FormState = typeof formFields[number]['name'];

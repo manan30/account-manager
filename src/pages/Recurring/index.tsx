@@ -5,7 +5,7 @@ import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import RecurringEntryModal from './RecurringEntryModal';
 import ModalFallback from '../../components/ModalFallback';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import { Recurring as RecurringModel } from '../../models/Recurring';
+import { Recurring as RecurringModel } from './interfaces/Recurring';
 import Card from '../../components/Card';
 
 const Recurring = () => {
