@@ -32,13 +32,25 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
     setFormErrors,
     resetForm
   } = useFormState<Record<FormState, string>, Record<FormState, boolean>>({
-    initialValues: { name: '', amount: '', date: '', type: '', endingDate: '' },
+    initialValues: {
+      name: '',
+      amount: '',
+      date: '',
+      type: '',
+      endingDate: '',
+      category: '',
+      frequency: '',
+      customFrequency: ''
+    },
     initialErrors: {
       name: false,
       amount: false,
       date: false,
       type: false,
-      endingDate: false
+      endingDate: false,
+      category: false,
+      frequency: false,
+      customFrequency: false
     }
   });
   const [
@@ -128,7 +140,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
   return (
     <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
       <form
-        className='grid gap-4 p-1 lg:grid-cols-2'
+        className='grid gap-4 p-1 xl:grid-cols-2'
         onSubmit={handleFormSubmit}
       >
         {formFields.map((field) => {
@@ -143,14 +155,15 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                   error={errors[field.name]}
                   placeholder={field.placeholder}
                   disabled={isLoading}
-                  options={['Credit', 'Debit']}
+                  options={(field.options as unknown) as string[]}
                   onChange={(name, value) =>
                     setFormValues(name as FormState, value)
                   }
                 />
               );
             default:
-              return (
+              return field.name !== 'customFrequency' ||
+                values.frequency === 'custom' ? (
                 <Input
                   key={field.name}
                   name={field.name}
@@ -164,7 +177,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                     setFormValues(name as FormState, value)
                   }
                 />
-              );
+              ) : null;
           }
         })}
       </form>

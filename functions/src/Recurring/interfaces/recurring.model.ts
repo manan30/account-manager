@@ -14,6 +14,7 @@ export type RecurringTransactionCategory =
   | 'Bills'
   | 'Rent'
   | 'Payment'
+  | 'Income'
   | 'Other';
 
 export interface Recurring {
@@ -27,6 +28,7 @@ export interface Recurring {
     frequency?: RecurringTransactionFrequency;
   };
   recurringDate: Timestamp;
+  endingDate: Timestamp;
   type: RecurringTransactionType;
   createdAt: Timestamp;
   updatedAt: Timestamp;

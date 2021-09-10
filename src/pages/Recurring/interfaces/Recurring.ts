@@ -6,26 +6,28 @@ export type RecurringTransactionFrequency =
   | 'Bi-Weekly'
   | 'Bi-Monthly'
   | 'Monthly'
-  | 'custom';
+  | 'Custom';
 
 export type RecurringTransactionCategory =
   | 'Bills'
   | 'Rent'
   | 'Payment'
+  | 'Income'
   | 'Other';
 
 export interface Recurring {
   id?: string;
   name: string;
   amount: number;
-  imageIcon?: string;
+  recurringDate: Timestamp;
+  endingDate: Timestamp;
   category: RecurringTransactionCategory;
+  type: RecurringTransactionType;
   metadata?: {
     monthlyPaymentsRemaining?: number;
     frequency?: RecurringTransactionFrequency;
   };
-  recurringDate: Timestamp;
-  type: RecurringTransactionType;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  imageIcon?: string;
 }
