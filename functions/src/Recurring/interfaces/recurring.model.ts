@@ -2,15 +2,32 @@ import { Timestamp } from '@firebase/firestore-types';
 
 export const RecurringCollection = 'recurring';
 
+export type RecurringTransactionType = 'debit' | 'credit';
+
+export type RecurringTransactionFrequency =
+  | 'Bi-Weekly'
+  | 'Bi-Monthly'
+  | 'Monthly'
+  | 'custom';
+
+export type RecurringTransactionCategory =
+  | 'Bills'
+  | 'Rent'
+  | 'Payment'
+  | 'Other';
+
 export interface Recurring {
-  id: string;
+  id?: string;
   name: string;
   amount: number;
   imageIcon?: string;
-  metadata?: { monthlyPaymentsRemaining?: number };
-  monthlyPayment: boolean;
+  category: RecurringTransactionCategory;
+  metadata?: {
+    monthlyPaymentsRemaining?: number;
+    frequency?: RecurringTransactionFrequency;
+  };
   recurringDate: Timestamp;
-  type: 'debit' | 'credit';
+  type: RecurringTransactionType;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
