@@ -1,12 +1,13 @@
 import React, { Suspense, useMemo, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/solid';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
-import RecurringEntryModal from './RecurringEntryModal';
+import RecurringEntryModal from './components/RecurringEntryModal';
 import ModalFallback from '../../components/ModalFallback';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Recurring as RecurringModel } from './interfaces/Recurring';
-import RecurringItem from './RecurringItem';
 import Card from '../../components/Card';
+import { RecurringTransactionCategory } from './utils/constants';
+import RecurringTransactionGroup from './components/RecurringTransactionGroup';
 
 const Recurring = () => {
   const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
@@ -19,56 +20,44 @@ const Recurring = () => {
     }
   );
 
-  const {
-    upcomingTransactions,
-    completedTransactions,
-    monthlyExpenditure
-  } = useMemo(() => {
-    const currentDate = new Date().getUTCDate();
-    const upcomingTransactions: Array<RecurringModel> = [];
-    const completedTransactions: Array<RecurringModel> = [];
+  const { groupedTransactions, monthlyExpenditure } = useMemo(() => {
     let monthlyExpenditure = 0;
+    const groupedTransactions: Record<
+      typeof RecurringTransactionCategory[number],
+      Array<RecurringModel>
+    > = {} as Record<
+      typeof RecurringTransactionCategory[number],
+      Array<RecurringModel>
+    >;
 
     recurringTransactions?.forEach((transaction) => {
-      const recurringDate = transaction.recurringDate.toDate().getUTCDate();
-      if (recurringDate >= currentDate) upcomingTransactions.push(transaction);
-      else completedTransactions.push(transaction);
+      if (!groupedTransactions[transaction.category])
+        groupedTransactions[transaction.category] = [transaction];
+      else groupedTransactions[transaction.category].push(transaction);
       monthlyExpenditure += transaction.amount;
     });
 
-    return { upcomingTransactions, completedTransactions, monthlyExpenditure };
+    return { groupedTransactions, monthlyExpenditure };
   }, [recurringTransactions]);
 
   return (
     <>
-      <div className='mt-6'>
+      <div className='my-6'>
         <Card>
           <div className='text-xl font-semibold text-indigo-600'>
             Total Monthly Expenditure: ${monthlyExpenditure}
           </div>
         </Card>
       </div>
-      <section className='mt-6 mb-12'>
-        {/* TODO: Show by category and dim completed transactions  */}
-        <h2 className='mb-6 text-lg font-semibold tracking-wide text-indigo-600'>
-          Upcoming
-        </h2>
-        <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {upcomingTransactions.map((transaction) => (
-            <RecurringItem key={transaction.id} transaction={transaction} />
-          ))}
-        </div>
-      </section>
-      <section className='my-6'>
-        <h2 className='mb-6 text-lg font-semibold tracking-wide text-indigo-600'>
-          Completed
-        </h2>
-        <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {completedTransactions.map((transaction) => (
-            <RecurringItem key={transaction.id} transaction={transaction} />
-          ))}
-        </div>
-      </section>
+      <div className='flex flex-col space-y-6'>
+        {Object.entries(groupedTransactions).map(([key, value]) => (
+          <RecurringTransactionGroup
+            key={key}
+            category={key as typeof RecurringTransactionCategory[number]}
+            transactions={value}
+          />
+        ))}
+      </div>
       <div className='fixed bottom-0 right-0 mb-8 mr-8'>
         <FloatingActionButton
           icon={<PlusIcon className='w-6 h-6 text-gray-100' />}

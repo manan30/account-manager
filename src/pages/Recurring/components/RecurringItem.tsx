@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import cn from 'classnames';
-import Card from '../../components/Card';
-import { Recurring } from './interfaces/Recurring';
+import Card from '../../../components/Card';
+import { Recurring } from '../interfaces/Recurring';
 
 type RecurringItemProps = {
   transaction: Recurring;
 };
 
 const RecurringItem: React.FC<RecurringItemProps> = ({ transaction }) => {
+  const recurringDatePassed = useMemo(() => {
+    const currentDate = new Date().getUTCDate();
+    const recurringDate = transaction.recurringDate.toDate().getUTCDate();
+    return recurringDate < currentDate;
+  }, [transaction]);
+
   return (
-    <Card key={transaction.id}>
+    <Card
+      key={transaction.id}
+      className={cn(recurringDatePassed && 'opacity-50 bg-gray-200')}
+    >
       <div className='flex h-16'>
         <div
           className={cn(

@@ -1,21 +1,21 @@
 import React, { useCallback } from 'react';
 import cn from 'classnames';
-import Button from '../../components/Button';
-import Input from '../../components/Input/Input';
-import Modal from '../../components/Modal/Modal';
-import Select from '../../components/Select/Select';
-import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
-import { useFormState } from '../../hooks/Form/useFormState';
-import { Recurring } from './interfaces/Recurring';
-import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { useNotificationDispatch } from '../../providers/NotificationProvider';
+import Button from '../../../components/Button';
+import Input from '../../../components/Input/Input';
+import Modal from '../../../components/Modal/Modal';
+import Select from '../../../components/Select/Select';
+import useFirestoreCreateQuery from '../../../hooks/Firestore/useFirestoreCreateQuery';
+import { useFormState } from '../../../hooks/Form/useFormState';
+import { Recurring } from '../interfaces/Recurring';
+import { useFirebaseContext } from '../../../providers/FirebaseProvider';
+import { useNotificationDispatch } from '../../../providers/NotificationProvider';
 import {
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS
-} from '../../utils/Constants/ThemeConstants';
-import { monthDiffBetweenTwoDates } from '../../utils/Functions';
-import { FormFields as formFields } from './utils/constants';
-import { FormState } from './interfaces/types';
+} from '../../../utils/Constants/ThemeConstants';
+import { monthDiffBetweenTwoDates } from '../../../utils/Functions';
+import { FormFields as formFields } from '../utils/constants';
+import { FormState } from '../interfaces/types';
 
 type RecurringEntryModalProps = {
   handleClose: () => void;
