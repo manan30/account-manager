@@ -14,7 +14,7 @@ import {
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
 import { monthDiffBetweenTwoDates } from '../../utils/Functions';
-import { FormFields } from './utils/constants';
+import { FormFields as formFields } from './utils/constants';
 import { FormState } from './interfaces/types';
 
 type RecurringEntryModalProps = {
@@ -142,7 +142,6 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
           }
         });
       } catch (err) {
-        console.log({ err });
         notificationDispatch({
           type: 'ADD_NOTIFICATION',
           payload: {
@@ -171,7 +170,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         className='grid gap-4 p-1 xl:grid-cols-2'
         onSubmit={handleFormSubmit}
       >
-        {FormFields.map((field) => {
+        {formFields.map((field) => {
           switch (field.type) {
             case 'select':
               return (

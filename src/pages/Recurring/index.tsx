@@ -1,12 +1,11 @@
 import React, { Suspense, useMemo, useState } from 'react';
-import cn from 'classnames';
 import { PlusIcon } from '@heroicons/react/solid';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import RecurringEntryModal from './RecurringEntryModal';
 import ModalFallback from '../../components/ModalFallback';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Recurring as RecurringModel } from './interfaces/Recurring';
-import Card from '../../components/Card';
+import RecurringItem from './RecurringItem';
 
 const Recurring = () => {
   const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
@@ -43,20 +42,7 @@ const Recurring = () => {
         </h2>
         <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
           {upcomingTransactions.map((transaction) => (
-            <Card key={transaction.id}>
-              <div className='flex items-center h-12'>
-                <div
-                  className={cn(
-                    'w-12 h-12 rounded-full text-center text-gray-100 text-2xl flex items-center justify-center',
-                    transaction.type === 'Debit' ? 'bg-green-500' : 'bg-red-500'
-                  )}
-                >
-                  {transaction.imageIcon
-                    ? null
-                    : transaction.name[0].toUpperCase()}
-                </div>
-              </div>
-            </Card>
+            <RecurringItem key={transaction.id} transaction={transaction} />
           ))}
         </div>
       </section>

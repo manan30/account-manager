@@ -22,13 +22,13 @@ export interface Recurring {
   name: string;
   amount: number;
   imageIcon?: string;
-  category: RecurringTransactionCategory;
+  category?: RecurringTransactionCategory;
   metadata?: {
     monthlyPaymentsRemaining?: number;
     frequency?: RecurringTransactionFrequency;
   };
   recurringDate: Timestamp;
-  endingDate: Timestamp;
+  endingDate?: Timestamp;
   type: RecurringTransactionType;
   createdAt: Timestamp;
   updatedAt: Timestamp;
