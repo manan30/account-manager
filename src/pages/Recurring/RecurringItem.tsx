@@ -25,9 +25,7 @@ const RecurringItem: React.FC<RecurringItemProps> = ({ transaction }) => {
           </div>
           <div className='text-xs text-gray-600'>
             {Intl.DateTimeFormat('en-US', { month: 'long' }).format(Date.now())}{' '}
-            {Intl.DateTimeFormat('en-US', { day: '2-digit' }).format(
-              transaction.recurringDate.toDate()
-            )}
+            {transaction.recurringDate.toDate().getUTCDate()}
           </div>
           <div className='text-sm font-semibold text-gray-700'>
             ${transaction.amount}

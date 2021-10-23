@@ -19,18 +19,12 @@ const Recurring = () => {
   );
 
   const { upcomingTransactions, completedTransactions } = useMemo(() => {
-    const currentDate = Number(
-      Intl.DateTimeFormat('en-US', { day: 'numeric' }).format(new Date())
-    );
+    const currentDate = new Date().getUTCDate();
     const upcomingTransactions: Array<RecurringModel> = [];
     const completedTransactions: Array<RecurringModel> = [];
 
     recurringTransactions?.forEach((transaction) => {
-      const recurringDate = Number(
-        Intl.DateTimeFormat('en-US', { day: 'numeric' }).format(
-          transaction.recurringDate.toDate()
-        )
-      );
+      const recurringDate = transaction.recurringDate.toDate().getUTCDate();
       if (recurringDate >= currentDate) upcomingTransactions.push(transaction);
       else completedTransactions.push(transaction);
     });
