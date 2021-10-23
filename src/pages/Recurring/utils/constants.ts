@@ -12,8 +12,8 @@ export const RecurringTransactionCategory = [
 export const RecurringTransactionFrequency = [
   'Bi-Weekly',
   'Bi-Monthly',
-  'Monthly',
-  'Custom'
+  'Monthly'
+  // 'Custom'
 ] as const;
 
 // TODO: Find out how to use a type for the array
