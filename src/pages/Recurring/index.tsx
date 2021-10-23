@@ -10,6 +10,7 @@ import Card from '../../components/Card';
 
 const Recurring = () => {
   const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
+  // TODO: Update query to fetch only correct transactions for that month
   const { data: recurringTransactions } = useFirestoreReadQuery<RecurringModel>(
     {
       collection: 'recurring',
@@ -18,18 +19,24 @@ const Recurring = () => {
     }
   );
 
-  const { upcomingTransactions, completedTransactions } = useMemo(() => {
+  const {
+    upcomingTransactions,
+    completedTransactions,
+    monthlyExpenditure
+  } = useMemo(() => {
     const currentDate = new Date().getUTCDate();
     const upcomingTransactions: Array<RecurringModel> = [];
     const completedTransactions: Array<RecurringModel> = [];
+    let monthlyExpenditure = 0;
 
     recurringTransactions?.forEach((transaction) => {
       const recurringDate = transaction.recurringDate.toDate().getUTCDate();
       if (recurringDate >= currentDate) upcomingTransactions.push(transaction);
       else completedTransactions.push(transaction);
+      monthlyExpenditure += transaction.amount;
     });
 
-    return { upcomingTransactions, completedTransactions };
+    return { upcomingTransactions, completedTransactions, monthlyExpenditure };
   }, [recurringTransactions]);
 
   return (
@@ -37,7 +44,7 @@ const Recurring = () => {
       <div className='mt-6'>
         <Card>
           <div className='text-xl font-semibold text-indigo-600'>
-            Total Monthly Expenditure: $
+            Total Monthly Expenditure: ${monthlyExpenditure}
           </div>
         </Card>
       </div>
