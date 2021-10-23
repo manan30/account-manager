@@ -49,6 +49,7 @@ const Recurring = () => {
         </Card>
       </div>
       <section className='mt-6 mb-12'>
+        {/* TODO: Show by category and dim completed transactions  */}
         <h2 className='mb-6 text-lg font-semibold tracking-wide text-indigo-600'>
           Upcoming
         </h2>

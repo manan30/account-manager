@@ -16,7 +16,6 @@ export const RecurringTransactionFrequency = [
   // 'Custom'
 ] as const;
 
-// TODO: Find out how to use a type for the array
 export const FormFields = [
   {
     name: 'name',
