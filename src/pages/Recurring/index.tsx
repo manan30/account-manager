@@ -6,12 +6,15 @@ import ModalFallback from '../../components/ModalFallback';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Recurring as RecurringModel } from './interfaces/Recurring';
 import RecurringItem from './RecurringItem';
+import Card from '../../components/Card';
 
 const Recurring = () => {
   const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
   const { data: recurringTransactions } = useFirestoreReadQuery<RecurringModel>(
     {
-      collection: 'recurring'
+      collection: 'recurring',
+      orderByClauses: [['recurringDate', 'asc']],
+      whereClauses: [['completed', '==', false]]
     }
   );
 
@@ -31,13 +34,21 @@ const Recurring = () => {
       if (recurringDate >= currentDate) upcomingTransactions.push(transaction);
       else completedTransactions.push(transaction);
     });
+
     return { upcomingTransactions, completedTransactions };
   }, [recurringTransactions]);
 
   return (
     <>
+      <div className='mt-6'>
+        <Card>
+          <div className='text-xl font-semibold text-indigo-600'>
+            Total Monthly Expenditure: $
+          </div>
+        </Card>
+      </div>
       <section className='mt-6 mb-12'>
-        <h2 className='mb-6 text-xl font-semibold tracking-wide text-indigo-600'>
+        <h2 className='mb-6 text-lg font-semibold tracking-wide text-indigo-600'>
           Upcoming
         </h2>
         <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
@@ -47,10 +58,14 @@ const Recurring = () => {
         </div>
       </section>
       <section className='my-6'>
-        <h2 className='mb-6 text-xl font-semibold tracking-wide text-indigo-600'>
+        <h2 className='mb-6 text-lg font-semibold tracking-wide text-indigo-600'>
           Completed
         </h2>
-        {JSON.stringify(completedTransactions.length, null, 2)}
+        <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
+          {completedTransactions.map((transaction) => (
+            <RecurringItem key={transaction.id} transaction={transaction} />
+          ))}
+        </div>
       </section>
       <div className='fixed bottom-0 right-0 mb-8 mr-8'>
         <FloatingActionButton

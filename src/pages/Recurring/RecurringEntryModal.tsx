@@ -119,7 +119,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         updatedAt: timestamp,
         type,
         category,
-        recurringDate: firestoreTimestamp.fromDate(new Date(date))
+        recurringDate: firestoreTimestamp.fromDate(new Date(date)),
+        completed: false
       } as Recurring;
 
       if (endingDate) {
@@ -166,67 +167,66 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
 
   return (
     <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
-      <form
-        className='grid gap-4 p-1 xl:grid-cols-2'
-        onSubmit={handleFormSubmit}
-      >
-        {formFields.map((field) => {
-          switch (field.type) {
-            case 'select':
-              return (
-                <div
-                  key={field.name}
-                  className={cn(
-                    field.name === 'frequency' &&
-                      values.frequency !== 'Custom' &&
-                      ''
-                  )}
-                >
-                  <Select
+      <form onSubmit={handleFormSubmit}>
+        <div className='grid gap-4 p-1 xl:grid-cols-2'>
+          {formFields.map((field) => {
+            switch (field.type) {
+              case 'select':
+                return (
+                  <div
+                    key={field.name}
+                    className={cn(
+                      field.name === 'frequency' &&
+                        values.frequency !== 'Custom' &&
+                        ''
+                    )}
+                  >
+                    <Select
+                      name={field.name}
+                      label={field.label}
+                      value={values[field.name]}
+                      error={errors[field.name]}
+                      placeholder={field.placeholder}
+                      disabled={isLoading}
+                      options={(field.options as unknown) as string[]}
+                      onChange={(name, value) =>
+                        setFormValues(name as FormState, value)
+                      }
+                    />
+                  </div>
+                );
+              default:
+                return field.name !== 'customFrequency' ||
+                  values.frequency === 'Custom' ? (
+                  <Input
+                    key={field.name}
                     name={field.name}
                     label={field.label}
                     value={values[field.name]}
                     error={errors[field.name]}
-                    placeholder={field.placeholder}
+                    type={field?.inputType}
                     disabled={isLoading}
-                    options={(field.options as unknown) as string[]}
+                    placeholder={field.placeholder}
                     onChange={(name, value) =>
                       setFormValues(name as FormState, value)
                     }
                   />
-                </div>
-              );
-            default:
-              return field.name !== 'customFrequency' ||
-                values.frequency === 'Custom' ? (
-                <Input
-                  key={field.name}
-                  name={field.name}
-                  label={field.label}
-                  value={values[field.name]}
-                  error={errors[field.name]}
-                  type={field?.inputType}
-                  disabled={isLoading}
-                  placeholder={field.placeholder}
-                  onChange={(name, value) =>
-                    setFormValues(name as FormState, value)
-                  }
-                />
-              ) : (
-                // TODO: See how to extend the select without this
-                <div key='hidden' />
-              );
-          }
-        })}
+                ) : (
+                  // TODO: See how to extend the select without this
+                  <div key='hidden' />
+                );
+            }
+          })}
+        </div>
+        <div className='flex items-center justify-end w-full pr-1 mt-8 mb-2 space-x-3'>
+          <Button layout='secondary' loading={isLoading} onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button type='submit' loading={isLoading}>
+            Add
+          </Button>
+        </div>
       </form>
-      <div className='flex items-center justify-end w-full pr-1 mt-8 mb-2 space-x-3'>
-        <Button layout='secondary' loading={isLoading} onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button onClick={handleFormSubmit} loading={isLoading}>
-          Add
-        </Button>
-      </div>
     </Modal>
   );
 };

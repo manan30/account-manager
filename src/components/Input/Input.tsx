@@ -42,7 +42,7 @@ const Input: React.FC<InputProps> = ({
           onChange(name, e.target.value);
         }}
         className={cn(
-          'w-full text-sm text-gray-600 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600',
+          'w-full text-sm text-gray-600 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-shadow hover:shadow-sm',
           error && 'border-red-500 focus:border-red-500 focus:ring-red-500'
         )}
       />

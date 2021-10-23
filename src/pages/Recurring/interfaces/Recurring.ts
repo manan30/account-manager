@@ -17,6 +17,7 @@ export interface Recurring {
     monthlyPaymentsRemaining?: number;
     frequency?: typeof RecurringTransactionFrequency[number];
   };
+  completed?: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   imageIcon?: string;
