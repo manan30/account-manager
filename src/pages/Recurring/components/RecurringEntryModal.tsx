@@ -212,7 +212,6 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                     }
                   />
                 ) : (
-                  // TODO: See how to extend the select without this
                   <div key='hidden' />
                 );
             }
