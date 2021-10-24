@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React from 'react';
 import { IoIosClose } from 'react-icons/io';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { REMOVE_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import {
   NOTIFICATION_THEME_FAILURE,
@@ -16,7 +16,7 @@ type NotificationProps = {
 };
 
 const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
-  const dispatch = useNotificationDispatchContext();
+  const dispatch = useNotificationDispatch();
 
   return (
     <div

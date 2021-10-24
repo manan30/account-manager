@@ -8,7 +8,7 @@ type LoaderProps = {
 
 const Loader: React.FC<LoaderProps> = ({ size = 24, color }) => {
   return (
-    <div className='h-full w-full grid place-items-center'>
+    <div className='grid w-full h-full place-items-center'>
       <svg
         width={size}
         height={size}

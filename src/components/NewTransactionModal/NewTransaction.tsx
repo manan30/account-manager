@@ -6,7 +6,7 @@ import {
   useNewTransactionDispatchContext,
   useNewTransactionStateContext
 } from '../../providers/NewTransactionProvider';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { NewTransactionActionType } from '../../reducers/NewTransactionReducer/newTransactionReducer.interface';
 import {
   INPUT_THEME_ERROR,
@@ -46,7 +46,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
     collectionName: 'transaction'
   });
   const newTransactionDispatch = useNewTransactionDispatchContext();
-  const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatch();
 
   const [formErrors, setFormErrors] = useState({
     type: { error: false, content: '' },
@@ -173,7 +173,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
       isPerformingAsyncTask={isLoading}
     >
       <div className='flex justify-center mx-8'>
-        <form className='mb-8 w-full'>
+        <form className='w-full mb-8'>
           <Select
             name='type'
             label='Transaction Type'
