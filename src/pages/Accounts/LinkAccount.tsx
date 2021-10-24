@@ -6,13 +6,13 @@ import { useTellerConnect } from '../../hooks/Teller/useTellerConnect';
 import { useMutation } from 'react-query';
 import { Response } from 'redaxios';
 import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import Loader from '../../components/Loader';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 
 const LinkAccount = () => {
-  const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatch();
   const { user } = useGlobalState();
   const {
     enrollment,

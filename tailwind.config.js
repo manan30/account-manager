@@ -5,11 +5,17 @@ module.exports = {
     extend: {
       maxHeight: {
         modal: '66.666667%'
+      },
+      minWidth: {
+        button: '6rem'
+      },
+      height: {
+        main: 'calc(100% - 4.8rem)'
       }
     }
   },
   variants: {
     extend: {}
   },
-  plugins: []
+  plugins: [require('@tailwindcss/forms')]
 };

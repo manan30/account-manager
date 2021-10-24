@@ -18,8 +18,8 @@ const Accounts = () => {
 
   if (!loadingAccounts && (!accountsData || accountsData.length === 0)) {
     return (
-      <div className='h-full w-full flex flex-col items-center justify-center space-y-4'>
-        <div className='h-96 w-96 rounded-full bg-indigo-100 grid place-items-center'>
+      <div className='flex flex-col items-center justify-center w-full h-full space-y-4'>
+        <div className='grid bg-indigo-100 rounded-full h-96 w-96 place-items-center'>
           <VaultIcon height={220} width={220} />
         </div>
         <p>It looks like you have not linked any accounts yet</p>
@@ -30,16 +30,16 @@ const Accounts = () => {
   }
 
   return accountsData ? (
-    <div className='mx-16'>
-      <div className='my-12 flex justify-end'>
+    <>
+      <div className='flex justify-end mb-12'>
         <LinkAccount />
       </div>
-      <div className='mt-6 flex flex-col space-y-6'>
+      <div className='flex flex-col mt-6 space-y-6'>
         {accountsData.map((account) => (
           <Account key={account.id} account={account} />
         ))}
       </div>
-    </div>
+    </>
   ) : null;
 };
 

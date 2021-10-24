@@ -10,7 +10,7 @@ const Home = () => {
         <meta property='og:title' content={`Account Manager - Overview`} />
         <meta property='twitter:title' content={`Account Manager - Overview`} />
       </Helmet>
-      <div className='m-8 grid grid-cols-3 gap-6'>Overview page</div>
+      <div className='grid grid-cols-3 gap-6 m-8'>Overview page</div>
     </>
   );
 };

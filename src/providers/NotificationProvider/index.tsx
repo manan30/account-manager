@@ -39,7 +39,7 @@ export const useNotificationStateContext = () => {
   return context;
 };
 
-export const useNotificationDispatchContext = () => {
+export const useNotificationDispatch = () => {
   const context = useContext(NotificationDispatchContext);
   if (context === undefined) {
     throw new Error(

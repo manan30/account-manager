@@ -7,7 +7,7 @@ import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQue
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { ICreditor } from '../../models/Creditor';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { useNotificationDispatchContext } from '../../providers/NotificationProvider';
+import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import {
   INPUT_THEME_ERROR,
   NOTIFICATION_THEME_FAILURE,
@@ -32,7 +32,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   showModal,
   setShowModal
 }) => {
-  const notificationDispatch = useNotificationDispatchContext();
+  const notificationDispatch = useNotificationDispatch();
   const { firestoreTimestamp } = useFirebaseContext();
   const { data: creditorsData } = useFirestoreReadQuery<ICreditor>({
     collection: 'creditor'
