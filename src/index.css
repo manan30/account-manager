@@ -18,3 +18,9 @@
     width: 100%;
   }
 }
+
+@layer base {
+  body {
+    @apply bg-gray-100;
+  }
+}

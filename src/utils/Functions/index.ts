@@ -44,3 +44,14 @@ export const spendingCategoryColorMapping = (category: string) => {
       return '#4fd1c5';
   }
 };
+
+export const monthDiffBetweenTwoDates = (dateFrom: string, dateTo: string) => {
+  // TODO: Check for exact diff in months between 2 dates
+  const date1 = new Date(dateTo);
+  const date2 = new Date(dateFrom);
+  return (
+    date1.getMonth() -
+    date2.getMonth() +
+    12 * (date1.getFullYear() - date2.getFullYear())
+  );
+};
