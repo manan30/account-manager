@@ -6,7 +6,7 @@
   "author": "Manan Joshi",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "dev": "TAILWIND_MODE=watch vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{ts,tsx}' --max-warnings 0",
@@ -23,7 +23,6 @@
   "devDependencies": {
     "@firebase/app-types": "0.6.1",
     "@firebase/firestore-types": "2.0.0",
-    "@tailwindcss/postcss7-compat": "^2.0.3",
     "@types/classnames": "2.2.11",
     "@types/faker": "5.1.5",
     "@types/react": "17.0.0",
@@ -49,7 +48,7 @@
     "husky": "^5.2.0",
     "postcss": "^8.2.7",
     "prettier": "2.1.1",
-    "tailwindcss": "^2.0.3",
+    "tailwindcss": "^2.2.19",
     "typescript": "4.1.2",
     "vite": "^2.0.5",
     "vite-plugin-svgr": "^0.2.0"
