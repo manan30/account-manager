@@ -13,11 +13,16 @@ import Button from '../../components/Button';
 
 type AuthenticationModalProps = {
   onGoogleAuthClicked: () => void;
+  handlePhoneAuthentication: (phoneNumber: string) => void;
+  reCaptchaVerifierRef: React.RefObject<HTMLDivElement>;
 };
 
 type SignInProvider = 'phone' | 'email';
 
-const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
+const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
+  reCaptchaVerifierRef,
+  handlePhoneAuthentication
+}) => {
   const [signInProvider, setSignInProvider] = useState<SignInProvider>('phone');
   const {
     errors,
@@ -67,8 +72,13 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
         setFormErrors(formErrors);
         return;
       }
+
+      if (signInProvider === 'phone') {
+        handlePhoneAuthentication(phoneNumber);
+        return;
+      }
     },
-    [signInProvider, values, setFormErrors]
+    [signInProvider, values, setFormErrors, handlePhoneAuthentication]
   );
 
   return (
@@ -78,8 +88,9 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
           onSubmit={handleFormSubmit}
           className='flex flex-col w-full space-y-6'
         >
-          {signInProvider === 'phone'
-            ? phoneSignInFormFields.map((field) => (
+          {signInProvider === 'phone' ? (
+            <>
+              {phoneSignInFormFields.map((field) => (
                 <Input
                   key={field.name}
                   name={field.name}
@@ -92,8 +103,10 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
                     setFormValues(name as Fields, value)
                   }
                 />
-              ))
-            : null}
+              ))}
+              <div ref={reCaptchaVerifierRef}></div>
+            </>
+          ) : null}
 
           {signInProvider === 'email'
             ? emailSignInFormFields.map((field) => (

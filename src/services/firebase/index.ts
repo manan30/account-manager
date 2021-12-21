@@ -25,9 +25,15 @@ function FirebaseService(): IFirebaseContext {
   const auth = app.auth();
   const authProviders = app.auth;
 
+  auth.useDeviceLanguage();
+
   const googleAuthProvider = new authProviders.GoogleAuthProvider();
   googleAuthProvider.addScope('profile');
   googleAuthProvider.addScope('email');
+
+  const phoneAuthProvider = new authProviders.PhoneAuthProvider();
+
+  const reCaptchaVerifier = authProviders.RecaptchaVerifier;
 
   if (window.location.hostname === 'localhost') {
     firestore.useEmulator('localhost', 8080);
@@ -39,7 +45,7 @@ function FirebaseService(): IFirebaseContext {
   return {
     firestore,
     auth,
-    authProviders: { googleAuthProvider },
+    authProviders: { googleAuthProvider, phoneAuthProvider, reCaptchaVerifier },
     firestoreTimestamp: {
       now: app.firestore.Timestamp.now,
       fromDate: app.firestore.Timestamp.fromDate

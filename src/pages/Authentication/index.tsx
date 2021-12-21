@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useFirebaseContext } from '../../providers/FirebaseProvider';
 import {
@@ -11,6 +11,7 @@ const Authentication = () => {
   const { authProviders, auth } = useFirebaseContext();
   const { user } = useGlobalState();
   const { state } = useLocation<{ from: string }>();
+  const reCaptchaVerifierRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const dispatch = useGlobalDispatch();
 
@@ -21,6 +22,23 @@ const Authentication = () => {
       } catch (err) {
         console.error({ err });
       }
+    }
+  };
+
+  const handlePhoneAuthentication = (phoneNumber: string) => {
+    if (reCaptchaVerifierRef.current && auth) {
+      const reCaptchaVerifier = new authProviders.reCaptchaVerifier(
+        reCaptchaVerifierRef.current,
+        {
+          size: 'invisible',
+          callback: () => {
+            authProviders.phoneAuthProvider.verifyPhoneNumber(
+              phoneNumber,
+              reCaptchaVerifier
+            );
+          }
+        }
+      );
     }
   };
 
@@ -53,7 +71,9 @@ const Authentication = () => {
 
   return (
     <AuthenticationModal
-      onGoogleAuthClicked={() => handleGoogleAuthProviderClick()}
+      onGoogleAuthClicked={handleGoogleAuthProviderClick}
+      handlePhoneAuthentication={handlePhoneAuthentication}
+      reCaptchaVerifierRef={reCaptchaVerifierRef}
     />
   );
 };
