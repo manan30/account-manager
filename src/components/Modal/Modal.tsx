@@ -1,29 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { XIcon } from '@heroicons/react/solid';
 
 type ModalProps = {
   title: string;
-  disableClose?: boolean;
-  onCloseIconClick: () => void;
+  hideCloseIcon?: boolean;
+  onCloseIconClick?: () => void;
 };
 
 const Modal: React.FC<ModalProps> = ({
   title,
-  disableClose,
-  onCloseIconClick,
-  children
+  hideCloseIcon,
+  children,
+  onCloseIconClick
 }) => {
-  useEffect(() => {
-    if (!disableClose) {
-      const handleEscKeyPress = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') onCloseIconClick();
-      };
-
-      document.addEventListener('keyup', handleEscKeyPress);
-      return () => document.removeEventListener('keyup', handleEscKeyPress);
-    }
-  }, [disableClose, onCloseIconClick]);
-
   return (
     <div className='relative w-full h-full'>
       <div className='fixed inset-0 bg-gray-700 opacity-50' />
@@ -33,13 +22,14 @@ const Modal: React.FC<ModalProps> = ({
             <div className='text-lg font-semibold tracking-wide text-indigo-700'>
               {title}
             </div>
-            <button
-              className='ml-auto focus:outline-none focus:ring-2 focus:ring-indigo-600'
-              onClick={onCloseIconClick}
-              disabled={disableClose}
-            >
-              <XIcon className='w-6 h-6 text-gray-700' />
-            </button>
+            {hideCloseIcon ? (
+              <button
+                className='ml-auto focus:outline-none focus:ring-2 focus:ring-indigo-600'
+                onClick={onCloseIconClick}
+              >
+                <XIcon className='w-6 h-6 text-gray-700' />
+              </button>
+            ) : null}
           </div>
           <div className='overflow-y-auto max-h-96'>{children}</div>
         </div>
