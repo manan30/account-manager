@@ -31,9 +31,12 @@ function FirebaseService(): IFirebaseContext {
   googleAuthProvider.addScope('profile');
   googleAuthProvider.addScope('email');
 
-  const phoneAuthProvider = authProviders.PhoneAuthProvider;
+  const phoneAuthProvider = new authProviders.PhoneAuthProvider();
 
-  const reCaptchaVerifier = authProviders.RecaptchaVerifier;
+  const reCaptchaVerifier = (recaptchaContainer: string) =>
+    new authProviders.RecaptchaVerifier(recaptchaContainer, {
+      size: 'invisible'
+    });
 
   if (window.location.hostname === 'localhost') {
     firestore.useEmulator('localhost', 8080);
@@ -45,7 +48,14 @@ function FirebaseService(): IFirebaseContext {
   return {
     firestore,
     auth,
-    authProviders: { googleAuthProvider, phoneAuthProvider, reCaptchaVerifier },
+    authProviders: {
+      googleAuthProvider,
+      phoneAuthProvider: {
+        verifyPhoneNumber: phoneAuthProvider.verifyPhoneNumber,
+        credential: authProviders.PhoneAuthProvider.credential,
+        reCaptchaVerifier
+      }
+    },
     firestoreTimestamp: {
       now: app.firestore.Timestamp.now,
       fromDate: app.firestore.Timestamp.fromDate

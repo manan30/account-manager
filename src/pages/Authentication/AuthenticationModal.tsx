@@ -13,16 +13,18 @@ import Button from '../../components/Button';
 import Select from '../../components/Select/Select';
 
 type AuthenticationModalProps = {
-  onGoogleAuthClicked: () => void;
-  handlePhoneAuthentication: (phoneNumber: string) => void;
+  accountProcessing: boolean;
   reCaptchaVerifierRef: React.RefObject<HTMLDivElement>;
+  // onGoogleAuthClicked: () => void;
+  handlePhoneNumberStep: (phoneNumber: string) => void;
 };
 
 type SignInProvider = 'phone' | 'email';
 
 const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
   reCaptchaVerifierRef,
-  handlePhoneAuthentication
+  accountProcessing,
+  handlePhoneNumberStep
 }) => {
   const [signInProvider, setSignInProvider] = useState<SignInProvider>('phone');
   const {
@@ -76,7 +78,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
         )
         .forEach((item) => {
           const [key, value] = Object.entries(item)[0];
-          if (value.trim() === '') formErrors.push(key);
+          if (value?.trim() === '') formErrors.push(key);
         });
 
       if (formErrors.length) {
@@ -86,11 +88,11 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
 
       if (signInProvider === 'phone') {
         const code = countryCode.split(' ')[0];
-        handlePhoneAuthentication(`${code}${phoneNumber}`);
+        handlePhoneNumberStep(`${code}${phoneNumber}`);
         return;
       }
     },
-    [signInProvider, values, setFormErrors, handlePhoneAuthentication]
+    [signInProvider, values, setFormErrors, handlePhoneNumberStep]
   );
 
   return (
@@ -158,6 +160,8 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
             layout='primary'
             className='flex items-center w-full hover:shadow'
             type='submit'
+            disabled={accountProcessing}
+            loading={accountProcessing}
           >
             Sign In
           </Button>
@@ -169,6 +173,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
           layout='secondary'
           className='flex items-center w-full hover:shadow'
           onClick={toggleSignInProvider}
+          disabled={accountProcessing}
         >
           {signInProvider === 'email' ? (
             <PhoneIcon className='w-5 h-5 mr-2' />
@@ -183,6 +188,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
         <Button
           layout='secondary'
           className='flex items-center w-full bg-gray-100 border border-gray-300 border-solid hover:shadow'
+          disabled={accountProcessing}
         >
           <div className='w-4 h-4 mr-2'>
             <GoogleIcon />

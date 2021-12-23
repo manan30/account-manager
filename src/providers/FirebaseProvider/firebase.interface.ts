@@ -5,8 +5,13 @@ export type IFirebaseContext = {
   auth: app.auth.Auth;
   authProviders: {
     googleAuthProvider: app.auth.GoogleAuthProvider;
-    phoneAuthProvider: typeof app.auth.PhoneAuthProvider;
-    reCaptchaVerifier: typeof app.auth.RecaptchaVerifier;
+    phoneAuthProvider: {
+      verifyPhoneNumber: app.auth.PhoneAuthProvider['verifyPhoneNumber'];
+      credential: typeof app.auth.PhoneAuthProvider.credential;
+      reCaptchaVerifier: (
+        recaptchaContainer: string
+      ) => app.auth.RecaptchaVerifier;
+    };
   };
   firestoreTimestamp: {
     now: () => app.firestore.Timestamp;
