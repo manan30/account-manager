@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFirebaseContext } from '../../../providers/FirebaseProvider';
 import { useNotificationDispatch } from '../../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_FAILURE } from '../../../utils/Constants/ThemeConstants';
@@ -46,22 +46,26 @@ export const usePhoneAuth = () => {
     }
   };
 
-  const handleVerificationCodeStep = async (verificationCode: string) => {
-    try {
-      setProcessingVerificationCodeStep(true);
-      const phoneCredential = await authProviders.helpers.credential(
-        verifier,
-        verificationCode
-      );
-      const creds = await auth.signInWithCredential(phoneCredential);
-      console.log(creds);
-    } catch (err) {
-      console.error(err);
-      setError(true);
-    } finally {
-      setProcessingVerificationCodeStep(false);
-    }
-  };
+  const handleVerificationCodeStep = useCallback(
+    async (verificationCode: string) => {
+      try {
+        setProcessingVerificationCodeStep(true);
+        console.log({ verifier, verificationCode });
+        const phoneCredential = await authProviders.helpers.credential(
+          verifier,
+          verificationCode
+        );
+        const creds = await auth.signInWithCredential(phoneCredential);
+        console.log(creds);
+      } catch (err) {
+        console.error(err);
+        setError(true);
+      } finally {
+        setProcessingVerificationCodeStep(false);
+      }
+    },
+    [auth, authProviders.helpers, verifier]
+  );
 
   useEffect(() => {
     if (error) {

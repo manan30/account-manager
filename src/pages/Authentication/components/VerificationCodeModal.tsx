@@ -3,21 +3,20 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input/Input';
 import Modal from '../../../components/Modal/Modal';
 import { useFormState } from '../../../hooks/Form/useFormState';
-import { usePhoneAuth } from '../../../services/firebase/hooks/usePhoneAuth';
 
 type VerificationCodeModalProps = {
+  processingVerificationCodeStep: boolean;
   hideModal: (status: false) => void;
+  handleVerificationCodeStep: (verificationCode: string) => Promise<void>;
 };
 
 type FormField = 'verificationCode';
 
 const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
-  hideModal
+  processingVerificationCodeStep,
+  hideModal,
+  handleVerificationCodeStep
 }) => {
-  const {
-    handleVerificationCodeStep,
-    processingVerificationCodeStep
-  } = usePhoneAuth();
   const { errors, values, setFormValues, setFormErrors } = useFormState({
     initialValues: { verificationCode: '' },
     initialErrors: { verificationCode: false }

@@ -26,6 +26,8 @@ const PhoneAuthenticationContent = () => {
     reCaptchaVerifierRef,
     awaitingVerificationCode,
     processingPhoneNumberStep,
+    handleVerificationCodeStep,
+    processingVerificationCodeStep,
     setAwaitingVerificationCode,
     handlePhoneNumberStep
   } = usePhoneAuth();
@@ -109,6 +111,8 @@ const PhoneAuthenticationContent = () => {
       </form>
       {awaitingVerificationCode ? (
         <VerificationCodeModal
+          processingVerificationCodeStep={processingVerificationCodeStep}
+          handleVerificationCodeStep={handleVerificationCodeStep}
           hideModal={(status) => setAwaitingVerificationCode(status)}
         />
       ) : null}
