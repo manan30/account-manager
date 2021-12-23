@@ -1,20 +1,23 @@
 import React, { useCallback } from 'react';
-import Button from '../../components/Button';
-import Input from '../../components/Input/Input';
-import Modal from '../../components/Modal/Modal';
-import { useFormState } from '../../hooks/Form/useFormState';
+import Button from '../../../components/Button';
+import Input from '../../../components/Input/Input';
+import Modal from '../../../components/Modal/Modal';
+import { useFormState } from '../../../hooks/Form/useFormState';
+import { usePhoneAuth } from '../../../services/firebase/hooks/usePhoneAuth';
 
 type VerificationCodeModalProps = {
   hideModal: (status: false) => void;
-  handleVerificationCodeStep: (verificationCode: string) => void;
 };
 
 type FormField = 'verificationCode';
 
 const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
-  handleVerificationCodeStep,
   hideModal
 }) => {
+  const {
+    handleVerificationCodeStep,
+    processingVerificationCodeStep
+  } = usePhoneAuth();
   const { errors, values, setFormValues, setFormErrors } = useFormState({
     initialValues: { verificationCode: '' },
     initialErrors: { verificationCode: false }
@@ -29,7 +32,7 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
       e.preventDefault();
       const formErrors: Array<string> = [];
       const { verificationCode } = values;
-      // Required fields check
+
       [{ verificationCode }].forEach((item) => {
         const [key, value] = Object.entries(item)[0];
         if (value?.trim() === '') formErrors.push(key);
@@ -46,13 +49,17 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
   );
 
   return (
-    <Modal onCloseIconClick={() => hideModal(false)}>
+    <Modal
+      size='small'
+      title='Verification Code'
+      onCloseIconClick={() => hideModal(false)}
+    >
       <p className='text-sm tracking-wide font-medium text-gray-400 text-center mb-6'>
         Please enter the verification code that we sent to your phone
       </p>
       <form
         onSubmit={handleFormSubmit}
-        className='flex flex-col w-full space-y-6'
+        className='flex flex-col w-full space-y-6 mb-4'
       >
         <Input
           name='verificationCode'
@@ -67,8 +74,8 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
           layout='primary'
           className='flex items-center w-full hover:shadow'
           type='submit'
-          // disabled={accountProcessing}
-          // loading={accountProcessing}
+          disabled={processingVerificationCodeStep}
+          loading={processingVerificationCodeStep}
         >
           Submit
         </Button>

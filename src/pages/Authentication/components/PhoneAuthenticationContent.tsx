@@ -6,6 +6,7 @@ import { useFormState } from '../../../hooks/Form/useFormState';
 import { usePhoneAuth } from '../../../services/firebase/hooks/usePhoneAuth';
 import { FormErrors, FormState, PhoneSignInFields } from '../interfaces';
 import { phoneSignInFormFields } from '../utils/constants';
+import VerificationCodeModal from './VerificationCodeModal';
 
 const PhoneAuthenticationContent = () => {
   const { errors, values, setFormValues, setFormErrors } = useFormState<
@@ -21,7 +22,13 @@ const PhoneAuthenticationContent = () => {
       phoneNumber: false
     }
   });
-  const { reCaptchaVerifierRef, handlePhoneNumberStep } = usePhoneAuth();
+  const {
+    reCaptchaVerifierRef,
+    awaitingVerificationCode,
+    processingPhoneNumberStep,
+    setAwaitingVerificationCode,
+    handlePhoneNumberStep
+  } = usePhoneAuth();
 
   const handleFormSubmit = useCallback(
     async (
@@ -50,55 +57,62 @@ const PhoneAuthenticationContent = () => {
   );
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className='flex flex-col w-full space-y-6'
-    >
-      <div>
-        <div className='flex space-x-4'>
-          {phoneSignInFormFields.map((field, idx) =>
-            idx === 0 ? (
-              <Select
-                key={field.name}
-                name={field.name}
-                label={field.label}
-                value={values[field.name]}
-                error={errors[field.name]}
-                placeholder={field.placeholder}
-                options={['+1 USA / Canada', '+91 India']}
-                onChange={(name, value) =>
-                  setFormValues(name as PhoneSignInFields, value)
-                }
-              />
-            ) : (
-              <Input
-                key={field.name}
-                name={field.name}
-                label={field.label}
-                value={values[field.name]}
-                error={errors[field.name]}
-                type={field.type}
-                placeholder={field.placeholder}
-                onChange={(name, value) =>
-                  setFormValues(name as PhoneSignInFields, value)
-                }
-              />
-            )
-          )}
-        </div>
-        <div ref={reCaptchaVerifierRef} id='recaptcha-container'></div>
-      </div>
-
-      <Button
-        layout='primary'
-        className='flex items-center w-full hover:shadow'
-        type='submit'
-        // disabled={accountProcessing}
-        // loading={accountProcessing}
+    <>
+      <form
+        onSubmit={handleFormSubmit}
+        className='flex flex-col w-full space-y-6'
       >
-        Sign In
-      </Button>
-    </form>
+        <div>
+          <div className='flex space-x-4'>
+            {phoneSignInFormFields.map((field, idx) =>
+              idx === 0 ? (
+                <Select
+                  key={field.name}
+                  name={field.name}
+                  label={field.label}
+                  value={values[field.name]}
+                  error={errors[field.name]}
+                  placeholder={field.placeholder}
+                  options={['+1 USA / Canada', '+91 India']}
+                  onChange={(name, value) =>
+                    setFormValues(name as PhoneSignInFields, value)
+                  }
+                />
+              ) : (
+                <Input
+                  key={field.name}
+                  name={field.name}
+                  label={field.label}
+                  value={values[field.name]}
+                  error={errors[field.name]}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  onChange={(name, value) =>
+                    setFormValues(name as PhoneSignInFields, value)
+                  }
+                />
+              )
+            )}
+          </div>
+          <div ref={reCaptchaVerifierRef} id='recaptcha-container'></div>
+        </div>
+
+        <Button
+          layout='primary'
+          className='flex items-center w-full hover:shadow'
+          type='submit'
+          disabled={processingPhoneNumberStep}
+          loading={processingPhoneNumberStep}
+        >
+          Sign In
+        </Button>
+      </form>
+      {awaitingVerificationCode ? (
+        <VerificationCodeModal
+          hideModal={(status) => setAwaitingVerificationCode(status)}
+        />
+      ) : null}
+    </>
   );
 };
 

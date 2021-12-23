@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
 import AuthenticationModal from './AuthenticationModal';
-import { usePhoneAuth } from '../../services/firebase/hooks/usePhoneAuth';
-import VerificationCodeModal from './VerificationCodeModal';
 
 const Authentication = () => {
-  const [accountProcessing, setAccountProcessing] = useState(false);
-  const {
-    reCaptchaVerifierRef,
-    awaitingVerificationCode,
-    setAwaitingVerificationCode,
-    handlePhoneNumberStep,
-    handleVerificationCodeStep
-  } = usePhoneAuth();
+  const [accountProcessing] = useState(false);
 
   // const handleGoogleAuthProviderClick = async () => {
   //   if (authProviders) {
@@ -51,20 +42,10 @@ const Authentication = () => {
   // }, [user, auth, dispatch, state, history]);
 
   return (
-    <>
-      <AuthenticationModal
-        accountProcessing={accountProcessing}
-        reCaptchaVerifierRef={reCaptchaVerifierRef}
-        // onGoogleAuthClicked={handleGoogleAuthProviderClick}
-        handlePhoneNumberStep={handlePhoneNumberStep}
-      />
-      {awaitingVerificationCode ? (
-        <VerificationCodeModal
-          handleVerificationCodeStep={handleVerificationCodeStep}
-          hideModal={(status) => setAwaitingVerificationCode(status)}
-        />
-      ) : null}
-    </>
+    <AuthenticationModal
+      accountProcessing={accountProcessing}
+      // onGoogleAuthClicked={handleGoogleAuthProviderClick}
+    />
   );
 };
 
