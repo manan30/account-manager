@@ -32,7 +32,7 @@ const Authentication = () => {
         reCaptchaVerifierRef.current.id,
         {
           size: 'invisible',
-          callback: (...args) => {
+          callback: (...args: Array<Record<string, unknown>>) => {
             // console.log('callback');
             console.log({ args });
           }
