@@ -1,5 +1,11 @@
 export const phoneSignInFormFields = [
   {
+    name: 'countryCode',
+    label: 'Country Code',
+    placeholder: 'Country Code',
+    type: 'text'
+  },
+  {
     name: 'phoneNumber',
     label: 'Phone Number',
     placeholder: 'Phone Number',

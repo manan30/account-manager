@@ -10,6 +10,7 @@ import {
   emailSignInFormFields
 } from './utils/constants';
 import Button from '../../components/Button';
+import Select from '../../components/Select/Select';
 
 type AuthenticationModalProps = {
   onGoogleAuthClicked: () => void;
@@ -31,8 +32,18 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
     setFormErrors,
     resetForm
   } = useFormState<FormState, FormErrors>({
-    initialValues: { phoneNumber: '', email: '', password: '' },
-    initialErrors: { phoneNumber: false, email: false, password: false }
+    initialValues: {
+      countryCode: '',
+      phoneNumber: '',
+      email: '',
+      password: ''
+    },
+    initialErrors: {
+      countryCode: false,
+      phoneNumber: false,
+      email: false,
+      password: false
+    }
   });
 
   const toggleSignInProvider = () => {
@@ -89,23 +100,39 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
           className='flex flex-col w-full space-y-6'
         >
           {signInProvider === 'phone' ? (
-            <>
-              {phoneSignInFormFields.map((field) => (
-                <Input
-                  key={field.name}
-                  name={field.name}
-                  label={field.label}
-                  value={values[field.name]}
-                  error={errors[field.name]}
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  onChange={(name, value) =>
-                    setFormValues(name as Fields, value)
-                  }
-                />
-              ))}
+            <div>
+              <div className='flex space-x-4'>
+                {phoneSignInFormFields.map((field, idx) =>
+                  idx === 0 ? (
+                    <Select
+                      name={field.name}
+                      label={field.label}
+                      value={values[field.name]}
+                      error={errors[field.name]}
+                      placeholder={field.placeholder}
+                      options={['+1 USA / Canada', '+91 India']}
+                      onChange={(name, value) =>
+                        setFormValues(name as Fields, value)
+                      }
+                    />
+                  ) : (
+                    <Input
+                      key={field.name}
+                      name={field.name}
+                      label={field.label}
+                      value={values[field.name]}
+                      error={errors[field.name]}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      onChange={(name, value) =>
+                        setFormValues(name as Fields, value)
+                      }
+                    />
+                  )
+                )}
+              </div>
               <div ref={reCaptchaVerifierRef}></div>
-            </>
+            </div>
           ) : null}
 
           {signInProvider === 'email'
