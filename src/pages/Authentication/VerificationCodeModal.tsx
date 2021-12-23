@@ -5,13 +5,15 @@ import Modal from '../../components/Modal/Modal';
 import { useFormState } from '../../hooks/Form/useFormState';
 
 type VerificationCodeModalProps = {
+  hideModal: (status: false) => void;
   handleVerificationCodeStep: (verificationCode: string) => void;
 };
 
 type FormField = 'verificationCode';
 
 const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
-  handleVerificationCodeStep
+  handleVerificationCodeStep,
+  hideModal
 }) => {
   const { errors, values, setFormValues, setFormErrors } = useFormState({
     initialValues: { verificationCode: '' },
@@ -44,35 +46,33 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
   );
 
   return (
-    <Modal title='Verification Code' hideCloseIcon>
-      <div className='text-center'>
-        <p className='text-sm tracking-wide font-medium text-gray-400'>
-          Please enter the verification code that we sent to your phone
-        </p>
-        <form
-          onSubmit={handleFormSubmit}
-          className='flex flex-col w-full space-y-6'
+    <Modal onCloseIconClick={() => hideModal(false)}>
+      <p className='text-sm tracking-wide font-medium text-gray-400 text-center mb-6'>
+        Please enter the verification code that we sent to your phone
+      </p>
+      <form
+        onSubmit={handleFormSubmit}
+        className='flex flex-col w-full space-y-6'
+      >
+        <Input
+          name='verificationCode'
+          label='Verification Code'
+          value={values.verificationCode}
+          error={errors.verificationCode}
+          type='text'
+          placeholder='123456'
+          onChange={(name, value) => setFormValues(name as FormField, value)}
+        />
+        <Button
+          layout='primary'
+          className='flex items-center w-full hover:shadow'
+          type='submit'
+          // disabled={accountProcessing}
+          // loading={accountProcessing}
         >
-          <Input
-            name='verificationCode'
-            label='Verification Code'
-            value={values.verificationCode}
-            error={errors.verificationCode}
-            type='text'
-            placeholder='123456'
-            onChange={(name, value) => setFormValues(name as FormField, value)}
-          />
-          <Button
-            layout='primary'
-            className='flex items-center w-full hover:shadow'
-            type='submit'
-            // disabled={accountProcessing}
-            // loading={accountProcessing}
-          >
-            Sign In
-          </Button>
-        </form>
-      </div>
+          Submit
+        </Button>
+      </form>
     </Modal>
   );
 };

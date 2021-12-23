@@ -5,8 +5,8 @@ export type IFirebaseContext = {
   auth: app.auth.Auth;
   authProviders: {
     googleAuthProvider: app.auth.GoogleAuthProvider;
-    phoneAuthProvider: {
-      verifyPhoneNumber: app.auth.PhoneAuthProvider['verifyPhoneNumber'];
+    phoneAuthProvider: app.auth.PhoneAuthProvider;
+    helpers: {
       credential: typeof app.auth.PhoneAuthProvider.credential;
       reCaptchaVerifier: (
         recaptchaContainer: string

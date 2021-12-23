@@ -4,10 +4,11 @@ import { usePhoneAuth } from '../../services/firebase/hooks/usePhoneAuth';
 import VerificationCodeModal from './VerificationCodeModal';
 
 const Authentication = () => {
-  const [accountProcessing] = useState(false);
+  const [accountProcessing, setAccountProcessing] = useState(false);
   const {
     reCaptchaVerifierRef,
     awaitingVerificationCode,
+    setAwaitingVerificationCode,
     handlePhoneNumberStep,
     handleVerificationCodeStep
   } = usePhoneAuth();
@@ -60,6 +61,7 @@ const Authentication = () => {
       {awaitingVerificationCode ? (
         <VerificationCodeModal
           handleVerificationCodeStep={handleVerificationCodeStep}
+          hideModal={(status) => setAwaitingVerificationCode(status)}
         />
       ) : null}
     </>

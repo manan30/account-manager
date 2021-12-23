@@ -18,8 +18,13 @@ export const usePhoneAuth = () => {
   const handlePhoneNumberStep = async (phoneNumber: string) => {
     try {
       if (reCaptchaVerifierRef.current && auth) {
-        const reCaptchaVerifier = authProviders.phoneAuthProvider.reCaptchaVerifier(
+        const reCaptchaVerifier = authProviders.helpers.reCaptchaVerifier(
           reCaptchaVerifierRef.current.id
+        );
+
+        console.log(
+          authProviders.phoneAuthProvider.verifyPhoneNumber,
+          reCaptchaVerifier
         );
 
         const verificationId = await authProviders.phoneAuthProvider.verifyPhoneNumber(
@@ -44,7 +49,7 @@ export const usePhoneAuth = () => {
   };
 
   const handleVerificationCodeStep = async (verificationCode: string) => {
-    const phoneCredential = await authProviders.phoneAuthProvider.credential(
+    const phoneCredential = await authProviders.helpers.credential(
       verifier,
       verificationCode
     );
@@ -64,6 +69,7 @@ export const usePhoneAuth = () => {
   return {
     reCaptchaVerifierRef,
     awaitingVerificationCode,
+    setAwaitingVerificationCode,
     handlePhoneNumberStep,
     handleVerificationCodeStep
   };

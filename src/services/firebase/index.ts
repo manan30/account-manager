@@ -50,8 +50,8 @@ function FirebaseService(): IFirebaseContext {
     auth,
     authProviders: {
       googleAuthProvider,
-      phoneAuthProvider: {
-        verifyPhoneNumber: phoneAuthProvider.verifyPhoneNumber,
+      phoneAuthProvider,
+      helpers: {
         credential: authProviders.PhoneAuthProvider.credential,
         reCaptchaVerifier
       }
