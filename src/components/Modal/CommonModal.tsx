@@ -12,7 +12,7 @@ type CommonModalProps = {
   closeModal: () => void;
 };
 
-const CommonModalProps: React.FC<CommonModalProps> = ({
+const CommonModal: React.FC<CommonModalProps> = ({
   isOpen,
   message,
   type,
@@ -20,16 +20,16 @@ const CommonModalProps: React.FC<CommonModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onCloseClickHandler={closeModal}>
-      <div className='flex items-center justify-center flex-col'>
+      <div className='flex flex-col items-center justify-center'>
         {type === 'ERROR' && (
-          <div className='text-red-500 mb-4'>
+          <div className='mb-4 text-red-500'>
             <MdErrorOutline size={72} />
           </div>
         )}
-        <div className='text-center mb-4 text-sm'>{message}</div>
+        <div className='mb-4 text-sm text-center'>{message}</div>
       </div>
     </Modal>
   );
 };
 
-export default CommonModalProps;
+export default CommonModal;

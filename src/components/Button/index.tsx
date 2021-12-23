@@ -7,6 +7,7 @@ type ButtonProps = {
   layout?: 'primary' | 'secondary' | 'outline';
   loading?: boolean;
   disabled?: boolean;
+  className?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 };
 
@@ -16,17 +17,19 @@ const Button: React.FC<ButtonProps> = ({
   layout,
   loading,
   disabled,
+  className,
   children
 }) => {
   return (
     <button
       type={type}
       className={cn(
-        'rounded-md px-2 py-1 min-w-button focus:outline-none focus:ring-1 focus:ring-offset-2 text-sm font-medium h-8 flex items-center justify-center',
+        'rounded-md px-2 py-1 min-w-button focus:outline-none focus:ring-1 focus:ring-offset-2 text-sm font-medium h-8 flex items-center justify-center transition-shadow',
         layout === 'secondary'
           ? 'bg-gray-300 text-gray-800 focus:ring-gray-400 '
           : 'bg-indigo-600 text-gray-100 focus:ring-indigo-600 ',
-        (loading || disabled) && 'opacity-50 cursor-default'
+        (loading || disabled) && 'opacity-50 cursor-default',
+        className ? className : null
       )}
       onClick={onClick}
       disabled={loading || disabled}
