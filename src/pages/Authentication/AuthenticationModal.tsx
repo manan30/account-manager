@@ -61,16 +61,16 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
     ) => {
       e.preventDefault();
       const formErrors: Array<string> = [];
-      const { email, password, phoneNumber } = values;
+      const { email, password, phoneNumber, countryCode } = values;
 
       // Required fields check
-      [{ email }, { password }, { phoneNumber }]
+      [{ email }, { password }, { phoneNumber }, { countryCode }]
         .filter((field) =>
           signInProvider === 'email'
-            ? phoneSignInFormFields.findIndex(
+            ? emailSignInFormFields.find(
                 (element) => element.name === Object.keys(field)[0]
               )
-            : emailSignInFormFields.findIndex(
+            : phoneSignInFormFields.find(
                 (element) => element.name === Object.keys(field)[0]
               )
         )
@@ -85,7 +85,8 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       }
 
       if (signInProvider === 'phone') {
-        handlePhoneAuthentication(phoneNumber);
+        const code = countryCode.split(' ')[0];
+        handlePhoneAuthentication(`${code}${phoneNumber}`);
         return;
       }
     },
@@ -105,6 +106,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
                 {phoneSignInFormFields.map((field, idx) =>
                   idx === 0 ? (
                     <Select
+                      key={field.name}
                       name={field.name}
                       label={field.label}
                       value={values[field.name]}
@@ -131,7 +133,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
                   )
                 )}
               </div>
-              <div ref={reCaptchaVerifierRef}></div>
+              <div ref={reCaptchaVerifierRef} id='recaptcha-container'></div>
             </div>
           ) : null}
 

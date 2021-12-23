@@ -31,7 +31,7 @@ function FirebaseService(): IFirebaseContext {
   googleAuthProvider.addScope('profile');
   googleAuthProvider.addScope('email');
 
-  const phoneAuthProvider = new authProviders.PhoneAuthProvider();
+  const phoneAuthProvider = authProviders.PhoneAuthProvider;
 
   const reCaptchaVerifier = authProviders.RecaptchaVerifier;
 

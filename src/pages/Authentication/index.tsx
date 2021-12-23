@@ -27,18 +27,29 @@ const Authentication = () => {
 
   const handlePhoneAuthentication = (phoneNumber: string) => {
     if (reCaptchaVerifierRef.current && auth) {
+      console.log({ phoneNumber });
       const reCaptchaVerifier = new authProviders.reCaptchaVerifier(
-        reCaptchaVerifierRef.current,
+        reCaptchaVerifierRef.current.id,
         {
           size: 'invisible',
-          callback: () => {
-            authProviders.phoneAuthProvider.verifyPhoneNumber(
-              phoneNumber,
-              reCaptchaVerifier
-            );
+          callback: (...args) => {
+            // console.log('callback');
+            console.log({ args });
           }
         }
       );
+      new authProviders.phoneAuthProvider()
+        .verifyPhoneNumber(phoneNumber, reCaptchaVerifier)
+        .then((res) =>
+          authProviders.phoneAuthProvider.credential(res, '123456')
+        )
+        .then((fulfillment) => {
+          auth.signInWithCredential(fulfillment).then((creds) => {
+            console.log({ creds });
+          });
+        })
+        .catch((err) => console.error({ err }));
+      // console.log({ reCaptchaVerifier });
     }
   };
 
