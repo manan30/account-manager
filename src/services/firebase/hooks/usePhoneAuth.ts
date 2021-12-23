@@ -50,13 +50,11 @@ export const usePhoneAuth = () => {
     async (verificationCode: string) => {
       try {
         setProcessingVerificationCodeStep(true);
-        console.log({ verifier, verificationCode });
         const phoneCredential = await authProviders.helpers.credential(
           verifier,
           verificationCode
         );
-        const creds = await auth.signInWithCredential(phoneCredential);
-        console.log(creds);
+        await auth.signInWithCredential(phoneCredential);
       } catch (err) {
         console.error(err);
         setError(true);

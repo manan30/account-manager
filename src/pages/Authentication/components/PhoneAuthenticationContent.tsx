@@ -26,8 +26,8 @@ const PhoneAuthenticationContent = () => {
     reCaptchaVerifierRef,
     awaitingVerificationCode,
     processingPhoneNumberStep,
-    handleVerificationCodeStep,
     processingVerificationCodeStep,
+    handleVerificationCodeStep,
     setAwaitingVerificationCode,
     handlePhoneNumberStep
   } = usePhoneAuth();

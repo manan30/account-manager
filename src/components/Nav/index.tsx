@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useGlobalState } from '../../providers/GlobalStateProvider';
+import Button from '../Button';
+import { useLogout } from '../../services/firebase/hooks/useLogout';
 
 const links = [
   { to: '/accounts', linkText: 'Accounts' },
@@ -13,6 +16,9 @@ const links = [
 
 const Nav = () => {
   const { pathname } = useLocation();
+  const { user } = useGlobalState();
+  const { logout } = useLogout();
+
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -57,6 +63,7 @@ const Nav = () => {
             </Link>
           );
         })}
+        {user ? <Button onClick={logout}>Logout</Button> : null}
       </ul>
     </nav>
   );
