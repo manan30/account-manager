@@ -1,90 +1,60 @@
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
+import { FingerPrintIcon } from '@heroicons/react/outline';
 import Button from '../../../components/Button';
-import Input from '../../../components/Input/Input';
 import Modal from '../../../components/Modal/Modal';
-import { useFormState } from '../../../hooks/Form/useFormState';
-// import { useResetPassword } from '../../../services/firebase/hooks/useResetPassword';
+import { useFirebaseContext } from '../../../providers/FirebaseProvider';
+import { useNotificationDispatch } from '../../../providers/NotificationProvider';
+import { NOTIFICATION_THEME_FAILURE } from '../../../utils/Constants/ThemeConstants';
 
-type PasswordResetModalProps = {
-  hideModal: () => void;
-};
-
-type FormField = 'newPassword' | 'verificationCode';
+type PasswordResetModalProps = { email: string; hideModal: () => void };
 
 const PasswordResetModal: React.FC<PasswordResetModalProps> = ({
+  email,
   hideModal
 }) => {
-  // const { handleResetPassword } = useResetPassword();
-  const { errors, values, setFormValues, setFormErrors } = useFormState({
-    initialValues: { newPassword: '', verificationCode: '' },
-    initialErrors: { newPassword: false, verificationCode: false }
-  });
+  const notificationDispatch = useNotificationDispatch();
+  const { auth } = useFirebaseContext();
+  const [processing, setProcessing] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
 
-  const handleFormSubmit = useCallback(
-    async (
-      e:
-        | React.FormEvent<HTMLFormElement>
-        | React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => {
-      e.preventDefault();
-      const formErrors: Array<string> = [];
-      const { newPassword, verificationCode } = values;
-
-      [{ newPassword }, { verificationCode }].forEach((item) => {
-        const [key, value] = Object.entries(item)[0];
-        if (value?.trim() === '') formErrors.push(key);
+  const handlePasswordReset = () => {
+    setProcessing(true);
+    auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        setConfirmationModal(true);
+      })
+      .catch((err) => {
+        notificationDispatch({
+          type: 'ADD_NOTIFICATION',
+          payload: { content: err.message, theme: NOTIFICATION_THEME_FAILURE }
+        });
+      })
+      .finally(() => {
+        setProcessing(false);
       });
-
-      if (formErrors.length) {
-        setFormErrors(formErrors);
-        return;
-      }
-
-      // handleResetPassword(email);
-    },
-    [values, setFormErrors]
-  );
+  };
 
   return (
-    <Modal size='small' title='Verification Code' onCloseIconClick={hideModal}>
-      <p className='text-sm tracking-wide font-medium text-gray-400 text-center mb-6'>
-        Please enter the verification code that we sent to your email as well as
-        the new password
-      </p>
-      <form
-        onSubmit={handleFormSubmit}
-        className='flex flex-col w-full space-y-6 mb-4'
-      >
-        <Input
-          name='newPassword'
-          label='New Password'
-          value={values.newPassword}
-          error={errors.newPassword}
-          type='password'
-          placeholder='Password'
-          onChange={(name, value) => setFormValues(name as FormField, value)}
-        />
-
-        <Input
-          name='verificationCode'
-          label='Verification Code'
-          value={values.verificationCode}
-          error={errors.verificationCode}
-          type='text'
-          placeholder='123456'
-          onChange={(name, value) => setFormValues(name as FormField, value)}
-        />
-
+    <Modal size='small' title='Forgot Password?' onCloseIconClick={hideModal}>
+      <div className='flex flex-col items-center justify-center space-y-6'>
+        <FingerPrintIcon className='h-10 w-10 text-red-600 items-center' />
+        <p className='text-sm tracking-wide font-medium text-gray-400 text-center mb-6'>
+          {confirmationModal
+            ? `If the account exists in our system you should receive a password reset email at ${email}. Please follow the link in the email to reset your password`
+            : "That's okay, it happens! Click on the button below to reset your password"}
+        </p>
         <Button
           layout='primary'
           className='flex items-center w-full hover:shadow'
-          type='submit'
-          // disabled={processingVerificationCodeStep}
-          // loading={processingVerificationCodeStep}
+          type='reset'
+          disabled={processing}
+          loading={processing}
+          onClick={confirmationModal ? hideModal : handlePasswordReset}
         >
-          Submit
+          {confirmationModal ? 'Login' : 'Reset Password'}
         </Button>
-      </form>
+      </div>
     </Modal>
   );
 };
