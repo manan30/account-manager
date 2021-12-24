@@ -4,6 +4,7 @@ import { addNewStore } from './HttpFunctions/addNewStore';
 import { addNewSpendingCategory } from './HttpFunctions/addNewSpendingCategory';
 import { accounts, SyncTransactionsCron } from './Accounts';
 import { onCreateAddToSpendingTrigger } from './BankTransactions';
+import { createNewUser } from './User';
 import { seed } from './Seed';
 
 export {
@@ -14,5 +15,6 @@ export {
   onCreateAddToSpendingTrigger,
   accounts,
   SyncTransactionsCron,
-  seed
+  seed,
+  createNewUser
 };
