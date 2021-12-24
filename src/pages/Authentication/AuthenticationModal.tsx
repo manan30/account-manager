@@ -5,14 +5,12 @@ import { ReactComponent as GoogleIcon } from '../../assets/svg/google-icon.svg';
 import Button from '../../components/Button';
 import PhoneAuthenticationContent from './components/PhoneAuthenticationContent';
 import PasswordAuthenticationContent from './components/PasswordAuthenticationContent';
-
-type AuthenticationModalProps = {
-  // onGoogleAuthClicked: () => void;
-};
+import { useFirebaseContext } from '../../providers/FirebaseProvider';
 
 type SignInProvider = 'phone' | 'email';
 
-const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
+const AuthenticationModal = () => {
+  const { auth, authProviders } = useFirebaseContext();
   const [signInProvider, setSignInProvider] = useState<SignInProvider>('phone');
 
   const toggleSignInProvider = () => {
@@ -47,6 +45,9 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
         <Button
           layout='secondary'
           className='flex items-center w-full bg-gray-100 border border-gray-300 border-solid hover:shadow'
+          onClick={() => {
+            auth.signInWithPopup(authProviders.googleAuthProvider);
+          }}
         >
           <div className='w-4 h-4 mr-2'>
             <GoogleIcon />
@@ -55,13 +56,6 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
             Sign in with Google
           </span>
         </Button>
-
-        {/* <button
-          className='flex items-center justify-center w-full p-2 rounded-md shadow'
-          onClick={onGoogleAuthClicked}
-        >
-
-        </button> */}
       </div>
     </Modal>
   );
