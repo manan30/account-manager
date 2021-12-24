@@ -26,18 +26,16 @@ export const useFormState = <FormValues, FormErrors>(formState: {
     [formErrors]
   );
 
-  const handleFormErrorsChange = useCallback(
-    (errorKeys: Array<string>) => {
-      const updatedErrorState = { ...formErrors };
-      errorKeys.forEach((key) => {
-        (updatedErrorState[key as keyof FormErrors] as unknown) = true;
-      });
-      setFormErrors(updatedErrorState);
-    },
-    [formErrors]
-  );
+  const handleFormErrorsChange = useCallback((errorKeys: Array<string>) => {
+    const updatedErrorState = {} as FormErrors;
+    errorKeys.forEach((key) => {
+      (updatedErrorState[key as keyof FormErrors] as unknown) = true;
+    });
+    setFormErrors(updatedErrorState);
+  }, []);
 
   const resetForm = useCallback(() => {
+    console.log('resetForm');
     setFormValues(formState.initialValues);
     setFormErrors(formState.initialErrors);
   }, [formState]);
