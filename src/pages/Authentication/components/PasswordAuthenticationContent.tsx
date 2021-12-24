@@ -2,10 +2,12 @@ import React, { useCallback } from 'react';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input/Input';
 import { useFormState } from '../../../hooks/Form/useFormState';
+import { usePasswordAuth } from '../../../services/firebase/hooks/usePasswordAuth';
 import { EmailSignInFields, FormErrors, FormState } from '../interfaces';
 import { emailSignInFormFields } from '../utils/constants';
 
-const EmailAuthenticationContent = () => {
+const PasswordAuthenticationContent = () => {
+  const { processing, handlePasswordAuth } = usePasswordAuth();
   const { errors, values, setFormValues, setFormErrors } = useFormState<
     FormState<EmailSignInFields>,
     FormErrors<EmailSignInFields>
@@ -40,8 +42,10 @@ const EmailAuthenticationContent = () => {
         setFormErrors(formErrors);
         return;
       }
+
+      handlePasswordAuth(email, password);
     },
-    [values, setFormErrors]
+    [values, handlePasswordAuth, setFormErrors]
   );
 
   return (
@@ -68,8 +72,8 @@ const EmailAuthenticationContent = () => {
         layout='primary'
         className='flex items-center w-full hover:shadow'
         type='submit'
-        // disabled={accountProcessing}
-        // loading={accountProcessing}
+        disabled={processing}
+        loading={processing}
       >
         Sign In
       </Button>
@@ -77,4 +81,4 @@ const EmailAuthenticationContent = () => {
   );
 };
 
-export default EmailAuthenticationContent;
+export default PasswordAuthenticationContent;

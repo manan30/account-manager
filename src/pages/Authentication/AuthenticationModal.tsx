@@ -4,7 +4,7 @@ import Modal from '../../components/Modal/Modal';
 import { ReactComponent as GoogleIcon } from '../../assets/svg/google-icon.svg';
 import Button from '../../components/Button';
 import PhoneAuthenticationContent from './components/PhoneAuthenticationContent';
-import EmailAuthenticationContent from './components/EmailAuthenticationContent';
+import PasswordAuthenticationContent from './components/PasswordAuthenticationContent';
 
 type AuthenticationModalProps = {
   // onGoogleAuthClicked: () => void;
@@ -25,7 +25,7 @@ const AuthenticationModal: React.FC<AuthenticationModalProps> = () => {
     <Modal hideCloseIcon>
       <div className='flex flex-col items-center justify-center flex-auto h-full mx-8 my-4 space-y-6'>
         {signInProvider === 'phone' ? <PhoneAuthenticationContent /> : null}
-        {signInProvider === 'email' ? <EmailAuthenticationContent /> : null}
+        {signInProvider === 'email' ? <PasswordAuthenticationContent /> : null}
 
         <hr className='w-full' />
 
