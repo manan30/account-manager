@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@firebase/app-types": "0.6.1",
+    "@firebase/auth-types": "^0.11.0",
     "@firebase/firestore-types": "2.0.0",
     "@types/classnames": "2.2.11",
     "@types/faker": "5.1.5",
