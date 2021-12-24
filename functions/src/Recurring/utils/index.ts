@@ -27,7 +27,7 @@ export const generateFakeRecurringRecord = (): Recurring => {
     amount,
     createdAt,
     updatedAt: createdAt,
-    monthlyPayment: faker.datatype.boolean(),
+    monthlyPayment: faker.random.boolean(),
     type,
     recurringDate,
     category,
