@@ -32,7 +32,7 @@ axios.defaults.httpsAgent = httpsAgent;
 
 export const syncTransactions = functions.pubsub
   .schedule('every monday 21:00')
-  .onRun(async (context) => {
+  .onRun(async () => {
     try {
       const accountsDbRef = db.collection(AccountCollection);
       const bankTransactionsDbRef = db.collection(BankTransactionCollection);
