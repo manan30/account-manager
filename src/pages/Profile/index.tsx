@@ -9,6 +9,7 @@ import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
 import { FormValues, FormErrors, FormFields } from './interfaces';
+import ProfileImage from './ProfileImage';
 import { formFields } from './utils/constants';
 
 const Profile = () => {
@@ -85,6 +86,8 @@ const Profile = () => {
       className='flex flex-col items-center max-w-md mx-auto mt-6 space-y-6'
       onSubmit={handleUserUpdate}
     >
+      <ProfileImage photoURL={data?.[0].photoURL} />
+
       {formFields.map((field) => (
         <Input
           key={field.name}
