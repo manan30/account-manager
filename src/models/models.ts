@@ -5,4 +5,5 @@ export type CollectionName =
   | 'stores'
   | 'transaction'
   | 'account'
-  | 'recurring';
+  | 'recurring'
+  | 'user';

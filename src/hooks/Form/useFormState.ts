@@ -3,13 +3,7 @@ import { useCallback, useState } from 'react';
 export const useFormState = <FormValues, FormErrors>(formState: {
   initialValues: FormValues;
   initialErrors: FormErrors;
-}): {
-  values: FormValues;
-  errors: FormErrors;
-  setFormValues: (name: keyof FormErrors, value: string) => void;
-  setFormErrors: (errorKeys: Array<string>) => void;
-  resetForm: () => void;
-} => {
+}) => {
   const [formValues, setFormValues] = useState<FormValues>(
     formState.initialValues
   );
@@ -35,7 +29,6 @@ export const useFormState = <FormValues, FormErrors>(formState: {
   }, []);
 
   const resetForm = useCallback(() => {
-    console.log('resetForm');
     setFormValues(formState.initialValues);
     setFormErrors(formState.initialErrors);
   }, [formState]);
@@ -43,6 +36,7 @@ export const useFormState = <FormValues, FormErrors>(formState: {
   return {
     values: formValues,
     errors: formErrors,
+    setValues: setFormValues,
     setFormValues: handleFormValueChange,
     setFormErrors: handleFormErrorsChange,
     resetForm
