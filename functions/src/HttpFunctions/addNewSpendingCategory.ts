@@ -34,7 +34,7 @@ expressApp.post('/', async (req, res) => {
       .send({ success: `Document written successfully: ${docRef.id}` });
   } catch (err) {
     console.error({ err });
-    return res.status(500).send({ error: err.toString() });
+    return res.status(500).send({ error: (err as Error).toString() });
   }
 });
 
