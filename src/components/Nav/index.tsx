@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { LogoutIcon } from '@heroicons/react/outline';
 import cn from 'classnames';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
-import Button from '../Button';
 import { useLogout } from '../../services/firebase/hooks/useLogout';
 
 const links = [
@@ -71,7 +71,11 @@ const Nav = () => {
       </Link>
       <ul className='flex items-center ml-auto space-x-3'>
         {renderLinks()}
-        {user ? <Button onClick={logout}>Logout</Button> : null}
+        {user ? (
+          <button onClick={logout} className='text-base'>
+            <LogoutIcon className='h-5 w-5 opacity-50 hover:opacity-100' />
+          </button>
+        ) : null}
       </ul>
     </nav>
   );

@@ -61,7 +61,12 @@ const Profile = () => {
 
   const disabled = updatingUser || fetchingUser;
 
-  const handleUserUpdate = () => {
+  const handleUserUpdate = (
+    e:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     const updatedUser = {} as User;
 
     if (user?.email !== values.email) updatedUser.email = values.email;
@@ -89,7 +94,12 @@ const Profile = () => {
           type={field.inputType}
           placeholder={field.placeholder}
           onChange={(name, value) => setFormValues(name as FormFields, value)}
-          disabled={disabled || field.name !== 'displayName'}
+          disabled={
+            disabled ||
+            (field.name !== 'displayName' &&
+              (values[field.name].trim() !== '-' ||
+                values[field.name].trim() !== ' '))
+          }
         />
       ))}
       <Button
