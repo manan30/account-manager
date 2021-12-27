@@ -18,8 +18,7 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
   handleVerificationCodeStep
 }) => {
   const { errors, values, setFormValues, setFormErrors } = useForm({
-    initialValues: { verificationCode: '' },
-    initialErrors: { verificationCode: false }
+    initialValues: { verificationCode: '' }
   });
 
   const handleFormSubmit = useCallback(

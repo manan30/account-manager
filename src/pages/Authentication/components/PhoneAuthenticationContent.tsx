@@ -4,22 +4,17 @@ import Input from '../../../components/Input/Input';
 import Select from '../../../components/Select/Select';
 import { useForm } from '../../../hooks/Form/useForm';
 import { usePhoneAuth } from '../../../services/firebase/hooks/usePhoneAuth';
-import { FormErrors, FormState, PhoneSignInFields } from '../interfaces';
+import { PhoneSignInFields } from '../interfaces';
 import { phoneSignInFormFields } from '../utils/constants';
 import VerificationCodeModal from './VerificationCodeModal';
 
 const PhoneAuthenticationContent = () => {
   const { errors, values, setFormValues, setFormErrors } = useForm<
-    FormState<PhoneSignInFields>,
-    FormErrors<PhoneSignInFields>
+    PhoneSignInFields
   >({
     initialValues: {
       countryCode: '',
       phoneNumber: ''
-    },
-    initialErrors: {
-      countryCode: false,
-      phoneNumber: false
     }
   });
   const {

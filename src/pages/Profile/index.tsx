@@ -8,7 +8,7 @@ import { User } from '../../models/User';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
-import { FormValues, FormErrors, FormFields } from './interfaces';
+import { FormFields } from './interfaces';
 import ProfileImage from './ProfileImage';
 import { formFields } from './utils/constants';
 
@@ -23,7 +23,7 @@ const Profile = () => {
     updateUserMutation,
     { isLoading: updatingUser }
   ] = useFirestoreUpdateQuery<User>({
-    collectionName: UserCollection,
+    collectionName: 'user',
     onSuccess: () => {
       notificationDispatch({
         type: 'ADD_NOTIFICATION',
@@ -35,16 +35,11 @@ const Profile = () => {
     }
   });
 
-  const { values, setFormValues, setValues } = useForm<FormValues, FormErrors>({
+  const { values, setFormValues, setValues } = useForm<FormFields>({
     initialValues: {
       displayName: user?.displayName ?? '-',
       email: user?.email ?? '-',
       phoneNumber: user?.phoneNumber ?? '-'
-    },
-    initialErrors: {
-      displayName: false,
-      email: false,
-      phoneNumber: false
     }
   });
 

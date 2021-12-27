@@ -7,11 +7,15 @@ import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants
 type UpdateQueryArgs = {
   collectionName: CollectionName;
   onSuccess?: () => void;
+  onError?: () => void;
+  onComplete?: () => void;
 };
 
 const useFirestoreUpdateQuery = <T>({
   collectionName,
-  onSuccess
+  onSuccess,
+  onError,
+  onComplete
 }: UpdateQueryArgs): [
   (id: string, document: Partial<T>) => Promise<void>,
   {
@@ -37,11 +41,13 @@ const useFirestoreUpdateQuery = <T>({
       } catch (err) {
         console.error(err);
         setError(true);
+        if (onError) onError();
       } finally {
         setIsLoading(false);
+        if (onComplete) onComplete();
       }
     },
-    [firestore, collectionName, onSuccess]
+    [firestore, collectionName, onSuccess, onError, onComplete]
   );
 
   useEffect(() => {
