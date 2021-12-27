@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input/Input';
 import Modal from '../../../components/Modal/Modal';
-import { useFormState } from '../../../hooks/Form/useFormState';
+import { useForm } from '../../../hooks/Form/useForm';
 
 type VerificationCodeModalProps = {
   processingVerificationCodeStep: boolean;
@@ -17,7 +17,7 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
   hideModal,
   handleVerificationCodeStep
 }) => {
-  const { errors, values, setFormValues, setFormErrors } = useFormState({
+  const { errors, values, setFormValues, setFormErrors } = useForm({
     initialValues: { verificationCode: '' },
     initialErrors: { verificationCode: false }
   });

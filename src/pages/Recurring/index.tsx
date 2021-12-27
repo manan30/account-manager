@@ -12,7 +12,6 @@ import { useGlobalState } from '../../providers/GlobalStateProvider';
 
 const Recurring = () => {
   const { user } = useGlobalState();
-  const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
   // TODO: Update query to fetch only correct transactions for that month
   const { data: recurringTransactions } = useFirestoreReadQuery<RecurringModel>(
     {
@@ -24,6 +23,8 @@ const Recurring = () => {
       ]
     }
   );
+
+  const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
 
   const { groupedTransactions, monthlyExpenditure } = useMemo(() => {
     let monthlyExpenditure = 0;

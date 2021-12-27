@@ -30,5 +30,3 @@ export interface User {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
-
-export const UserCollection = 'user';

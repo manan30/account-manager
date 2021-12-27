@@ -3,8 +3,8 @@ import Button from '../../components/Button';
 import Input from '../../components/Input/Input';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import useFirestoreUpdateQuery from '../../hooks/Firestore/useFirestoreUpdateQuery';
-import { useFormState } from '../../hooks/Form/useFormState';
-import { User, UserCollection } from '../../models/User';
+import { useForm } from '../../hooks/Form/useForm';
+import { User } from '../../models/User';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
@@ -16,7 +16,7 @@ const Profile = () => {
   const { user } = useGlobalState();
   const notificationDispatch = useNotificationDispatch();
   const { data, isLoading: fetchingUser } = useFirestoreReadQuery<User>({
-    collection: UserCollection,
+    collection: 'user',
     whereClauses: [['uid', '==', user?.uid]]
   });
   const [
@@ -35,10 +35,7 @@ const Profile = () => {
     }
   });
 
-  const { values, setFormValues, setValues } = useFormState<
-    FormValues,
-    FormErrors
-  >({
+  const { values, setFormValues, setValues } = useForm<FormValues, FormErrors>({
     initialValues: {
       displayName: user?.displayName ?? '-',
       email: user?.email ?? '-',
