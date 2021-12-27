@@ -4,19 +4,24 @@ import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import RecurringEntryModal from './components/RecurringEntryModal';
 import ModalFallback from '../../components/ModalFallback';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import { Recurring as RecurringModel } from './interfaces/Recurring';
+import { Recurring as RecurringModel } from './interfaces/recurring.model';
 import Card from '../../components/Card';
 import { RecurringTransactionCategory } from './utils/constants';
 import RecurringTransactionGroup from './components/RecurringTransactionGroup';
+import { useGlobalState } from '../../providers/GlobalStateProvider';
 
 const Recurring = () => {
+  const { user } = useGlobalState();
   const [openRecurringEntryModal, setOpenRecurringEntryModal] = useState(false);
   // TODO: Update query to fetch only correct transactions for that month
   const { data: recurringTransactions } = useFirestoreReadQuery<RecurringModel>(
     {
       collection: 'recurring',
       orderByClauses: [['recurringDate', 'asc']],
-      whereClauses: [['completed', '==', false]]
+      whereClauses: [
+        ['completed', '==', false],
+        ['uid', '==', user?.uid]
+      ]
     }
   );
 
@@ -67,6 +72,7 @@ const Recurring = () => {
       {openRecurringEntryModal ? (
         <Suspense fallback={<ModalFallback />}>
           <RecurringEntryModal
+            uid={user?.uid ?? ''}
             handleClose={() => setOpenRecurringEntryModal(false)}
           />
         </Suspense>

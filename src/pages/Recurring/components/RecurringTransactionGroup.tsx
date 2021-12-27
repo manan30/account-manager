@@ -1,5 +1,5 @@
 import React from 'react';
-import { Recurring } from '../interfaces/Recurring';
+import { Recurring } from '../interfaces/recurring.model';
 import { RecurringTransactionCategory } from '../utils/constants';
 import RecurringItem from './RecurringItem';
 

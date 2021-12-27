@@ -21,4 +21,5 @@ export interface Recurring {
   createdAt: Timestamp;
   updatedAt: Timestamp;
   imageIcon?: string;
+  uid: string;
 }

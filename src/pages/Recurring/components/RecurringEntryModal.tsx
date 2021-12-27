@@ -6,22 +6,21 @@ import Modal from '../../../components/Modal/Modal';
 import Select from '../../../components/Select/Select';
 import useFirestoreCreateQuery from '../../../hooks/Firestore/useFirestoreCreateQuery';
 import { useFormState } from '../../../hooks/Form/useFormState';
-import { Recurring } from '../interfaces/Recurring';
 import { useFirebaseContext } from '../../../providers/FirebaseProvider';
 import { useNotificationDispatch } from '../../../providers/NotificationProvider';
-import {
-  NOTIFICATION_THEME_FAILURE,
-  NOTIFICATION_THEME_SUCCESS
-} from '../../../utils/Constants/ThemeConstants';
+import { NOTIFICATION_THEME_SUCCESS } from '../../../utils/Constants/ThemeConstants';
 import { monthDiffBetweenTwoDates } from '../../../utils/Functions';
 import { FormFields as formFields } from '../utils/constants';
 import { FormState } from '../interfaces/types';
+import { Recurring } from '../interfaces/recurring.model';
 
 type RecurringEntryModalProps = {
+  uid: string;
   handleClose: () => void;
 };
 
 const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
+  uid,
   handleClose
 }) => {
   const { firestoreTimestamp } = useFirebaseContext();
@@ -58,7 +57,19 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
     addNewRecurringTransactionMutation,
     { isLoading }
   ] = useFirestoreCreateQuery<Recurring>({
-    collectionName: 'recurring'
+    collectionName: 'recurring',
+    onSuccess: () => {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: 'New Recurring Transaction Added',
+          theme: NOTIFICATION_THEME_SUCCESS
+        }
+      });
+    },
+    onComplete: () => {
+      resetForm();
+    }
   });
 
   const handleFormSubmit = useCallback(
@@ -120,7 +131,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         type,
         category,
         recurringDate: firestoreTimestamp.fromDate(new Date(date)),
-        completed: false
+        completed: false,
+        uid
       } as Recurring;
 
       if (endingDate) {
@@ -132,36 +144,14 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         };
       }
 
-      try {
-        await addNewRecurringTransactionMutation(newTransaction);
-
-        notificationDispatch({
-          type: 'ADD_NOTIFICATION',
-          payload: {
-            content: 'New Recurring Transaction Added',
-            theme: NOTIFICATION_THEME_SUCCESS
-          }
-        });
-      } catch (err) {
-        notificationDispatch({
-          type: 'ADD_NOTIFICATION',
-          payload: {
-            content: 'Error occurred while adding new recurring transaction',
-            theme: NOTIFICATION_THEME_FAILURE
-          }
-        });
-        console.error({ err });
-      } finally {
-        resetForm();
-      }
+      await addNewRecurringTransactionMutation(newTransaction);
     },
     [
       values,
       firestoreTimestamp,
+      uid,
       setFormErrors,
-      addNewRecurringTransactionMutation,
-      notificationDispatch,
-      resetForm
+      addNewRecurringTransactionMutation
     ]
   );
 
