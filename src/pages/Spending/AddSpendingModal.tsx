@@ -338,7 +338,7 @@ const AddSpendingModal: React.FC<AddSpendingModalProps> = ({
                   ? 'Add Spending Entry'
                   : 'Update Spending Entry'
               }
-              onClickHandler={(e) => handleSubmit(e)}
+              onClick={handleSubmit}
               loading={isLoading}
               disabled={
                 currentTransaction &&

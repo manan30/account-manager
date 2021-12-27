@@ -39,7 +39,8 @@ const routes: RouteType[] = [
   {
     path: '/recurring',
     component: React.lazy(() => import('../pages/Recurring'))
-  }
+  },
+  { path: '/profile', component: React.lazy(() => import('../pages/Profile')) }
 ].filter(Boolean) as RouteType[];
 
 const Router = () => {
