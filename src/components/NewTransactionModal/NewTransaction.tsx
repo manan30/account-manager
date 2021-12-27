@@ -237,7 +237,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
           <div className='mt-10'>
             <Button
               buttonText='Add Transaction'
-              onClickHandler={(e) => handleSubmit(e)}
+              onClick={handleSubmit}
               loading={isLoading}
               type='submit'
             />

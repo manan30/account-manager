@@ -10,6 +10,7 @@ import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import Loader from '../../components/Loader';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import { Account } from '../../models/Account';
 
 const LinkAccount = () => {
   const notificationDispatch = useNotificationDispatch();
@@ -63,7 +64,7 @@ const LinkAccount = () => {
         (initializing || addingAccount) &&
           'hover:shadow-none opacity-40 cursor-default'
       )}
-      onClickHandler={() => {
+      onClick={() => {
         if (openTellerConnect) openTellerConnect();
       }}
     >
