@@ -99,7 +99,8 @@ const Profile = () => {
           onChange={(name, value) => setFormValues(name as FormFields, value)}
           disabled={
             disabled ||
-            (field.name !== 'displayName' && data?.[0][field.name] !== '-')
+            (field.name !== 'displayName' &&
+              !(data?.[0][field.name] === '-' || data?.[0][field.name] === ''))
           }
         />
       ))}
