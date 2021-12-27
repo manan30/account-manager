@@ -8,9 +8,6 @@ import { generateRandomKey } from '../utils/Functions';
 import Helmet from '../components/Helmet';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
-const UnauthorizedUserModal = React.lazy(
-  () => import('../pages/Authentication/UnauthorizedUserModal')
-);
 const NotFoundPage = React.lazy(() => import('../pages/404'));
 
 type RouteType = {
@@ -57,11 +54,6 @@ const Router = () => {
               <Route
                 path='/authentication'
                 component={AuthenticationPage}
-                exact
-              />
-              <Route
-                path='/unauthorized'
-                component={UnauthorizedUserModal}
                 exact
               />
               {routes.map(({ path, component: Component }) => (
