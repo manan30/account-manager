@@ -13,8 +13,8 @@ import {
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS
 } from '../../utils/Constants/ThemeConstants';
-import { FormFields } from './interfaces';
-import { FormFields as formFields } from './utils/constants';
+import { NewCreditorFormFields } from './interfaces';
+import { NewCreditorFormFields as formFields } from './utils/constants';
 
 type NewCreditorModalProps = {
   uid: string;
@@ -50,7 +50,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
   });
 
   const { values, errors, setFormValues, setFormErrors, resetForm } = useForm<
-    FormFields
+    NewCreditorFormFields
   >({
     initialValues: {
       name: '',
@@ -137,7 +137,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
                     disabled={isLoading}
                     options={(field.options as unknown) as string[]}
                     onChange={(name, value) =>
-                      setFormValues(name as FormFields, value)
+                      setFormValues(name as NewCreditorFormFields, value)
                     }
                   />
                 );
@@ -153,7 +153,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
                     disabled={isLoading}
                     placeholder={field.placeholder}
                     onChange={(name, value) =>
-                      setFormValues(name as FormFields, value)
+                      setFormValues(name as NewCreditorFormFields, value)
                     }
                   />
                 );

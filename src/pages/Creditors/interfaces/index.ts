@@ -1,3 +1,8 @@
-import { FormFields } from '../utils/constants';
+import {
+  NewCreditorFormFields,
+  NewTransactionFormFields
+} from '../utils/constants';
 
-export type FormFields = typeof FormFields[number]['name'];
+export type NewCreditorFormFields = typeof NewCreditorFormFields[number]['name'];
+
+export type NewTransactionFormFields = typeof NewTransactionFormFields[number]['name'];
