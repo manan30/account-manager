@@ -6,7 +6,7 @@ import { User, UserCollection } from '../../models/User';
 
 type ProfileImageProps = {
   photoURL?: string;
-  id: string;
+  id?: string;
 };
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ id, photoURL }) => {
@@ -30,7 +30,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ id, photoURL }) => {
   };
 
   useEffect(() => {
-    if (data) {
+    if (data && id) {
       updateProfileImageMutation(id, { photoURL: data.url });
     }
   }, [data, id, updateProfileImageMutation]);

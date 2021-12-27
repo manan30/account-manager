@@ -86,7 +86,7 @@ const Profile = () => {
       className='flex flex-col items-center max-w-md mx-auto mt-6 space-y-6'
       onSubmit={handleUserUpdate}
     >
-      <ProfileImage photoURL={data?.[0].photoURL} />
+      <ProfileImage photoURL={data?.[0].photoURL} id={data?.[0].id} />
 
       {formFields.map((field) => (
         <Input
