@@ -94,7 +94,11 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
   ]);
 
   return (
-    <Modal title='Transactions' onCloseIconClick={onModalCloseHandler}>
+    <Modal
+      size='large'
+      title='Transactions'
+      onCloseIconClick={onModalCloseHandler}
+    >
       <div className='px-3'>
         {loadingTransactions || !tableData ? (
           new Array(10).fill(0).map(() => (

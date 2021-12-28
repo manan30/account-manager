@@ -41,7 +41,7 @@ const routes: RouteType[] = [
 ].filter(Boolean) as RouteType[];
 
 const Router = () => {
-  const { user, unauthorizedUser } = useGlobalState();
+  const { user } = useGlobalState();
 
   return (
     <>
@@ -61,7 +61,8 @@ const Router = () => {
                   key={generateRandomKey()}
                   path={path}
                   render={({ location }) => {
-                    return user && !unauthorizedUser ? (
+                    console.log({ location });
+                    return user ? (
                       <Component />
                     ) : (
                       <Redirect
