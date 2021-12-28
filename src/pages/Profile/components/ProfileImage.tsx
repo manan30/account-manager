@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { UserCircleIcon, PencilIcon } from '@heroicons/react/solid';
-import { useUploadImage } from '../../hooks/Cloudinary/useUploadImage';
-import useFirestoreUpdateQuery from '../../hooks/Firestore/useFirestoreUpdateQuery';
-import { User } from '../../models/User';
+import { useUploadImage } from '../../../hooks/Cloudinary/useUploadImage';
+import useFirestoreUpdateQuery from '../../../hooks/Firestore/useFirestoreUpdateQuery';
+import { User } from '../../../models/User';
 
 type ProfileImageProps = {
   photoURL?: string;

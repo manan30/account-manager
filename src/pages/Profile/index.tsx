@@ -9,7 +9,7 @@ import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_SUCCESS } from '../../utils/Constants/ThemeConstants';
 import { FormFields } from './interfaces';
-import ProfileImage from './ProfileImage';
+import ProfileImage from './components/ProfileImage';
 import { formFields } from './utils/constants';
 
 const Profile = () => {
