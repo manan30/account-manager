@@ -1,10 +1,13 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import axios, { Response } from 'redaxios';
-import { Account as AccountModel, AccountResponse } from '../../models/Account';
-import { useNotificationDispatch } from '../../providers/NotificationProvider';
-import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
-import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
+import {
+  Account as AccountModel,
+  AccountResponse
+} from '../../../models/Account';
+import { useNotificationDispatch } from '../../../providers/NotificationProvider';
+import { ACCOUNT_FUNCTIONS } from '../../../utils/Constants/APIConstants';
+import { NOTIFICATION_THEME_FAILURE } from '../../../utils/Constants/ThemeConstants';
 import AccountItem from './AccountItem';
 import AccountsLoading from './AccountsLoading';
 

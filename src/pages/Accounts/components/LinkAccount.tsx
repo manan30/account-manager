@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import axios from 'redaxios';
 import cn from 'classnames';
-import Button from '../../components/Button';
-import { useTellerConnect } from '../../hooks/Teller/useTellerConnect';
+import Button from '../../../components/Button';
+import { useTellerConnect } from '../../../hooks/Teller/useTellerConnect';
 import { useMutation } from 'react-query';
 import { Response } from 'redaxios';
-import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
-import { useNotificationDispatch } from '../../providers/NotificationProvider';
-import { useGlobalState } from '../../providers/GlobalStateProvider';
-import Loader from '../../components/Loader';
-import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { Account } from '../../models/Account';
+import { ACCOUNT_FUNCTIONS } from '../../../utils/Constants/APIConstants';
+import { useNotificationDispatch } from '../../../providers/NotificationProvider';
+import { useGlobalState } from '../../../providers/GlobalStateProvider';
+import Loader from '../../../components/Loader';
+import { NOTIFICATION_THEME_FAILURE } from '../../../utils/Constants/ThemeConstants';
+import { Account } from '../../../models/Account';
 
 const LinkAccount = () => {
   const notificationDispatch = useNotificationDispatch();
@@ -24,7 +24,6 @@ const LinkAccount = () => {
 
   const {
     isLoading: addingAccount,
-    error: accountAddingError,
     mutate: addNewAccountMutation
   } = useMutation<Response<Account>, Response<Error>>(
     async () =>
@@ -33,28 +32,27 @@ const LinkAccount = () => {
         userId: user?.uid
       }),
     {
-      mutationKey: enrollment?.enrollment.id
+      mutationKey: enrollment?.enrollment.id,
+      onSuccess: () => {
+        enrollmentCompleted();
+      },
+      onError: (accountAddingError) => {
+        notificationDispatch({
+          type: 'ADD_NOTIFICATION',
+          payload: {
+            content: `Request failed due to ${accountAddingError.data}`,
+            theme: NOTIFICATION_THEME_FAILURE
+          }
+        });
+      }
     }
   );
 
   useEffect(() => {
     if (enrollment?.accessToken) {
       addNewAccountMutation();
-      enrollmentCompleted();
     }
-  }, [enrollment, addNewAccountMutation, enrollmentCompleted]);
-
-  useEffect(() => {
-    if (accountAddingError) {
-      notificationDispatch({
-        type: 'ADD_NOTIFICATION',
-        payload: {
-          content: `Request failed due to ${accountAddingError.data}`,
-          theme: NOTIFICATION_THEME_FAILURE
-        }
-      });
-    }
-  }, [accountAddingError, notificationDispatch]);
+  }, [enrollment, addNewAccountMutation]);
 
   return (
     <Button
