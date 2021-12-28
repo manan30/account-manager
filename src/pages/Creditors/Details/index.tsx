@@ -19,7 +19,7 @@ import FloatingActionButton from '../../../components/Button/FloatingActionButto
 import { PlusIcon } from '@heroicons/react/solid';
 
 const NewTransactionModal = React.lazy(
-  () => import('../Details/NewTransactionModal')
+  () => import('../components/NewTransactionModal')
 );
 
 const CreditorDetails = () => {

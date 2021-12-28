@@ -1,20 +1,20 @@
 import React, { useCallback } from 'react';
-import Button from '../../components/Button';
-import Input from '../../components/Input/Input';
-import Modal from '../../components/Modal/Modal';
-import Select from '../../components/Select/Select';
-import useFirestoreCreateQuery from '../../hooks/Firestore/useFirestoreCreateQuery';
-import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import { useForm } from '../../hooks/Form/useForm';
-import { ICreditor } from '../../models/Creditor';
-import { useFirebaseContext } from '../../providers/FirebaseProvider';
-import { useNotificationDispatch } from '../../providers/NotificationProvider';
+import Button from '../../../components/Button';
+import Input from '../../../components/Input/Input';
+import Modal from '../../../components/Modal/Modal';
+import Select from '../../../components/Select/Select';
+import useFirestoreCreateQuery from '../../../hooks/Firestore/useFirestoreCreateQuery';
+import useFirestoreReadQuery from '../../../hooks/Firestore/useFirestoreReadQuery';
+import { useForm } from '../../../hooks/Form/useForm';
+import { ICreditor } from '../../../models/Creditor';
+import { useFirebaseContext } from '../../../providers/FirebaseProvider';
+import { useNotificationDispatch } from '../../../providers/NotificationProvider';
 import {
   NOTIFICATION_THEME_FAILURE,
   NOTIFICATION_THEME_SUCCESS
-} from '../../utils/Constants/ThemeConstants';
-import { NewCreditorFormFields } from './interfaces';
-import { NewCreditorFormFields as formFields } from './utils/constants';
+} from '../../../utils/Constants/ThemeConstants';
+import { NewCreditorFormFields } from '../interfaces';
+import { NewCreditorFormFields as formFields } from '../utils/constants';
 
 type NewCreditorModalProps = {
   uid: string;

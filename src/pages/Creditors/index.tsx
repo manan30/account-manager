@@ -21,7 +21,9 @@ import { generateRandomKey } from '../../utils/Functions';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 
-const NewCreditorModal = React.lazy(() => import('./NewCreditorModal'));
+const NewCreditorModal = React.lazy(
+  () => import('./components/NewCreditorModal')
+);
 
 const Creditors = () => {
   const notificationDispatch = useNotificationDispatch();
