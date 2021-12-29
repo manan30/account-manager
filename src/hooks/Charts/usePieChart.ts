@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ISpending } from '../../models/Spending';
+import { IExpense } from '../../models/Expense';
 import { spendingCategoryColorMapping } from '../../utils/Functions';
 
 const usePieChart = (
-  data?: Array<ISpending> | undefined,
+  data?: Array<IExpense> | undefined,
   monthYear?: string,
   showPieChart?: boolean
 ) => {

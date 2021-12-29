@@ -1,23 +1,26 @@
 import React from 'react';
-import Modal from '../../components/Modal';
-import { ISpending } from '../../models/Spending';
-import { NumberWithCommasFormatter } from '../../utils/Formatters';
-import { generateRandomKey } from '../../utils/Functions';
+import Modal from '../../../components/Modal/Modal';
+import { IExpense } from '../../../models/Expense';
+import { NumberWithCommasFormatter } from '../../../utils/Formatters';
+import { generateRandomKey } from '../../../utils/Functions';
 
-type SpendingOverviewModalProps = {
+type ExpenseOverviewModalProps = {
+  currentExpense?: IExpense;
+  allExpenses?: IExpense[];
   handleModalClose: () => void;
-  currentTransaction?: ISpending;
-  allTransactions?: ISpending[];
 };
 
-const SpendingOverviewModal: React.FC<SpendingOverviewModalProps> = ({
-  currentTransaction,
-  allTransactions,
+const ExpenseOverviewModal: React.FC<ExpenseOverviewModalProps> = ({
+  currentExpense,
+  allExpenses,
   handleModalClose
 }) => {
   return (
-    <Modal isOpen shouldCloseOnEscape onCloseClickHandler={handleModalClose}>
-      <div className='flex flex-col justify-center items-center mb-4'>
+    <Modal
+      title={`${currentExpense?.category || ''} Expenses`}
+      onCloseIconClick={handleModalClose}
+    >
+      <div className='flex flex-col justify-center items-center mb-3'>
         <h2 className='tracking-wider uppercase text-xl mb-4 text-gray-500'>
           Transaction
         </h2>
@@ -27,19 +30,19 @@ const SpendingOverviewModal: React.FC<SpendingOverviewModalProps> = ({
             month: 'short',
             year: 'numeric',
             day: 'numeric'
-          }).format(currentTransaction?.date.toDate())}
+          }).format(currentExpense?.date.toDate())}
         </h3>
         <h1 className='text-2xl tracking-wide font-semibold mb-4 text-indigo-600'>
-          {currentTransaction?.storeName}
+          {currentExpense?.storeName}
         </h1>
         <h2 className='tracking-wider uppercase text-xl mb-4 text-indigo-500'>
-          ${NumberWithCommasFormatter.format(`${currentTransaction?.amount}`)}
+          ${NumberWithCommasFormatter.format(`${currentExpense?.amount}`)}
         </h2>
-        <div className='font-medium text-xl w-full text-center mb-4 text-gray-600'>
-          All {currentTransaction?.category || ''} transactions
+        <div className='font-medium text-xl w-full text-center mb-2 text-gray-600 capitalize'>
+          Other {currentExpense?.category || ''} expenses
         </div>
-        <div className='w-full px-3' style={{ height: 'calc(100% - 10rem)' }}>
-          {allTransactions?.map((transaction) => {
+        <div className='w-full px-3'>
+          {allExpenses?.map((transaction) => {
             return (
               <div
                 className='mt-4 flex items-center justify-between'
@@ -66,4 +69,4 @@ const SpendingOverviewModal: React.FC<SpendingOverviewModalProps> = ({
   );
 };
 
-export default SpendingOverviewModal;
+export default ExpenseOverviewModal;

@@ -1,6 +1,6 @@
 import { Timestamp } from '@firebase/firestore-types';
 
-export interface ISpending {
+export interface IExpense {
   id?: string;
   storeName: string;
   category: string;

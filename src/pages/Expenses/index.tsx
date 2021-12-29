@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import cn from 'classnames';
 import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import { MdAdd, MdArrowBack, MdDelete, MdEdit } from 'react-icons/md';
+import { MdArrowBack, MdDelete, MdEdit } from 'react-icons/md';
 import { Column, Row } from 'react-table';
 import {
   VictoryAxis,
@@ -17,27 +17,35 @@ import {
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
 import Loader from '../../components/Loader';
-import DeleteModal from '../../components/Modal';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
 import useChartWidth from '../../hooks/Charts/useChartWidth';
 import useLineChart from '../../hooks/Charts/useLineChart';
 import usePieChart from '../../hooks/Charts/usePieChart';
-import { ISpending } from '../../models/Spending';
+import { IExpense } from '../../models/Expense';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { numberToMonthMapping } from '../../utils/Functions';
-import AddSpendingModal from './AddSpendingModal';
-import SpendingOverviewModal from './SpendingOverviewModal';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
-import useFirestoreDeleteQuery from '../../hooks/Firestore/useFirestoreDeleteQuery';
+import FloatingActionButton from '../../components/Button/FloatingActionButton';
+import { PlusIcon } from '@heroicons/react/solid';
+
+const DeleteExpenseModal = React.lazy(
+  () => import('./components/DeleteExpenseModal')
+);
+const ExpenseOverviewModal = React.lazy(
+  () => import('./components/ExpenseOverviewModal')
+);
+const AddExpenseModal = React.lazy(
+  () => import('./components/AddExpenseModal')
+);
 
 const Spending = () => {
   const notificationDispatch = useNotificationDispatch();
   const { data: spendingData, isLoading, error } = useFirestoreReadQuery<
-    ISpending
+    IExpense
   >({
     collection: 'spending',
     orderByClauses: [['date', 'desc']]
@@ -55,22 +63,12 @@ const Spending = () => {
   const [deleteDoc, setDeleteDoc] = useState<
     { id: string; name: string } | undefined
   >();
-  const {
-    error: deleteError,
-    isLoading: isDocumentBeingDeleted,
-    mutation: deleteSpendingEntryMutation
-  } = useFirestoreDeleteQuery({
-    id: deleteDoc?.id ?? '',
-    collectionName: 'spending',
-    onComplete: () => {
-      setShowDeleteModal(false);
-    }
-  });
+
   const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
-    ISpending | undefined
+    IExpense | undefined
   >();
   const [spendingOverviewModalData, setSpendingOverviewModalData] = useState<
-    ISpending[] | undefined
+    IExpense[] | undefined
   >();
   const [currentMonthYear, setCurrentMonthYear] = useState<
     string | undefined
@@ -82,7 +80,7 @@ const Spending = () => {
     angle
   } = usePieChart(spendingData, currentMonthYear, showPieChart);
 
-  const tableColumns = useMemo<Column<Partial<ISpending>>[]>(
+  const tableColumns = useMemo<Column<Partial<IExpense>>[]>(
     () => [
       {
         Header: ({ column }) => {
@@ -159,7 +157,7 @@ const Spending = () => {
             className='w-full uppercase'
             onClick={() => {
               setShowSpendingOverviewModal(true);
-              setCurrentSpendingEntry(row.original as ISpending);
+              setCurrentSpendingEntry(row.original as IExpense);
             }}
           >
             <Badge type={row.original.category || ''} />
@@ -203,11 +201,11 @@ const Spending = () => {
       {
         id: 'edit',
         accessor: undefined,
-        Cell: ({ row }: { row: Row<Partial<ISpending>> }) => (
+        Cell: ({ row }: { row: Row<Partial<IExpense>> }) => (
           <button
             className='text-gray-500 hover:text-gray-700'
             onClick={() => {
-              setCurrentSpendingEntry(row.original as ISpending);
+              setCurrentSpendingEntry(row.original as IExpense);
               setShowAddSpendingModal(true);
             }}
           >
@@ -219,7 +217,7 @@ const Spending = () => {
       {
         id: 'delete',
         accessor: undefined,
-        Cell: ({ row }: { row: Row<Partial<ISpending>> }) => (
+        Cell: ({ row }: { row: Row<Partial<IExpense>> }) => (
           <button
             className='w-4 text-red-400 hover:text-red-600'
             onClick={() => {
@@ -252,17 +250,6 @@ const Spending = () => {
         }
       });
   }, [error, notificationDispatch]);
-
-  useEffect(() => {
-    if (deleteError)
-      notificationDispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-          content: `There was an error while deleting spending entry for ${deleteDoc?.name}`,
-          theme: NOTIFICATION_THEME_FAILURE
-        }
-      });
-  }, [deleteError, notificationDispatch, deleteDoc]);
 
   useEffect(() => {
     if (showSpendingOverviewModal)
@@ -442,15 +429,15 @@ const Spending = () => {
       </Card>
       {isLoading && <Loader size={48} />}
       {tableData && <Table columns={tableColumns} data={tableData} paginate />}
-      <button
-        className='absolute bottom-0 right-0 z-10 grid w-12 h-12 p-2 mb-12 mr-12 text-white bg-indigo-500 rounded-full shadow-lg hover:bg-indigo-700 place-items-center'
-        onClick={() => setShowAddSpendingModal(true)}
-      >
-        <MdAdd size={32} />
-      </button>
+      <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+        <FloatingActionButton
+          icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
+          onClickHandler={() => setShowAddSpendingModal(true)}
+        />
+      </div>
       {showAddSpendingModal && (
         <React.Suspense fallback={<ModalFallback />}>
-          <AddSpendingModal
+          <AddExpenseModal
             currentTransaction={currentSpendingEntry}
             handleModalClose={() => {
               setShowAddSpendingModal(false);
@@ -460,9 +447,9 @@ const Spending = () => {
       )}
       {showSpendingOverviewModal && (
         <React.Suspense fallback={<ModalFallback />}>
-          <SpendingOverviewModal
-            currentTransaction={currentSpendingEntry}
-            allTransactions={spendingOverviewModalData}
+          <ExpenseOverviewModal
+            currentExpense={currentSpendingEntry}
+            allExpenses={spendingOverviewModalData}
             handleModalClose={() => {
               setShowSpendingOverviewModal(false);
             }}
@@ -471,17 +458,10 @@ const Spending = () => {
       )}
       {showDeleteModal && (
         <React.Suspense fallback={<ModalFallback />}>
-          <DeleteModal
-            onCloseClickHandler={() => setShowDeleteModal(false)}
-            onConfirmClickHandler={() => deleteSpendingEntryMutation()}
-            confirmButtonText='Confirm'
-            isOpen
-            isPerformingAsyncTask={isDocumentBeingDeleted}
-          >
-            <div className='px-2 mb-8'>
-              Are you sure you want to delete <strong>{deleteDoc?.name}</strong>
-            </div>
-          </DeleteModal>
+          <DeleteExpenseModal
+            deleteDoc={deleteDoc}
+            handleClose={() => setShowDeleteModal(false)}
+          />
         </React.Suspense>
       )}
     </>

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { MailIcon, PhoneIcon } from '@heroicons/react/solid';
-import Modal from '../../components/Modal/Modal';
-import { ReactComponent as GoogleIcon } from '../../assets/svg/google-icon.svg';
-import Button from '../../components/Button';
-import PhoneAuthenticationContent from './components/PhoneAuthenticationContent';
-import PasswordAuthenticationContent from './components/PasswordAuthenticationContent';
-import { useFirebaseContext } from '../../providers/FirebaseProvider';
+import Modal from '../../../components/Modal/Modal';
+import { ReactComponent as GoogleIcon } from '../../../assets/svg/google-icon.svg';
+import Button from '../../../components/Button';
+import PhoneAuthenticationContent from './PhoneAuthenticationContent';
+import PasswordAuthenticationContent from './PasswordAuthenticationContent';
+import { useFirebaseContext } from '../../../providers/FirebaseProvider';
 
 type SignInProvider = 'phone' | 'email';
 

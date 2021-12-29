@@ -27,7 +27,7 @@ const routes: RouteType[] = [
   },
   {
     path: '/expenses',
-    component: React.lazy(() => import('../pages/Spending'))
+    component: React.lazy(() => import('../pages/Expenses'))
   },
   {
     path: '/accounts',
@@ -61,7 +61,6 @@ const Router = () => {
                   key={generateRandomKey()}
                   path={path}
                   render={({ location }) => {
-                    console.log({ location });
                     return user ? (
                       <Component />
                     ) : (

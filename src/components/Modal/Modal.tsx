@@ -30,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({
           {title || !hideCloseIcon ? (
             <div className='flex items-center mb-6'>
               {title ? (
-                <div className='text-lg font-semibold tracking-wide text-indigo-700'>
+                <div className='text-lg font-semibold tracking-wide text-indigo-700 capitalize'>
                   {title}
                 </div>
               ) : null}
