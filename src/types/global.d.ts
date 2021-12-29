@@ -13,7 +13,7 @@ declare namespace TellerConnect {
   };
 
   let TellerConnectSetupOptions: {
-    environment: 'development' | 'production';
+    environment: 'development' | 'production' | 'sandbox';
     applicationId: string;
     enrollmentId?: string;
     userId?: string;

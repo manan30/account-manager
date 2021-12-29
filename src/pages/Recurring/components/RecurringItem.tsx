@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import cn from 'classnames';
 import Card from '../../../components/Card';
-import { Recurring } from '../interfaces/Recurring';
+import { Recurring } from '../interfaces/recurring.model';
 
 type RecurringItemProps = {
   transaction: Recurring;

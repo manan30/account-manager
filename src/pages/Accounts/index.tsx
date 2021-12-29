@@ -2,19 +2,19 @@ import React from 'react';
 import { ReactComponent as VaultIcon } from '../../assets/svg/vault.svg';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import { Account as AccountModel } from '../../models/Account';
-import Account from './Account';
-import LinkAccount from './LinkAccount';
+import { useGlobalState } from '../../providers/GlobalStateProvider';
+import Account from './components/Account';
+import LinkAccount from './components/LinkAccount';
 
 const Accounts = () => {
+  const { user } = useGlobalState();
   const {
     data: accountsData,
-    // error: accountsFetchingError,
     isLoading: loadingAccounts
   } = useFirestoreReadQuery<AccountModel>({
-    collection: 'account'
+    collection: 'account',
+    whereClauses: [['userId', '==', user?.uid]]
   });
-
-  // if (loadingAccounts) return <AccountsLoading />;
 
   if (!loadingAccounts && (!accountsData || accountsData.length === 0)) {
     return (

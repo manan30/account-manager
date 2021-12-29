@@ -5,34 +5,29 @@ import Input from '../../../components/Input/Input';
 import Modal from '../../../components/Modal/Modal';
 import Select from '../../../components/Select/Select';
 import useFirestoreCreateQuery from '../../../hooks/Firestore/useFirestoreCreateQuery';
-import { useFormState } from '../../../hooks/Form/useFormState';
-import { Recurring } from '../interfaces/Recurring';
+import { useForm } from '../../../hooks/Form/useForm';
 import { useFirebaseContext } from '../../../providers/FirebaseProvider';
 import { useNotificationDispatch } from '../../../providers/NotificationProvider';
-import {
-  NOTIFICATION_THEME_FAILURE,
-  NOTIFICATION_THEME_SUCCESS
-} from '../../../utils/Constants/ThemeConstants';
+import { NOTIFICATION_THEME_SUCCESS } from '../../../utils/Constants/ThemeConstants';
 import { monthDiffBetweenTwoDates } from '../../../utils/Functions';
 import { FormFields as formFields } from '../utils/constants';
-import { FormState } from '../interfaces/types';
+import { FormFields } from '../interfaces/types';
+import { Recurring } from '../interfaces/recurring.model';
 
 type RecurringEntryModalProps = {
+  uid: string;
   handleClose: () => void;
 };
 
 const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
+  uid,
   handleClose
 }) => {
   const { firestoreTimestamp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatch();
-  const {
-    values,
-    errors,
-    setFormValues,
-    setFormErrors,
-    resetForm
-  } = useFormState<Record<FormState, string>, Record<FormState, boolean>>({
+  const { values, errors, setFormValues, setFormErrors, resetForm } = useForm<
+    FormFields
+  >({
     initialValues: {
       name: '',
       amount: '',
@@ -42,23 +37,25 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
       category: '',
       frequency: '',
       customFrequency: ''
-    },
-    initialErrors: {
-      name: false,
-      amount: false,
-      date: false,
-      type: false,
-      endingDate: false,
-      category: false,
-      frequency: false,
-      customFrequency: false
     }
   });
   const [
     addNewRecurringTransactionMutation,
     { isLoading }
   ] = useFirestoreCreateQuery<Recurring>({
-    collectionName: 'recurring'
+    collectionName: 'recurring',
+    onSuccess: () => {
+      notificationDispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          content: 'New Recurring Transaction Added',
+          theme: NOTIFICATION_THEME_SUCCESS
+        }
+      });
+    },
+    onComplete: () => {
+      resetForm();
+    }
   });
 
   const handleFormSubmit = useCallback(
@@ -120,7 +117,8 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         type,
         category,
         recurringDate: firestoreTimestamp.fromDate(new Date(date)),
-        completed: false
+        completed: false,
+        uid
       } as Recurring;
 
       if (endingDate) {
@@ -132,41 +130,19 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
         };
       }
 
-      try {
-        await addNewRecurringTransactionMutation(newTransaction);
-
-        notificationDispatch({
-          type: 'ADD_NOTIFICATION',
-          payload: {
-            content: 'New Recurring Transaction Added',
-            theme: NOTIFICATION_THEME_SUCCESS
-          }
-        });
-      } catch (err) {
-        notificationDispatch({
-          type: 'ADD_NOTIFICATION',
-          payload: {
-            content: 'Error occurred while adding new recurring transaction',
-            theme: NOTIFICATION_THEME_FAILURE
-          }
-        });
-        console.error({ err });
-      } finally {
-        resetForm();
-      }
+      await addNewRecurringTransactionMutation(newTransaction);
     },
     [
       values,
       firestoreTimestamp,
+      uid,
       setFormErrors,
-      addNewRecurringTransactionMutation,
-      notificationDispatch,
-      resetForm
+      addNewRecurringTransactionMutation
     ]
   );
 
   return (
-    <Modal title='Add Recurring Transaction' onCloseIconClick={handleClose}>
+    <Modal title='Add Recurring Transaction' hideCloseIcon>
       <form onSubmit={handleFormSubmit}>
         <div className='grid gap-4 p-1 xl:grid-cols-2'>
           {formFields.map((field) => {
@@ -190,7 +166,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                       disabled={isLoading}
                       options={(field.options as unknown) as string[]}
                       onChange={(name, value) =>
-                        setFormValues(name as FormState, value)
+                        setFormValues(name as FormFields, value)
                       }
                     />
                   </div>
@@ -208,7 +184,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
                     disabled={isLoading}
                     placeholder={field.placeholder}
                     onChange={(name, value) =>
-                      setFormValues(name as FormState, value)
+                      setFormValues(name as FormFields, value)
                     }
                   />
                 ) : (
@@ -218,7 +194,7 @@ const RecurringEntryModal: React.FC<RecurringEntryModalProps> = ({
           })}
         </div>
         <div className='flex items-center justify-end w-full pr-1 mt-8 mb-2 space-x-3'>
-          <Button layout='secondary' loading={isLoading} onClick={handleClose}>
+          <Button layout='secondary' disabled={isLoading} onClick={handleClose}>
             Cancel
           </Button>
           <Button type='submit' loading={isLoading}>

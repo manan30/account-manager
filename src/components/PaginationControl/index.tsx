@@ -1,34 +1,35 @@
 import React from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon
+} from '@heroicons/react/outline';
 import cn from 'classnames';
 
 type PaginationControlProps = {
   isThereAPreviousPage: boolean;
-  previousPage: () => void;
   isThereANextPage: boolean;
-  nextPage: () => void;
   start: number;
   end: number;
-  gotoPage: (updater: ((pageIndex: number) => number) | number) => void;
   lastPage: number;
+  previousPage: () => void;
+  nextPage: () => void;
+  gotoPage: (updater: ((pageIndex: number) => number) | number) => void;
 };
 
 const PaginationControl: React.FC<PaginationControlProps> = ({
-  previousPage,
   isThereAPreviousPage,
-  nextPage,
   isThereANextPage,
   start,
   end,
-  gotoPage,
-  lastPage
+  lastPage,
+  previousPage,
+  nextPage,
+  gotoPage
 }) => {
   return (
     <div className='flex items-center text-gray-800'>
-      <div className='mr-6 text-sm font-light'>
-        Page {start} of {end}
-      </div>
       <button
         className={cn(
           'mr-3',
@@ -37,7 +38,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         onClick={() => gotoPage(0)}
         disabled={!isThereAPreviousPage}
       >
-        <CgPushChevronLeft size={24} />
+        <ChevronDoubleLeftIcon className='h-4 w-4' />
       </button>
       <button
         className={cn(
@@ -47,21 +48,24 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         onClick={previousPage}
         disabled={!isThereAPreviousPage}
       >
-        <FaChevronLeft />
+        <ChevronLeftIcon className='h-4 w-4' />
       </button>
+      <div className='mr-6 text-sm font-light'>
+        Page {start} of {end}
+      </div>
       <button
         className={cn('mr-3', !isThereANextPage && 'opacity-25 cursor-default')}
         onClick={nextPage}
         disabled={!isThereANextPage}
       >
-        <FaChevronRight />
+        <ChevronRightIcon className='h-4 w-4' />
       </button>
       <button
         className={cn('mr-6', !isThereANextPage && 'opacity-25 cursor-default')}
         onClick={() => gotoPage(lastPage)}
         disabled={!isThereANextPage}
       >
-        <CgPushChevronRight size={24} />
+        <ChevronDoubleRightIcon className='h-4 w-4' />
       </button>
     </div>
   );

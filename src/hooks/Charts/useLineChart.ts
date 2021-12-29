@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { ISpending } from '../../models/Spending';
+import { IExpense } from '../../models/Expense';
 
-const useLineChart = <T extends ISpending>(data?: Array<T>) => {
+const useLineChart = <T extends IExpense>(data?: Array<T>) => {
   const [isDataFormatted, setIsDataFormatted] = useState(false);
 
   const formattedData = useMemo(() => {
