@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { UserCircleIcon, PencilIcon } from '@heroicons/react/solid';
-import { useUploadImage } from '../../hooks/Cloudinary/useUploadImage';
-import useFirestoreUpdateQuery from '../../hooks/Firestore/useFirestoreUpdateQuery';
-import { User, UserCollection } from '../../models/User';
+import { useUploadImage } from '../../../hooks/Cloudinary/useUploadImage';
+import useFirestoreUpdateQuery from '../../../hooks/Firestore/useFirestoreUpdateQuery';
+import { User } from '../../../models/User';
 
 type ProfileImageProps = {
   photoURL?: string;
@@ -12,7 +12,7 @@ type ProfileImageProps = {
 const ProfileImage: React.FC<ProfileImageProps> = ({ id, photoURL }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [updateProfileImageMutation] = useFirestoreUpdateQuery<User>({
-    collectionName: UserCollection
+    collectionName: 'user'
   });
   const { handleImageUpload: handleUpload, data, loading } = useUploadImage();
 

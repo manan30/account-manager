@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React from 'react';
-import { IoIosClose } from 'react-icons/io';
+import { XIcon } from '@heroicons/react/outline';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { REMOVE_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import {
@@ -35,7 +35,7 @@ const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
             dispatch({ type: REMOVE_NOTIFICATION, payload: { id } })
           }
         >
-          <IoIosClose size={24} />
+          <XIcon className='ml-6 h-4 w-4' />
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Timestamp } from '@firebase/firestore-types';
 export interface ICreditor {
   id?: string;
+  uid: string;
   name: string;
   amount: number;
   currency: string;

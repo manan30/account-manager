@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import cn from 'classnames';
-import { MdArrowForward } from 'react-icons/md';
+import { ArrowRightIcon } from '@heroicons/react/solid';
 import { useQuery } from 'react-query';
 import axios, { Response } from 'redaxios';
-import { AccountResponse, AccountBalance } from '../../models/Account';
-import { ACCOUNT_FUNCTIONS } from '../../utils/Constants/APIConstants';
-import ModalFallback from '../../components/ModalFallback';
+import { AccountResponse, AccountBalance } from '../../../../models/Account';
+import { ACCOUNT_FUNCTIONS } from '../../../../utils/Constants/APIConstants';
+import ModalFallback from '../../../../components/ModalFallback';
 
-const TransactionsModal = React.lazy(() => import('./TransactionsModal'));
+const TransactionsModal = React.lazy(() => import('../TransactionsModal'));
 
 type AccountItemsProps = {
   account: AccountResponse;
@@ -58,7 +58,7 @@ const AccountItem: React.FC<AccountItemsProps> = ({ account, accessToken }) => {
               className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200 outline-none'
               onClick={() => setShowModal(true)}
             >
-              <MdArrowForward size={24} />
+              <ArrowRightIcon className='h-5 w-5 text-gray-600' />
             </button>
           </div>
         </div>

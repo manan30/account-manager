@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateRandomKey } from '../../utils/Functions';
+import { generateRandomKey } from '../../../../utils/Functions';
 
 const AccountsLoading = () => {
   return (

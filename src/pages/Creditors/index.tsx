@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
-import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
+import {
+  ArrowSmUpIcon,
+  ArrowSmDownIcon,
+  PlusIcon
+} from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
-import Button from '../../components/Button';
 import Card from '../../components/Card';
 import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
@@ -16,18 +18,25 @@ import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificatio
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
+import FloatingActionButton from '../../components/Button/FloatingActionButton';
+import { useGlobalState } from '../../providers/GlobalStateProvider';
 
-const NewCreditorModal = React.lazy(() => import('./NewCreditorModal'));
+const NewCreditorModal = React.lazy(
+  () => import('./components/NewCreditorModal')
+);
 
 const Creditors = () => {
   const notificationDispatch = useNotificationDispatch();
-  const [showModal, setShowModal] = useState(false);
+  const { user } = useGlobalState();
   const { data: creditorsData, isLoading, error } = useFirestoreReadQuery<
     ICreditor
   >({
     collection: 'creditor',
-    orderByClauses: [['updatedAt', 'desc']]
+    orderByClauses: [['updatedAt', 'desc']],
+    whereClauses: [['uid', '==', user?.uid]]
   });
+
+  const [showAddCreditorModal, setShowAddCreditorModal] = useState(false);
 
   const tableColumns = useMemo<Column<Partial<ICreditor>>[]>(
     () => [
@@ -39,9 +48,9 @@ const Creditors = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <FaSortAlphaUp />
+                    <ArrowSmUpIcon className='h-4 w-4' />
                   ) : (
-                    <FaSortAlphaDown />
+                    <ArrowSmDownIcon className='h-4 w-4' />
                   )
                 ) : (
                   ''
@@ -68,9 +77,9 @@ const Creditors = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ImSortAmountDesc />
+                    <ArrowSmUpIcon className='h-4 w-4' />
                   ) : (
-                    <ImSortAmountAsc />
+                    <ArrowSmDownIcon className='h-4 w-4' />
                   )
                 ) : (
                   ''
@@ -92,9 +101,9 @@ const Creditors = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ImSortAmountDesc />
+                    <ArrowSmUpIcon className='h-4 w-4' />
                   ) : (
-                    <ImSortAmountAsc />
+                    <ArrowSmDownIcon className='h-4 w-4' />
                   )
                 ) : (
                   ''
@@ -186,13 +195,6 @@ const Creditors = () => {
 
   return (
     <>
-      <div className='flex justify-end w-full mb-8'>
-        <div className='inline-flex ml-auto'>
-          <Button onClickHandler={() => setShowModal(true)}>
-            Add new creditor
-          </Button>
-        </div>
-      </div>
       <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
         <Card className='p-4 bg-gray-100 shadow-md'>
           <div className='flex flex-col'>
@@ -237,11 +239,20 @@ const Creditors = () => {
           </div>
         </Card>
       </div>
+      <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+        <FloatingActionButton
+          icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
+          onClickHandler={() => setShowAddCreditorModal(true)}
+        />
+      </div>
       {isLoading && <Loader size={48} />}
       {tableData && <Table columns={tableColumns} data={tableData} paginate />}
-      {showModal && (
+      {showAddCreditorModal && (
         <React.Suspense fallback={<ModalFallback />}>
-          <NewCreditorModal showModal={showModal} setShowModal={setShowModal} />
+          <NewCreditorModal
+            uid={user?.uid ?? ''}
+            handleClose={() => setShowAddCreditorModal(false)}
+          />
         </React.Suspense>
       )}
     </>

@@ -1,25 +1,20 @@
 import React, { useCallback, useState } from 'react';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input/Input';
-import { useFormState } from '../../../hooks/Form/useFormState';
+import { useForm } from '../../../hooks/Form/useForm';
 import { usePasswordAuth } from '../../../services/firebase/hooks/usePasswordAuth';
-import { EmailSignInFields, FormErrors, FormState } from '../interfaces';
+import { EmailSignInFields } from '../interfaces';
 import { emailSignInFormFields } from '../utils/constants';
 import PasswordResetModal from './PasswordResetModal';
 
 const PasswordAuthenticationContent = () => {
   const { processing, handlePasswordAuth } = usePasswordAuth();
-  const { errors, values, setFormValues, setFormErrors } = useFormState<
-    FormState<EmailSignInFields>,
-    FormErrors<EmailSignInFields>
+  const { errors, values, setFormValues, setFormErrors } = useForm<
+    EmailSignInFields
   >({
     initialValues: {
       email: '',
       password: ''
-    },
-    initialErrors: {
-      email: false,
-      password: false
     }
   });
 

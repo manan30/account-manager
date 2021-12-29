@@ -8,9 +8,6 @@ import { generateRandomKey } from '../utils/Functions';
 import Helmet from '../components/Helmet';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
-const UnauthorizedUserModal = React.lazy(
-  () => import('../pages/Authentication/UnauthorizedUserModal')
-);
 const NotFoundPage = React.lazy(() => import('../pages/404'));
 
 type RouteType = {
@@ -30,7 +27,7 @@ const routes: RouteType[] = [
   },
   {
     path: '/expenses',
-    component: React.lazy(() => import('../pages/Spending'))
+    component: React.lazy(() => import('../pages/Expenses'))
   },
   {
     path: '/accounts',
@@ -44,7 +41,7 @@ const routes: RouteType[] = [
 ].filter(Boolean) as RouteType[];
 
 const Router = () => {
-  const { user, unauthorizedUser } = useGlobalState();
+  const { user } = useGlobalState();
 
   return (
     <>
@@ -59,17 +56,12 @@ const Router = () => {
                 component={AuthenticationPage}
                 exact
               />
-              <Route
-                path='/unauthorized'
-                component={UnauthorizedUserModal}
-                exact
-              />
               {routes.map(({ path, component: Component }) => (
                 <Route
                   key={generateRandomKey()}
                   path={path}
                   render={({ location }) => {
-                    return user && !unauthorizedUser ? (
+                    return user ? (
                       <Component />
                     ) : (
                       <Redirect

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHandleAuthStateChange } from '../../services/firebase/hooks/useHandleAuthStateChange';
-import AuthenticationModal from './AuthenticationModal';
+import AuthenticationModal from './components/AuthenticationModal';
 
 const Authentication = () => {
   useHandleAuthStateChange();

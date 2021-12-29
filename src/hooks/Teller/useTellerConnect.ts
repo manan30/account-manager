@@ -10,7 +10,7 @@ export const useTellerConnect = () => {
   useEffect(() => {
     if (!tellerConnectRef.current) {
       tellerConnectRef.current = TellerConnect.setup({
-        environment: 'development',
+        environment: 'sandbox',
         applicationId: `${import.meta.env.VITE_TELLER_APPLICATION_ID}`,
         onInit: function () {
           setInitializing(false);
@@ -27,9 +27,9 @@ export const useTellerConnect = () => {
   }, []);
 
   return {
-    openTellerConnect: tellerConnectRef.current?.open,
     enrollment,
-    enrollmentCompleted,
-    initializing
+    initializing,
+    openTellerConnect: tellerConnectRef.current?.open,
+    enrollmentCompleted
   };
 };

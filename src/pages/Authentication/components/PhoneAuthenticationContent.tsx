@@ -2,24 +2,19 @@ import React, { useCallback } from 'react';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input/Input';
 import Select from '../../../components/Select/Select';
-import { useFormState } from '../../../hooks/Form/useFormState';
+import { useForm } from '../../../hooks/Form/useForm';
 import { usePhoneAuth } from '../../../services/firebase/hooks/usePhoneAuth';
-import { FormErrors, FormState, PhoneSignInFields } from '../interfaces';
+import { PhoneSignInFields } from '../interfaces';
 import { phoneSignInFormFields } from '../utils/constants';
 import VerificationCodeModal from './VerificationCodeModal';
 
 const PhoneAuthenticationContent = () => {
-  const { errors, values, setFormValues, setFormErrors } = useFormState<
-    FormState<PhoneSignInFields>,
-    FormErrors<PhoneSignInFields>
+  const { errors, values, setFormValues, setFormErrors } = useForm<
+    PhoneSignInFields
   >({
     initialValues: {
       countryCode: '',
       phoneNumber: ''
-    },
-    initialErrors: {
-      countryCode: false,
-      phoneNumber: false
     }
   });
   const {

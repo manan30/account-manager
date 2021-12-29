@@ -3,12 +3,10 @@ import cn from 'classnames';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Column } from 'react-table';
-import Button from '../../../components/Button';
 import Card from '../../../components/Card';
 import CurrencyConversionCell from '../../../components/CurrencyConversionCell';
 import Loader from '../../../components/Loader';
 import ModalFallback from '../../../components/ModalFallback';
-import NewTransactionModal from '../../../components/NewTransactionModal';
 import Table from '../../../components/Table';
 import useFirestoreReadQuery from '../../../hooks/Firestore/useFirestoreReadQuery';
 import { RouteParamsInterface } from '../../../interfaces/route-interface';
@@ -17,10 +15,16 @@ import { ITransaction } from '../../../models/Transaction';
 import { useNotificationDispatch } from '../../../providers/NotificationProvider';
 import { NOTIFICATION_THEME_FAILURE } from '../../../utils/Constants/ThemeConstants';
 import { NumberWithCommasFormatter } from '../../../utils/Formatters';
+import FloatingActionButton from '../../../components/Button/FloatingActionButton';
+import { PlusIcon } from '@heroicons/react/solid';
+
+const NewTransactionModal = React.lazy(
+  () => import('../components/NewTransactionModal')
+);
 
 const CreditorDetails = () => {
   const notificationDispatch = useNotificationDispatch();
-  const [showModal, setShowModal] = useState(false);
+  const [showAddTransactionModal, setShowAddTransactionModal] = useState(false);
   const { id } = useParams<RouteParamsInterface>();
   const {
     data: creditorData,
@@ -246,11 +250,12 @@ const CreditorDetails = () => {
               </span>
             </div>
           </Card>
-          <span className='ml-auto'>
-            <Button onClickHandler={() => setShowModal(true)}>
-              Add Transaction
-            </Button>
-          </span>
+          <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+            <FloatingActionButton
+              icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
+              onClickHandler={() => setShowAddTransactionModal(true)}
+            />
+          </div>{' '}
         </div>
         {transactionsDataLoading && <Loader size={48} />}
         {tableData && (
@@ -259,14 +264,13 @@ const CreditorDetails = () => {
           </div>
         )}
       </div>
-      {showModal && (
+      {showAddTransactionModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <NewTransactionModal
-            showModal={showModal}
-            setShowModal={setShowModal}
             transactionEntity={
               creditor ? { name: creditor?.name, id: creditor.id } : undefined
             }
+            handleClose={() => setShowAddTransactionModal(false)}
           />
         </React.Suspense>
       )}

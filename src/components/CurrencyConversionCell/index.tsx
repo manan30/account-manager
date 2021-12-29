@@ -1,9 +1,9 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import cn from 'classnames';
+import { ExclamationIcon } from '@heroicons/react/solid';
 import { convertAmountToUSD } from '../../api';
 import Loader from '../Loader';
-import { MdReportProblem } from 'react-icons/md';
 
 type CurrencyConversionCellProps = {
   currency?: string;
@@ -38,7 +38,7 @@ const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
   return (
     <div className={cn('flex justify-center', isError && 'text-red-600')}>
       {isError ? (
-        <MdReportProblem size={24} />
+        <ExclamationIcon className='h-6 w-6' />
       ) : (
         data && `${'$'.concat(data.rates.USD.toFixed(2))}`
       )}
