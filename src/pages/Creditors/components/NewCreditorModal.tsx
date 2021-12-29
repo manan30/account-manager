@@ -121,7 +121,7 @@ const NewCreditorModal: React.FC<NewCreditorModalProps> = ({
 
   return (
     <Modal title='Add New Creditor' size='medium' hideCloseIcon>
-      <form className='w-full' onSubmit={handleSubmit}>
+      <form className='w-full px-2' onSubmit={handleSubmit}>
         <div className='flex flex-col space-y-6'>
           {formFields.map((field) => {
             switch (field.type) {

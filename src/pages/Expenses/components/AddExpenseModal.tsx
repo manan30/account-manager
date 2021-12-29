@@ -16,13 +16,15 @@ import { FormFields } from '../interfaces';
 import { FormFields as formFields } from '../utils/constants';
 
 type AddExpenseModalProps = {
-  handleModalClose: () => void;
+  uid: string;
   currentTransaction?: IExpense;
+  handleModalClose: () => void;
 };
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
-  handleModalClose,
-  currentTransaction
+  uid,
+  currentTransaction,
+  handleModalClose
 }) => {
   const { firestoreTimestamp } = useFirebaseContext();
   const notificationDispatch = useNotificationDispatch();
@@ -104,6 +106,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     if (!currentTransaction) {
       await addNewExpenseMutation({
+        uid,
         storeName: storeName?.trim(),
         category: category?.trim(),
         amount: Number(amount?.trim()),
@@ -139,7 +142,11 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   };
 
   useEffect(() => {
-    if (currentTransaction && !errors) {
+    const formErrors = Object.values(errors).reduce(
+      (acc, curr) => acc && curr,
+      true
+    );
+    if (currentTransaction && !formErrors) {
       const { amount, category, date, storeName } = currentTransaction;
 
       Object.entries({ amount, category, date, storeName }).forEach(
@@ -155,7 +162,10 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   const loading = addingExpense || updatingExpense;
 
   return (
-    <Modal hideCloseIcon title='Add Expense'>
+    <Modal
+      hideCloseIcon
+      title={!currentTransaction ? 'Add Expense' : 'Edit Expense'}
+    >
       <form className='w-full' onSubmit={handleSubmit}>
         <div className='mx-3 flex flex-col space-y-6'>
           {formFields.map((field) => {

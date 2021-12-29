@@ -87,7 +87,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
 
   return (
     <Modal title='Add New Transaction' hideCloseIcon>
-      <form className='w-full' onSubmit={handleSubmit}>
+      <form className='w-full px-2' onSubmit={handleSubmit}>
         <div className='flex flex-col space-y-6'>
           {formFields.map((field) => {
             switch (field.type) {
