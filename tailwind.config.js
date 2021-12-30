@@ -15,6 +15,30 @@ module.exports = {
       },
       rotate: {
         270: '270deg'
+      },
+      keyframes: {
+        'slide-in-top': {
+          '0%': { transform: 'translateY(-80%)' },
+          '100%': { transform: 'translateY(0)' }
+        },
+        'slide-out-bottom': {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(160%)' }
+        },
+        'slide-in-left': {
+          '0%': { transform: 'translateX(80%)' },
+          '100%': { transform: 'translateY(0)' }
+        },
+        'slide-out-right': {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateX(80%)' }
+        }
+      },
+      animation: {
+        'slide-in-top': 'slide-in-top 0.8s ease-in-out',
+        'slide-out-bottom': 'slide-out-bottom 0.8s ease-in-out',
+        'slide-in-left': 'slide-in-left 0.5s ease-out',
+        'slide-out-right': 'slide-out-right 0.5s ease-in'
       }
     }
   },

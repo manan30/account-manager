@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 import { XIcon } from '@heroicons/react/outline';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { REMOVE_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
@@ -17,23 +17,33 @@ type NotificationProps = {
 
 const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
   const dispatch = useNotificationDispatch();
+  const [animationState, setAnimationState] = useState<'entry' | 'exit'>(
+    'entry'
+  );
 
   return (
     <div
       className={cn(
-        'w-notification-width rounded p-2 mb-4 animate-notification-entry',
+        'w-notification-width rounded p-2 mb-4',
         theme === NOTIFICATION_THEME_SUCCESS && 'bg-indigo-200 text-indigo-800',
         theme === NOTIFICATION_THEME_FAILURE && 'bg-red-200 text-red-800',
-        theme === NOTIFICATION_THEME_WARNING && 'bg-yellow-200 text-yellow-800'
+        theme === NOTIFICATION_THEME_WARNING && 'bg-yellow-200 text-yellow-800',
+        animationState === 'entry' && 'animate-slide-in-left',
+        animationState === 'exit' && 'animate-slide-out-right'
       )}
+      onAnimationEnd={() => {
+        if (animationState === 'exit') {
+          dispatch({ type: REMOVE_NOTIFICATION, payload: { id } });
+        }
+      }}
     >
       <div className='flex items-center'>
         <div className='flex-auto text-sm'>{children}</div>
         <button
           type='button'
-          onClick={() =>
-            dispatch({ type: REMOVE_NOTIFICATION, payload: { id } })
-          }
+          onClick={() => {
+            setAnimationState('exit');
+          }}
         >
           <XIcon className='ml-6 h-4 w-4' />
         </button>
