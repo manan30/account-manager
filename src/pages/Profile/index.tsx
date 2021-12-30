@@ -73,6 +73,8 @@ const Profile = () => {
     }
   };
 
+  console.log({ data });
+
   return (
     <form
       className='flex flex-col items-center max-w-md mx-auto mt-6 space-y-6'
