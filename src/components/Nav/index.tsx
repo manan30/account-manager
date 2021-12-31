@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
 import { useLogout } from '../../services/firebase/hooks/useLogout';
+import { useWindowSize } from '../../hooks/Device/useWindowSize';
 
 const links = [
   { to: '/accounts', linkText: 'Accounts' },
@@ -19,6 +20,9 @@ const Nav = () => {
   const { pathname } = useLocation();
   const { user } = useGlobalState();
   const { logout } = useLogout();
+  const windowSize = useWindowSize();
+
+  const isMobile = windowSize.width && windowSize.width < 640;
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -62,21 +66,23 @@ const Nav = () => {
   return (
     <nav
       className={cn(
-        'flex items-center p-6 transition-shadow z-50 bg-indigo-600 text-gray-100',
+        'flex items-center transition-shadow z-50 bg-indigo-600 text-gray-100',
         scrolled && 'shadow-xl'
       )}
     >
       <Link to='/'>
         <h1 className='text-xl font-medium'>Account Manager</h1>
       </Link>
-      <ul className='flex items-center ml-auto space-x-3'>
-        {renderLinks()}
-        {user ? (
-          <button onClick={logout} className='text-base'>
-            <LogoutIcon className='h-5 w-5 opacity-50 hover:opacity-100' />
-          </button>
-        ) : null}
-      </ul>
+      {!isMobile ? (
+        <ul className='flex items-center ml-auto space-x-3'>
+          {renderLinks()}
+          {user ? (
+            <button onClick={logout} className='text-base'>
+              <LogoutIcon className='h-5 w-5 opacity-50 hover:opacity-100' />
+            </button>
+          ) : null}
+        </ul>
+      ) : null}
     </nav>
   );
 };
