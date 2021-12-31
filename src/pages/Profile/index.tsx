@@ -75,7 +75,7 @@ const Profile = () => {
 
   return (
     <form
-      className='flex flex-col items-center max-w-md mx-auto mt-6 space-y-6'
+      className='flex flex-col items-center px-4 mx-auto mt-10 space-y-6 sm:max-w-md md:mt-16'
       onSubmit={handleUserUpdate}
     >
       <ProfileImage photoURL={data?.[0].photoURL} id={data?.[0].id} />
