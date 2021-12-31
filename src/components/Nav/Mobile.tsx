@@ -12,7 +12,7 @@ const Mobile = () => {
   const { logout } = useLogout();
 
   return (
-    <nav className='fixed bottom-0 left-0 grid w-full grid-flow-col px-2 py-3 text-gray-100 bg-indigo-600 shadow-md auto-cols-fr'>
+    <nav className='fixed bottom-0 left-0 z-50 grid w-full grid-flow-col px-2 py-3 text-gray-100 bg-indigo-600 shadow-md auto-cols-fr'>
       {links.map(({ to, linkText, component: Component }) => (
         <Link
           key={linkText}
