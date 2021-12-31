@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       className={cn(
-        'rounded-md px-2 py-1 min-w-button focus:outline-none focus:ring-1 focus:ring-offset-2 text-sm font-medium h-8 flex items-center justify-center transition-shadow',
+        'rounded-md px-2 py-1 min-w-button focus:outline-none focus:ring-1 focus:ring-offset-2 text-xs md:text-sm font-medium h-8 flex items-center justify-center transition-shadow',
         layout === 'secondary'
           ? 'bg-gray-300 text-gray-800 focus:ring-gray-400 '
           : 'bg-indigo-600 text-gray-100 focus:ring-indigo-600 ',
