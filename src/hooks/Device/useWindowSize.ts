@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { TAILWIND_MEDIUM_BREAKPOINT } from './constants';
 
 type WindowSize = { height?: number; width?: number };
 
@@ -7,6 +8,7 @@ export const useWindowSize = () => {
     width: undefined,
     height: undefined
   });
+
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -21,5 +23,9 @@ export const useWindowSize = () => {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  return windowSize;
+
+  const isMobile =
+    !!windowSize.width && windowSize.width < TAILWIND_MEDIUM_BREAKPOINT;
+
+  return { windowSize, isMobile };
 };

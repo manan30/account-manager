@@ -1,6 +1,6 @@
 import React from 'react';
-import cn from 'classnames';
 import { HeaderGroup } from 'react-table';
+import { generateRandomKey } from '../../utils/Functions';
 
 type TableHeaderProps = {
   headerGroups: HeaderGroup[];
@@ -10,17 +10,14 @@ const TableHeader: React.FC<TableHeaderProps> = ({ headerGroups }) => {
   return (
     <thead>
       {headerGroups.map((headerGroup) => (
-        // TODO: change key to a dynamic value
-        <tr {...headerGroup.getHeaderGroupProps()} key='creditors-table-header'>
-          {headerGroup.headers.map((column, i) => (
+        <tr {...headerGroup.getHeaderGroupProps()} key={generateRandomKey()}>
+          {headerGroup.headers.map((column) => (
             <th
               {...column.getHeaderProps(column.getSortByToggleProps())}
               key={column.id}
-              className={cn(
-                'px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 sticky top-0 bg-gray-300',
-                i === 0 && 'rounded-tl-lg',
-                i === headerGroup.headers.length - 1 && 'rounded-tr-lg'
-              )}
+              className={
+                'p-3 md:px-6 md:py-3 text-left text-xxs sm:text-xs font-medium uppercase tracking-wider text-gray-700 sticky top-0 bg-gray-300'
+              }
             >
               {column.render('Header')}
             </th>

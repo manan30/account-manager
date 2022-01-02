@@ -48,8 +48,8 @@ const DeleteExpenseModal: React.FC<DeleteExpenseModalProps> = ({
 
   return (
     <Modal title='Delete Expense' hideCloseIcon>
-      <div className='px-2 mb-8'>
-        Are you sure you want to delete <strong>{deleteDoc?.name}</strong>
+      <div className='text-sm md:text-base'>
+        Are you sure you want to delete <strong>{deleteDoc?.name}</strong>?
       </div>
       <div className='flex items-center justify-end w-full pr-1 mt-8 mb-2 space-x-3'>
         <Button

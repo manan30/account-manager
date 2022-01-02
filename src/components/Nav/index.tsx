@@ -6,9 +6,7 @@ const Desktop = React.lazy(() => import('./Desktop'));
 const Mobile = React.lazy(() => import('./Mobile'));
 
 const Nav = () => {
-  const windowSize = useWindowSize();
-
-  const isMobile = windowSize.width && windowSize.width < 768;
+  const { isMobile } = useWindowSize();
 
   return (
     <React.Suspense fallback={null}>

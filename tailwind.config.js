@@ -4,6 +4,13 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      fontSize: {
+        xxs: '0.65rem',
+        'xxs-badge': '0.5rem'
+      },
+      gridTemplateColumns: {
+        expenses: '0.5fr 1fr 0.5fr'
+      },
       maxHeight: {
         modal: '66.666667%'
       },
