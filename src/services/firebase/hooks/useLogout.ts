@@ -11,16 +11,20 @@ export const useLogout = () => {
   const globalDispatch = useGlobalDispatch();
   const notificationDispatch = useNotificationDispatch();
 
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const logout = async () => {
     try {
+      setLoading(true);
       await auth.signOut();
       globalDispatch({ type: 'LOGOUT_USER' });
       history.push('/authentication');
     } catch (err) {
       console.error(err);
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,5 +40,5 @@ export const useLogout = () => {
     }
   }, [error, notificationDispatch]);
 
-  return { logout };
+  return { loading, logout };
 };
