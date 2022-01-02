@@ -31,10 +31,10 @@ const Accounts = () => {
 
   return accountsData ? (
     <>
-      <div className='flex justify-end mb-12'>
+      <div className='flex justify-end mt-10 mb-8 md:mt-16'>
         <LinkAccount />
       </div>
-      <div className='flex flex-col mt-6 space-y-6'>
+      <div className='flex flex-col space-y-6'>
         {accountsData.map((account) => (
           <Account key={account.id} account={account} />
         ))}

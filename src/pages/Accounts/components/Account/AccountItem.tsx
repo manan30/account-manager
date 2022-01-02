@@ -6,6 +6,7 @@ import axios, { Response } from 'redaxios';
 import { AccountResponse, AccountBalance } from '../../../../models/Account';
 import { ACCOUNT_FUNCTIONS } from '../../../../utils/Constants/APIConstants';
 import ModalFallback from '../../../../components/ModalFallback';
+import Card from '../../../../components/Card';
 
 const TransactionsModal = React.lazy(() => import('../TransactionsModal'));
 
@@ -31,38 +32,37 @@ const AccountItem: React.FC<AccountItemsProps> = ({ account, accessToken }) => {
 
   return (
     <>
-      <div className='shadow-md h-48 w-full bg-gray-50 rounded-lg p-6 flex flex-col'>
-        <p className='font-semibold text-lg text-indigo-700 mb-2'>
+      <Card className='flex flex-col space-y-3'>
+        <p className='text-base font-semibold text-indigo-700 md:text-lg'>
           {account.name.split('-')[0].trim()}
         </p>
-        <p className='text-sm capitalize mb-2'>
+        <p className='text-xs capitalize md:text-sm'>
           Account Type: {account.subtype.split('_').join(' ')}
         </p>
-        <div className='flex flex-col mt-auto -mb-2'>
-          <p
-            className={cn(
-              'font-medium text-md text-indigo-500',
-              loadingAccountBalance && 'animate-pulse w-2/3'
-            )}
-          >
-            Available Balance: ${accountBalance?.data.available}
-          </p>
-          <div className='flex items-center text-gray-500'>
-            <div className='flex items-center space-x-2'>
-              <p className='text-sm'>XXXX</p>
-              <p className='text-sm'>XXXX</p>
-              <p className='text-sm'>XXXX</p>
-              <p className='text-sm'>{account.last_four}</p>
-            </div>
-            <button
-              className='ml-auto text-gray-700 rounded-full p-2 hover:bg-gray-200 outline-none'
-              onClick={() => setShowModal(true)}
-            >
-              <ArrowRightIcon className='h-5 w-5 text-gray-600' />
-            </button>
+
+        <p
+          className={cn(
+            'font-medium text-md text-indigo-500 text-xs md:text-sm',
+            loadingAccountBalance && 'animate-pulse w-2/3'
+          )}
+        >
+          Available Balance: ${accountBalance?.data.available}
+        </p>
+        <div className='flex items-center text-gray-500'>
+          <div className='flex items-center space-x-2 text-xs md:text-sm'>
+            <p>XXXX</p>
+            <p>XXXX</p>
+            <p>XXXX</p>
+            <p>{account.last_four}</p>
           </div>
+          <button
+            className='p-1 ml-auto text-gray-700 rounded-full outline-none focus:ring-1 focus:ring-gray-500'
+            onClick={() => setShowModal(true)}
+          >
+            <ArrowRightIcon className='w-5 h-5 text-gray-600' />
+          </button>
         </div>
-      </div>
+      </Card>
       {showModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <TransactionsModal

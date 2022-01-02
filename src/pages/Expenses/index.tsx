@@ -31,7 +31,7 @@ const AddExpenseModal = React.lazy(
   () => import('./components/AddExpenseModal')
 );
 
-const Spending = () => {
+const Expense = () => {
   const notificationDispatch = useNotificationDispatch();
   const { user } = useGlobalState();
   const { data: expenseData, isLoading, error } = useFirestoreReadQuery<
@@ -266,4 +266,4 @@ const Spending = () => {
   );
 };
 
-export default Spending;
+export default Expense;
