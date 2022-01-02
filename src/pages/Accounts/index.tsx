@@ -18,9 +18,9 @@ const Accounts = () => {
 
   if (!loadingAccounts && (!accountsData || accountsData.length === 0)) {
     return (
-      <div className='flex flex-col items-center justify-center w-full h-full space-y-4'>
-        <div className='grid bg-indigo-100 rounded-full h-96 w-96 place-items-center'>
-          <VaultIcon height={220} width={220} />
+      <div className='flex flex-col items-center justify-center w-full h-full space-y-4 text-sm text-center md:text-base'>
+        <div className='grid w-56 h-56 bg-indigo-100 rounded-full md:h-96 md:w-96 place-items-center'>
+          <VaultIcon className='w-32 h-32 md:h-48 md:w-48' />
         </div>
         <p>It looks like you have not linked any accounts yet</p>
         <p>Let&apos;s get started by linking an account</p>

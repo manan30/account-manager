@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
-import { useGlobalState } from '../../providers/GlobalStateProvider';
-import { useLogout } from '../../services/firebase/hooks/useLogout';
 import { links } from './utils/constants';
+import Logout from '../Logout';
 
 const Desktop = () => {
   const { pathname } = useLocation();
-  const { user } = useGlobalState();
-  const { logout } = useLogout();
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -52,14 +49,7 @@ const Desktop = () => {
             <span className='text-base'>{linkText}</span>
           </Link>
         ))}
-        {user ? (
-          <button
-            onClick={logout}
-            className='text-base opacity-50 hover:opacity-100'
-          >
-            Logout
-          </button>
-        ) : null}
+        <Logout />
       </div>
     </nav>
   );

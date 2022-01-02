@@ -1,11 +1,9 @@
-import { RiBankLine } from 'react-icons/ri';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { MdRepeatOne } from 'react-icons/md';
 import { GiTakeMyMoney } from 'react-icons/gi';
 import { CgProfile } from 'react-icons/cg';
 
 export const links = [
-  { to: '/accounts', linkText: 'Accounts', component: RiBankLine },
   { to: '/expenses', linkText: 'Expenses', component: FaRegMoneyBillAlt },
   { to: '/creditors', linkText: 'Creditors', component: GiTakeMyMoney },
   { to: '/recurring', linkText: 'Recurring', component: MdRepeatOne },
