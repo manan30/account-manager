@@ -13,22 +13,23 @@ const Modal: React.FC<ModalProps> = ({
   title,
   hideCloseIcon,
   children,
-  size,
+  size = 'medium',
   onCloseIconClick
 }) => {
   return (
-    <div className='relative w-full h-full'>
+    <div className='fixed inset-0 w-full h-full'>
       <div className='fixed inset-0 bg-gray-700 opacity-50' />
       <div className='fixed inset-0 flex items-center justify-center w-full h-full'>
         <div
           className={cn(
-            'w-full p-4 mx-6 bg-gray-100 rounded-md sm:w-1/2 sm:-mx-6 lg:w-2/5',
-            size === 'small' && 'md:w-1/3 lg:w-1/4',
-            size === 'large' && 'xl:w-1/2'
+            'w-full p-4 mx-6 bg-gray-100 rounded-md sm:-mx-6',
+            size === 'small' && 'w-10/12 md:w-2/5 lg:w-1/4',
+            size === 'medium' && 'w-10/12 md:w-2/3 lg:w-2/5',
+            size === 'large' && 'w-10/12 md:w-3/4 lg:w-1/2'
           )}
         >
           {title || !hideCloseIcon ? (
-            <div className='flex items-center mb-6'>
+            <div className='flex items-center mb-4'>
               {title ? (
                 <div className='text-lg font-semibold tracking-wide text-indigo-700 capitalize'>
                   {title}

@@ -1,8 +1,5 @@
-export const NumberWithCommasFormatter = {
+export const CurrencyFormatter = {
   format: (value = '') => {
-    return new Intl.NumberFormat().format(Number(value));
-  },
-  unFormat: (value = '') => {
-    return value.split(',').join('');
+    return new Intl.NumberFormat('en-US', {}).format(Number(value));
   }
 };

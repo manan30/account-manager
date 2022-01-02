@@ -43,24 +43,24 @@ const RecurringItem: React.FC<RecurringItemProps> = ({ transaction }) => {
           ></div>
         </>
       ) : null}
-      <div className='flex h-16'>
+      <div className='flex h-12 md:h-16'>
         <div
           className={cn(
-            'w-16 h-16 rounded-full text-center text-gray-100 text-2xl grid place-items-center',
+            'w-12 h-12 md:w-16 md:h-16 rounded-full text-center text-gray-100 text-2xl grid place-items-center',
             transaction.type === 'Debit' ? 'bg-green-500' : 'bg-red-500'
           )}
         >
           {transaction.imageIcon ? null : transaction.name[0].toUpperCase()}
         </div>
         <div className='flex flex-col flex-1 ml-6 space-y-1'>
-          <div className='text-sm font-medium text-gray-700 '>
+          <div className='text-xs font-medium text-gray-700 md:text-sm '>
             {transaction.name}
           </div>
           <div className='text-xs text-gray-600'>
             {Intl.DateTimeFormat('en-US', { month: 'long' }).format(Date.now())}{' '}
             {transaction.recurringDate.toDate().getUTCDate()}
           </div>
-          <div className='text-sm font-semibold text-gray-700'>
+          <div className='text-xs font-semibold text-gray-700 md:text-sm'>
             ${transaction.amount}
           </div>
         </div>

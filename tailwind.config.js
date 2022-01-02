@@ -4,11 +4,24 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      fontSize: {
+        xxs: '0.65rem',
+        'xxs-badge': '0.5rem'
+      },
+      gridTemplateColumns: {
+        expenses: '0.5fr 1fr 0.5fr'
+      },
       maxHeight: {
         modal: '66.666667%'
       },
       minWidth: {
         button: '6rem'
+      },
+      maxWidth: {
+        notification: '20rem'
+      },
+      zIndex: {
+        75: 75
       },
       height: {
         main: 'calc(100% - 4.8rem)'

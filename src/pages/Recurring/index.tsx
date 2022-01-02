@@ -48,9 +48,9 @@ const Recurring = () => {
 
   return (
     <>
-      <div className='my-6'>
+      <div className='mt-10 mb-6 md:mt-16'>
         <Card>
-          <div className='text-xl font-semibold text-indigo-600'>
+          <div className='text-base font-semibold text-indigo-600 sm:text-lg md:text-xl'>
             Total Monthly Expenditure: ${monthlyExpenditure}
           </div>
         </Card>
@@ -64,7 +64,7 @@ const Recurring = () => {
           />
         ))}
       </div>
-      <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+      <div className='fixed bottom-0 right-0 mb-16 mr-8 md:mb-8'>
         <FloatingActionButton
           icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
           onClickHandler={() => setOpenRecurringEntryModal(true)}

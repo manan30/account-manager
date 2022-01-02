@@ -42,7 +42,7 @@ const Account: React.FC<AccountProps> = ({ account }) => {
 
   return (
     <div>
-      <p className='text-3xl font-bold text-gray-600'>
+      <p className='text-xl font-bold text-gray-600 md:text-2xl'>
         {account.institutionName}
       </p>
       {(loadingAccount || fetchingAccount) && (
@@ -51,7 +51,7 @@ const Account: React.FC<AccountProps> = ({ account }) => {
         </div>
       )}
       {accountResponse?.data && (
-        <div className='grid grid-cols-2 gap-8 mt-6 mb-8'>
+        <div className='grid grid-cols-1 gap-6 mt-6 mb-8 md:gap-8 md:grid-cols-2'>
           {accountResponse.data.map((accountItem) => (
             <AccountItem
               key={accountItem.id}

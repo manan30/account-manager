@@ -60,7 +60,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
     const formErrors: Array<string> = [];
     const { amount, date, entity, type } = values;
 
-    [{ amount }, { entity }, { type }].forEach((item) => {
+    [{ amount }, { entity }, { type }, { date }].forEach((item) => {
       const [key, value] = Object.entries(item)[0];
       if (value.trim() === '') formErrors.push(key);
     });
@@ -72,7 +72,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
 
     await addNewTransactionMutation({
       transactionType: type.trim(),
-      transactionEntity: entity.trim(),
+      transactionEntity: transactionEntity?.id,
       amount: Number(amount.trim()),
       transactionDate: firestoreTimestamp.fromDate(new Date(date)),
       createdAt: firestoreTimestamp.now()
@@ -86,7 +86,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
   }, [setFormValues, transactionEntity]);
 
   return (
-    <Modal title='Add New Transaction' hideCloseIcon>
+    <Modal title='Add New Transaction' size='small' hideCloseIcon>
       <form className='w-full px-2' onSubmit={handleSubmit}>
         <div className='flex flex-col space-y-6'>
           {formFields.map((field) => {

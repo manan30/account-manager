@@ -48,17 +48,17 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ id, photoURL }) => {
         <img
           alt='user-profile'
           src={photoURL}
-          className='rounded-full h-36 w-36 object-cover'
+          className='object-cover rounded-full h-36 w-36'
         />
       ) : (
-        <UserCircleIcon className='h-36 w-36 text-gray-400' />
+        <UserCircleIcon className='text-gray-400 h-36 w-36' />
       )}
       <button
-        className='absolute bottom-0 right-0 p-1 rounded-full bg-gray-100 -translate-x-3 -translate-y-2 shadow-md'
+        className='absolute bottom-0 right-0 p-1 -translate-x-3 -translate-y-2 bg-gray-100 rounded-full shadow-md'
         onClick={handleUploadButtonClick}
         disabled={loading}
       >
-        <PencilIcon className='h-6 w-6 text-gray-800 rotate-270' />
+        <PencilIcon className='w-6 h-6 text-gray-800 rotate-270' />
       </button>
     </div>
   );

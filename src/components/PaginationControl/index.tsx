@@ -38,7 +38,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         onClick={() => gotoPage(0)}
         disabled={!isThereAPreviousPage}
       >
-        <ChevronDoubleLeftIcon className='h-4 w-4' />
+        <ChevronDoubleLeftIcon className='w-4 h-4' />
       </button>
       <button
         className={cn(
@@ -48,7 +48,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         onClick={previousPage}
         disabled={!isThereAPreviousPage}
       >
-        <ChevronLeftIcon className='h-4 w-4' />
+        <ChevronLeftIcon className='w-4 h-4' />
       </button>
       <div className='mr-6 text-sm font-light'>
         Page {start} of {end}
@@ -58,14 +58,14 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         onClick={nextPage}
         disabled={!isThereANextPage}
       >
-        <ChevronRightIcon className='h-4 w-4' />
+        <ChevronRightIcon className='w-4 h-4' />
       </button>
       <button
         className={cn('mr-6', !isThereANextPage && 'opacity-25 cursor-default')}
         onClick={() => gotoPage(lastPage)}
         disabled={!isThereANextPage}
       >
-        <ChevronDoubleRightIcon className='h-4 w-4' />
+        <ChevronDoubleRightIcon className='w-4 h-4' />
       </button>
     </div>
   );

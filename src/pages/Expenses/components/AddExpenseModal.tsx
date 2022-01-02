@@ -164,10 +164,11 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   return (
     <Modal
       hideCloseIcon
+      size='small'
       title={!currentTransaction ? 'Add Expense' : 'Edit Expense'}
     >
       <form className='w-full' onSubmit={handleSubmit}>
-        <div className='mx-3 flex flex-col space-y-6'>
+        <div className='flex flex-col mx-3 space-y-6'>
           {formFields.map((field) => {
             switch (field.type) {
               case 'select':
