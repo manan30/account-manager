@@ -6,7 +6,7 @@ import Modal from '../../../components/Modal/Modal';
 import Table from '../../../components/Table';
 import { Transaction } from '../../../models/Account';
 import { ACCOUNT_FUNCTIONS } from '../../../utils/Constants/APIConstants';
-import { NumberWithCommasFormatter } from '../../../utils/Formatters';
+import { CurrencyFormatter } from '../../../utils/Formatters';
 import { generateRandomKey } from '../../../utils/Functions';
 
 type TransactionModalProps = {
@@ -77,8 +77,7 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
       {
         Header: 'Amount',
         accessor: 'amount',
-        Cell: ({ row }) =>
-          `$ ${NumberWithCommasFormatter.format(row.original.amount)}`
+        Cell: ({ row }) => `$ ${CurrencyFormatter.format(row.original.amount)}`
       },
       {
         Header: 'Status',
@@ -102,12 +101,12 @@ const TransactionsModal: React.FC<TransactionModalProps> = ({
       <div className='px-3'>
         {loadingTransactions || !tableData ? (
           new Array(10).fill(0).map(() => (
-            <div key={generateRandomKey()} className='p-4 w-full bg-gray-50'>
-              <div className='animate-pulse flex space-x-4'>
-                <div className='h-4 bg-gray-200 rounded w-3/4'></div>
-                <div className='h-4 bg-gray-200 rounded w-3/4'></div>
-                <div className='h-4 bg-gray-200 rounded w-3/4'></div>
-                <div className='h-4 bg-gray-200 rounded w-3/4'></div>
+            <div key={generateRandomKey()} className='w-full p-4 bg-gray-50'>
+              <div className='flex space-x-4 animate-pulse'>
+                <div className='w-3/4 h-4 bg-gray-200 rounded'></div>
+                <div className='w-3/4 h-4 bg-gray-200 rounded'></div>
+                <div className='w-3/4 h-4 bg-gray-200 rounded'></div>
+                <div className='w-3/4 h-4 bg-gray-200 rounded'></div>
               </div>
             </div>
           ))

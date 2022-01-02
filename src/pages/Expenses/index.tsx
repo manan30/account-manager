@@ -6,6 +6,7 @@ import {
   ArrowSmDownIcon
 } from '@heroicons/react/solid';
 import { Column, Row } from 'react-table';
+import { PlusIcon } from '@heroicons/react/solid';
 import Badge from '../../components/Badge';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
@@ -14,12 +15,11 @@ import { IExpense } from '../../models/Expense';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { CurrencyFormatter } from '../../utils/Formatters';
 import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
-import { PlusIcon } from '@heroicons/react/solid';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
-import { useWindowSize } from '../../hooks/Device/useWindowSize';
+import Date from '../../components/Date';
 
 const DeleteExpenseModal = React.lazy(
   () => import('./components/DeleteExpenseModal')
@@ -34,7 +34,6 @@ const AddExpenseModal = React.lazy(
 const Spending = () => {
   const notificationDispatch = useNotificationDispatch();
   const { user } = useGlobalState();
-  const { isMobile } = useWindowSize();
   const { data: expenseData, isLoading, error } = useFirestoreReadQuery<
     IExpense
   >({
@@ -104,7 +103,7 @@ const Spending = () => {
         },
         accessor: 'amount',
         Cell: ({ row }) =>
-          `$${NumberWithCommasFormatter.format(`${row.original.amount}`)}`
+          `$${CurrencyFormatter.format(`${row.original.amount}`)}`
       },
       {
         Header: ({ column }) => {
@@ -161,19 +160,7 @@ const Spending = () => {
         Cell: ({ row }) => {
           if (row.original.date) {
             const rawDate = row.original.date.toDate();
-
-            return !isMobile
-              ? new Intl.DateTimeFormat('en-US', {
-                  weekday: 'short',
-                  month: 'short',
-                  year: 'numeric',
-                  day: 'numeric'
-                }).format(rawDate)
-              : new Intl.DateTimeFormat('en-US', {
-                  month: 'numeric',
-                  year: '2-digit',
-                  day: '2-digit'
-                }).format(rawDate);
+            return <Date date={rawDate} />;
           }
           return 'N/A';
         }
@@ -213,7 +200,7 @@ const Spending = () => {
         )
       }
     ],
-    [isMobile]
+    []
   );
 
   const tableData = useMemo(() => expenseData, [expenseData]);

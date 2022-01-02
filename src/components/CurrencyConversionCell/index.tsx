@@ -1,34 +1,19 @@
 import React from 'react';
-import { useQuery } from 'react-query';
 import cn from 'classnames';
 import { ExclamationIcon } from '@heroicons/react/solid';
-import { convertAmountToUSD } from '../../api';
 import Loader from '../Loader';
+import { useCurrencyConversion } from '../../hooks/Currency/useCurrencyConversion';
 
 type CurrencyConversionCellProps = {
   currency?: string;
   amount?: number;
 };
 
-type CurrencyConversionAPIData = {
-  amount: number;
-  base: string;
-  date: Date;
-  rates: { USD: number };
-};
-
 const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
   currency,
   amount
 }) => {
-  const { data, isLoading, isError } = useQuery<CurrencyConversionAPIData>(
-    [`Convert${amount}${currency}ToUSD`, currency, amount],
-    () => {
-      if (currency !== 'USD') return convertAmountToUSD(currency, amount);
-      return Promise.resolve();
-    },
-    { staleTime: 10 * 60 * 1000, retry: 2 }
-  );
+  const { data, isError, isLoading } = useCurrencyConversion();
 
   if (currency === 'USD')
     return <div className='flex justify-center'>${amount}</div>;
@@ -38,10 +23,10 @@ const CurrencyConversionCell: React.FC<CurrencyConversionCellProps> = ({
   return (
     <div className={cn('flex justify-center', isError && 'text-red-600')}>
       {isError ? (
-        <ExclamationIcon className='h-6 w-6' />
-      ) : (
-        data && `${'$'.concat(data.rates.USD.toFixed(2))}`
-      )}
+        <ExclamationIcon className='w-6 h-6' />
+      ) : data ? (
+        `$${data.rates.USD.toFixed(2)}`
+      ) : null}
     </div>
   );
 };
