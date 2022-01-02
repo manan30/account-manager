@@ -6,6 +6,7 @@ import Nav from '../components/Nav';
 import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
 import Helmet from '../components/Helmet';
+import { useGeoLocation } from '../hooks/GeoLocation/useGeoLocation';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 const NotFoundPage = React.lazy(() => import('../pages/404'));
@@ -30,10 +31,6 @@ const routes: RouteType[] = [
     component: React.lazy(() => import('../pages/Expenses'))
   },
   {
-    path: '/accounts',
-    component: React.lazy(() => import('../pages/Accounts'))
-  },
-  {
     path: '/recurring',
     component: React.lazy(() => import('../pages/Recurring'))
   },
@@ -42,6 +39,14 @@ const routes: RouteType[] = [
 
 const Router = () => {
   const { user } = useGlobalState();
+  const { requestFromUS } = useGeoLocation();
+
+  if (requestFromUS) {
+    routes.push({
+      path: '/accounts',
+      component: React.lazy(() => import('../pages/Accounts'))
+    });
+  }
 
   return (
     <>
