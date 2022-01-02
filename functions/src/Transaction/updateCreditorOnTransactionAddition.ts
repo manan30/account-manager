@@ -19,6 +19,7 @@ export const updateCreditorOnTransactionAddition = functions.firestore
         const creditorRef = db
           .collection(`creditor`)
           .doc(data.transactionEntity);
+
         const creditor = (await creditorRef.get()).data() as ICreditor;
 
         if (data.transactionType === 'Credit') {

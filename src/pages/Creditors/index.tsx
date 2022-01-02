@@ -7,7 +7,6 @@ import {
 import { Link } from 'react-router-dom';
 import { Column } from 'react-table';
 import Card from '../../components/Card';
-import CurrencyConversionCell from '../../components/CurrencyConversionCell';
 import Loader from '../../components/Loader';
 import ModalFallback from '../../components/ModalFallback';
 import Table from '../../components/Table';
@@ -16,10 +15,12 @@ import { ICreditor } from '../../models/Creditor';
 import { useNotificationDispatch } from '../../providers/NotificationProvider';
 import { ADD_NOTIFICATION } from '../../reducers/NotificationReducer/notificationReducer.interface';
 import { NOTIFICATION_THEME_FAILURE } from '../../utils/Constants/ThemeConstants';
-import { NumberWithCommasFormatter } from '../../utils/Formatters';
+import { CurrencyFormatter } from '../../utils/Formatters';
 import { generateRandomKey } from '../../utils/Functions';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
+import Date from '../../components/Date';
+import SettlementBadge from './components/SettlementBadge';
 
 const NewCreditorModal = React.lazy(
   () => import('./components/NewCreditorModal')
@@ -48,9 +49,9 @@ const Creditors = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -77,9 +78,9 @@ const Creditors = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -90,7 +91,7 @@ const Creditors = () => {
         },
         accessor: 'remainingAmount',
         Cell: ({ row }) =>
-          NumberWithCommasFormatter.format(`${row.original.remainingAmount}`)
+          CurrencyFormatter.format(`${row.original.remainingAmount}`)
       },
       { Header: 'Currency', accessor: 'currency', disableSortBy: true },
       {
@@ -101,9 +102,9 @@ const Creditors = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -113,22 +114,14 @@ const Creditors = () => {
           );
         },
         accessor: 'amount',
-        Cell: ({ row }) =>
-          NumberWithCommasFormatter.format(`${row.original.amount}`)
+        Cell: ({ row }) => CurrencyFormatter.format(`${row.original.amount}`)
       },
       {
         Header: 'Account Settled',
         accessor: 'accountSettled',
-        Cell: ({ row }) =>
-          row.original.accountSettled ? (
-            <span className='inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-200 rounded-full'>
-              Settled
-            </span>
-          ) : (
-            <span className='inline-flex px-2 text-xs font-semibold leading-5 text-red-800 bg-red-200 rounded-full'>
-              Not Settled
-            </span>
-          ),
+        Cell: ({ row }) => (
+          <SettlementBadge settled={row.original.accountSettled} />
+        ),
         disableSortBy: true
       },
       {
@@ -138,26 +131,10 @@ const Creditors = () => {
           if (row.original.accountSettledOn) {
             const rawDate = row.original.accountSettledOn.toDate();
 
-            return new Intl.DateTimeFormat('en-US', {
-              weekday: 'short',
-              month: 'short',
-              year: 'numeric',
-              day: 'numeric'
-            }).format(rawDate);
+            return <Date date={rawDate} />;
           }
           return 'N/A';
         }
-      },
-      {
-        Header: 'USD Conversion',
-        accessor: 'convertedAmount',
-        Cell: ({ row }) => (
-          <CurrencyConversionCell
-            currency={row.original.currency}
-            amount={row.original.remainingAmount}
-          />
-        ),
-        disableSortBy: true
       }
     ],
     []
@@ -195,26 +172,10 @@ const Creditors = () => {
 
   return (
     <>
-      <div className='grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-3'>
-        <Card className='p-4 bg-gray-100 shadow-md'>
-          <div className='flex flex-col'>
-            <span className='mb-2 text-lg font-bold text-indigo-600'>
-              Total Creditors
-            </span>
-            <span className='text-4xl font-semibold tracking-wider text-gray-700'>
-              {isLoading ? (
-                <div className='w-12 h-12 mt-4'>
-                  <Loader size={36} />
-                </div>
-              ) : (
-                creditorsData?.length
-              )}
-            </span>
-          </div>
-        </Card>
-        <Card className='p-4 bg-gray-100 shadow-md'>
-          <div className='flex flex-col'>
-            <span className='mb-2 text-lg font-bold text-indigo-600'>
+      <div className='grid grid-cols-1 gap-4 mt-10 mb-8 md:mt-16 md:grid-cols-2 lg:grid-cols-3'>
+        <Card className='shadow-md'>
+          <div className='flex flex-col space-y-4'>
+            <span className='text-base font-bold text-indigo-600 md:text-lg'>
               {`Top ${topRemainingCreditors.length} Remaining Creditors`}
             </span>
             {isLoading ? (
@@ -222,14 +183,12 @@ const Creditors = () => {
                 <Loader size={36} />
               </div>
             ) : (
-              <ul className='mt-2 text-gray-700'>
+              <ul className='text-xs text-gray-700 md:text-sm'>
                 {topRemainingCreditors.map((cb) => (
                   <li key={generateRandomKey()} className='flex mb-2'>
-                    <div className='text-sm font-semibold'>{cb.name}</div>
-                    <div className='ml-auto text-sm'>
-                      {NumberWithCommasFormatter.format(
-                        `${cb.remainingAmount}`
-                      )}{' '}
+                    <div className='font-semibold'>{cb.name}</div>
+                    <div className='ml-auto'>
+                      {CurrencyFormatter.format(`${cb.remainingAmount}`)}{' '}
                       {cb.currency}
                     </div>
                   </li>
@@ -239,14 +198,14 @@ const Creditors = () => {
           </div>
         </Card>
       </div>
-      <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+      {isLoading && <Loader size={48} />}
+      {tableData && <Table columns={tableColumns} data={tableData} paginate />}
+      <div className='fixed bottom-0 right-0 mb-16 mr-8 md:mb-8'>
         <FloatingActionButton
           icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
           onClickHandler={() => setShowAddCreditorModal(true)}
         />
       </div>
-      {isLoading && <Loader size={48} />}
-      {tableData && <Table columns={tableColumns} data={tableData} paginate />}
       {showAddCreditorModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <NewCreditorModal

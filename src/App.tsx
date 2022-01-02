@@ -6,13 +6,13 @@ import GlobalStateProvider from './providers/GlobalStateProvider';
 import NotificationProvider from './providers/NotificationProvider';
 import AppRouter from './Router';
 import axios from 'redaxios';
-import { BASE_ENDPOINT } from './utils/Constants/APIConstants';
+import { BASE_FUNCTIONS_ENDPOINT } from './utils/Constants/APIConstants';
 
 const queryClient = new QueryClient();
 
 function App() {
   useEffect(() => {
-    axios.defaults.baseURL = BASE_ENDPOINT;
+    axios.defaults.baseURL = BASE_FUNCTIONS_ENDPOINT;
   }, []);
 
   return (

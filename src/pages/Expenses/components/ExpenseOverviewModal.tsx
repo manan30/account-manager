@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '../../../components/Modal/Modal';
 import { IExpense } from '../../../models/Expense';
-import { NumberWithCommasFormatter } from '../../../utils/Formatters';
+import { CurrencyFormatter } from '../../../utils/Formatters';
 import { generateRandomKey } from '../../../utils/Functions';
 
 type ExpenseOverviewModalProps = {
@@ -47,7 +47,7 @@ const ExpenseOverviewModal: React.FC<ExpenseOverviewModalProps> = ({
           {currentExpense?.storeName}
         </h1>
         <h2 className='text-base tracking-wider text-indigo-500 uppercase md:text-xl'>
-          ${NumberWithCommasFormatter.format(`${currentExpense?.amount}`)}
+          ${CurrencyFormatter.format(`${currentExpense?.amount}`)}
         </h2>
         <div className='w-full px-3'>
           <div className='w-full mb-2 text-base font-medium text-center text-gray-600 capitalize md:text-lg'>
@@ -69,7 +69,7 @@ const ExpenseOverviewModal: React.FC<ExpenseOverviewModalProps> = ({
                   {transaction.storeName}
                 </div>
                 <div className='text-sm text-right text-gray-700 md:text-base'>
-                  ${NumberWithCommasFormatter.format(`${transaction.amount}`)}
+                  ${CurrencyFormatter.format(`${transaction.amount}`)}
                 </div>
               </div>
             );

@@ -60,7 +60,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
     const formErrors: Array<string> = [];
     const { amount, date, entity, type } = values;
 
-    [{ amount }, { entity }, { type }].forEach((item) => {
+    [{ amount }, { entity }, { type }, { date }].forEach((item) => {
       const [key, value] = Object.entries(item)[0];
       if (value.trim() === '') formErrors.push(key);
     });
@@ -72,7 +72,7 @@ const NewTransaction: React.FC<NewTransactionProps> = ({
 
     await addNewTransactionMutation({
       transactionType: type.trim(),
-      transactionEntity: entity.trim(),
+      transactionEntity: transactionEntity?.id,
       amount: Number(amount.trim()),
       transactionDate: firestoreTimestamp.fromDate(new Date(date)),
       createdAt: firestoreTimestamp.now()
