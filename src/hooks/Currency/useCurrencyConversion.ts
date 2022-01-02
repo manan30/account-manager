@@ -10,8 +10,6 @@ type CurrencyConversionAPIData = {
 };
 
 export const useCurrencyConversion = (currency?: string, amount?: number) => {
-  const locale = new Intl.NumberFormat('default').resolvedOptions();
-  console.log({ locale });
   const { data, isLoading, isError } = useQuery<CurrencyConversionAPIData>(
     [`Convert${amount}${currency}ToUSD`, currency, amount],
     () => {

@@ -24,7 +24,7 @@ const NotificationManager = () => {
   }, [notifications, dispatch]);
 
   return notifications.length !== 0 ? (
-    <div className='fixed top-0 right-0 mt-8 mr-8'>
+    <div className='fixed top-0 right-0 mt-8 mr-8 z-75 max-w-notification'>
       {notifications.map((notification, id) => {
         const key = id;
         return (

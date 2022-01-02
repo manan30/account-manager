@@ -3,8 +3,6 @@ import cn from 'classnames';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Column } from 'react-table';
-import Card from '../../../components/Card';
-import CurrencyConversionCell from '../../../components/CurrencyConversionCell';
 import Loader from '../../../components/Loader';
 import ModalFallback from '../../../components/ModalFallback';
 import Table from '../../../components/Table';
@@ -18,6 +16,7 @@ import { CurrencyFormatter } from '../../../utils/Formatters';
 import FloatingActionButton from '../../../components/Button/FloatingActionButton';
 import { PlusIcon } from '@heroicons/react/solid';
 import Date from '../../../components/Date';
+import CreditorDetailsCard from '../components/CreditorDetailsCard';
 
 const NewTransactionModal = React.lazy(
   () => import('../components/NewTransactionModal')
@@ -51,7 +50,7 @@ const CreditorDetails = () => {
   const tableColumns = useMemo<Column<Partial<ITransaction>>[]>(
     () => [
       {
-        Header: 'Transaction Date',
+        Header: 'Date',
         accessor: 'transactionDate',
         Cell: ({ row }) => {
           const rawDate = row.original?.transactionDate?.toDate();
@@ -64,7 +63,7 @@ const CreditorDetails = () => {
         Cell: ({ row }) => CurrencyFormatter.format(`${row.original.amount}`)
       },
       {
-        Header: 'Transaction Type',
+        Header: 'Type',
         accessor: 'transactionType',
         Cell: ({ row }) => (
           <span
@@ -80,14 +79,6 @@ const CreditorDetails = () => {
             {row.original.transactionType}
           </span>
         )
-      },
-      {
-        Header: 'Transaction Added On',
-        accessor: 'createdAt',
-        Cell: ({ row }) => {
-          const rawDate = row.original?.createdAt?.toDate();
-          return <Date date={rawDate} />;
-        }
       }
     ],
     []
@@ -144,105 +135,17 @@ const CreditorDetails = () => {
           content={`Creditor Details${' - '.concat(creditor?.name ?? '')}`}
         />
       </Helmet>
-      <div className='flex mb-8'>
-        <Card className='w-3/5 p-4 mr-6 bg-gray-100 shadow-md'>
-          <div className='flex flex-col'>
-            <span className='mb-2 text-2xl font-bold text-indigo-600'>
-              Creditor Details
-            </span>
-            <span className='text-gray-700'>
-              {creditorDataLoading ? (
-                <div className='w-12 h-12 mt-4'>
-                  <Loader size={36} />
-                </div>
-              ) : (
-                <div className='grid grid-cols-1 gap-3 text-sm font-normal lg:grid-cols-2 xl:grid-cols-2'>
-                  <div className='flex items-center col-start-1 col-end-3'>
-                    <span className='mr-1 font-bold'>Name:</span>
-                    <span>{creditor?.name}</span>
-                  </div>
-                  <div className='flex items-center'>
-                    <span className='mr-1 font-bold'>Account Settled:</span>
-                    <span>
-                      {creditor?.accountSettled ? (
-                        <div className='inline-flex px-2 text-xs font-medium text-green-800 bg-green-200 rounded-full'>
-                          Settled
-                        </div>
-                      ) : (
-                        <div className='inline-flex px-2 text-xs font-medium text-red-800 bg-red-200 rounded-full'>
-                          Not Settled
-                        </div>
-                      )}
-                    </span>
-                  </div>
-                  <div className='flex items-center'>
-                    <span className='mr-1 font-bold'>Account Settled On:</span>
-                    <span>
-                      {creditor?.accountSettledOn
-                        ? new Intl.DateTimeFormat('en-US', {
-                            month: 'short',
-                            year: 'numeric',
-                            day: 'numeric'
-                          }).format(creditor.accountSettledOn.toDate())
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  <div className='flex items-center'>
-                    <span className='mr-1 font-bold'>Remaining Amount:</span>
-                    <span>{creditor?.remainingAmount}</span>
-                  </div>
-                  <div className='flex items-center'>
-                    <span className='mr-1 font-bold'>Credit Amount:</span>
-                    <span>{creditor?.amount}</span>
-                  </div>
-                  <div className='flex items-center'>
-                    <span className='mr-1 font-bold'>Currency:</span>
-                    <span>{creditor?.currency}</span>
-                  </div>
-                  <div className='flex items-center'>
-                    <span className='mr-1 font-bold'>Amount in USD:</span>
-                    <span>
-                      {creditor && (
-                        <CurrencyConversionCell
-                          amount={creditor?.remainingAmount}
-                          currency={creditor?.currency}
-                        />
-                      )}
-                    </span>
-                  </div>
-                  <div className='flex items-center text-xs'>
-                    <span className='mr-1 font-bold'>Creditor Added On:</span>
-                    <span>
-                      {new Intl.DateTimeFormat('en-US', {
-                        month: 'short',
-                        year: 'numeric',
-                        day: 'numeric'
-                      }).format(creditor?.createdAt.toDate())}
-                    </span>
-                  </div>
-                  <div className='flex items-center text-xs'>
-                    <span className='mr-1 font-bold'>Last Updated On:</span>
-                    <span>
-                      {new Intl.DateTimeFormat('en-US', {
-                        month: 'short',
-                        year: 'numeric',
-                        day: 'numeric'
-                      }).format(creditor?.updatedAt.toDate())}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </span>
-          </div>
-        </Card>
-      </div>
+      <CreditorDetailsCard
+        creditorDataLoading={creditorDataLoading}
+        creditor={creditor}
+      />
       {transactionsDataLoading && <Loader size={48} />}
       {tableData && (
         <div className='mb-6'>
           <Table columns={tableColumns} data={tableData} paginate />
         </div>
       )}
-      <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+      <div className='fixed bottom-0 right-0 mb-16 mr-8 md:mb-8'>
         <FloatingActionButton
           icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
           onClickHandler={() => setShowAddTransactionModal(true)}

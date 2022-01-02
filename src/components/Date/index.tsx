@@ -16,7 +16,7 @@ const Date: React.FC<DateProps> = ({ date }) => {
             day: 'numeric'
           }).format(date)
         : new Intl.DateTimeFormat('en-US', {
-            month: 'numeric',
+            month: '2-digit',
             year: '2-digit',
             day: '2-digit'
           }).format(date)}

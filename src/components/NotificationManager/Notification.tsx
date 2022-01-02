@@ -24,7 +24,7 @@ const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
   return (
     <div
       className={cn(
-        'w-notification-width rounded p-2 mb-4',
+        'rounded p-2 mb-4',
         theme === NOTIFICATION_THEME_SUCCESS && 'bg-indigo-200 text-indigo-800',
         theme === NOTIFICATION_THEME_FAILURE && 'bg-red-200 text-red-800',
         theme === NOTIFICATION_THEME_WARNING && 'bg-yellow-200 text-yellow-800',
@@ -45,7 +45,7 @@ const Notification: React.FC<NotificationProps> = ({ id, children, theme }) => {
             setAnimationState('exit');
           }}
         >
-          <XIcon className='ml-6 h-4 w-4' />
+          <XIcon className='w-4 h-4 ml-6' />
         </button>
       </div>
     </div>

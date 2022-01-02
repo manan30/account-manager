@@ -17,6 +17,12 @@ module.exports = {
       minWidth: {
         button: '6rem'
       },
+      maxWidth: {
+        notification: '20rem'
+      },
+      zIndex: {
+        75: 75
+      },
       height: {
         main: 'calc(100% - 4.8rem)'
       },

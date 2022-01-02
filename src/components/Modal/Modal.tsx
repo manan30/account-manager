@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({
   onCloseIconClick
 }) => {
   return (
-    <div className='relative w-full h-full'>
+    <div className='fixed inset-0 w-full h-full'>
       <div className='fixed inset-0 bg-gray-700 opacity-50' />
       <div className='fixed inset-0 flex items-center justify-center w-full h-full'>
         <div

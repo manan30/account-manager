@@ -9,7 +9,7 @@ const SettlementBadge: React.FC<SettlementBadgeProps> = ({ settled }) => {
   return (
     <span
       className={cn(
-        'p-2 font-semibold text-center rounded-full whitespace-nowrap text-xxs md:text-xs',
+        'px-2 py-1 font-semibold text-center rounded-full whitespace-nowrap text-xxs md:text-xs',
         settled ? ' text-green-800 bg-green-200' : 'text-red-800 bg-red-200'
       )}
     >
