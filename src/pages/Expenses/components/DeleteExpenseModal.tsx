@@ -47,7 +47,7 @@ const DeleteExpenseModal: React.FC<DeleteExpenseModalProps> = ({
   });
 
   return (
-    <Modal title='Delete Expense' hideCloseIcon>
+    <Modal title='Delete Expense' size='small' hideCloseIcon>
       <div className='text-sm md:text-base'>
         Are you sure you want to delete <strong>{deleteDoc?.name}</strong>?
       </div>
