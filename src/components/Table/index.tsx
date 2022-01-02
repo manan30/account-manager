@@ -16,17 +16,17 @@ const Table: <T extends Column, K>(
   const {
     headerGroups,
     page,
-    getTableProps,
-    getTableBodyProps,
-    prepareRow,
     canPreviousPage,
     canNextPage,
     pageOptions,
     pageCount,
+    state: { pageIndex },
+    getTableProps,
+    getTableBodyProps,
+    prepareRow,
     gotoPage,
     nextPage,
-    previousPage,
-    state: { pageIndex }
+    previousPage
   } = useTable(
     {
       columns,
@@ -38,11 +38,11 @@ const Table: <T extends Column, K>(
   );
 
   return (
-    <div className='shadow border-b border-gray-200 rounded-lg overflow-auto'>
+    <div className='overflow-auto border-b border-gray-200 rounded-md shadow'>
       <div className='overflow-auto max-h-table'>
         <table
           {...getTableProps()}
-          className='min-w-full divide-y divide-gray-200 sticky top-0 table-fixed'
+          className='sticky top-0 min-w-full divide-y divide-gray-200 table-auto'
         >
           <TableHeader headerGroups={headerGroups} />
           <TableBody
@@ -53,7 +53,7 @@ const Table: <T extends Column, K>(
         </table>
       </div>
       {paginate && (
-        <div className='w-full flex justify-end p-2'>
+        <div className='flex justify-end w-full p-2'>
           <PaginationControl
             previousPage={previousPage}
             isThereAPreviousPage={canPreviousPage}

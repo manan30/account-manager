@@ -19,6 +19,7 @@ import useFirestoreReadQuery from '../../hooks/Firestore/useFirestoreReadQuery';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useGlobalState } from '../../providers/GlobalStateProvider';
+import { useWindowSize } from '../../hooks/Device/useWindowSize';
 
 const DeleteExpenseModal = React.lazy(
   () => import('./components/DeleteExpenseModal')
@@ -33,27 +34,25 @@ const AddExpenseModal = React.lazy(
 const Spending = () => {
   const notificationDispatch = useNotificationDispatch();
   const { user } = useGlobalState();
-  const { data: spendingData, isLoading, error } = useFirestoreReadQuery<
+  const { isMobile } = useWindowSize();
+  const { data: expenseData, isLoading, error } = useFirestoreReadQuery<
     IExpense
   >({
     collection: 'spending',
     orderByClauses: [['date', 'desc']],
     whereClauses: [['uid', '==', user?.uid]]
   });
-  const [showAddSpendingModal, setShowAddSpendingModal] = useState(false);
-  const [showSpendingOverviewModal, setShowSpendingOverviewModal] = useState(
+
+  const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+  const [showExpenseOverviewModal, setShowExpenseOverviewModal] = useState(
     false
   );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteDoc, setDeleteDoc] = useState<
     { id: string; name: string } | undefined
   >();
-
-  const [currentSpendingEntry, setCurrentSpendingEntry] = useState<
+  const [currentExpenseEntry, setCurrentExpenseEntry] = useState<
     IExpense | undefined
-  >();
-  const [spendingOverviewModalData, setSpendingOverviewModalData] = useState<
-    IExpense[] | undefined
   >();
 
   const tableColumns = useMemo<Column<Partial<IExpense>>[]>(
@@ -66,9 +65,9 @@ const Spending = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -79,7 +78,7 @@ const Spending = () => {
         },
         accessor: 'storeName',
         Cell: ({ row }) => (
-          <p className='w-1/3 font-medium text-indigo-500'>
+          <p className='font-medium text-indigo-500'>
             {row.original.storeName}
           </p>
         )
@@ -92,9 +91,9 @@ const Spending = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -115,9 +114,9 @@ const Spending = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -129,10 +128,10 @@ const Spending = () => {
         accessor: 'category',
         Cell: ({ row }) => (
           <button
-            className='w-full uppercase'
+            className='uppercase'
             onClick={() => {
-              setShowSpendingOverviewModal(true);
-              setCurrentSpendingEntry(row.original as IExpense);
+              setShowExpenseOverviewModal(true);
+              setCurrentExpenseEntry(row.original as IExpense);
             }}
           >
             <Badge type={row.original.category || ''} />
@@ -147,9 +146,9 @@ const Spending = () => {
               <div className='ml-auto'>
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <ArrowSmDownIcon className='h-4 w-4' />
+                    <ArrowSmDownIcon className='w-4 h-4' />
                   ) : (
-                    <ArrowSmUpIcon className='h-4 w-4' />
+                    <ArrowSmUpIcon className='w-4 h-4' />
                   )
                 ) : (
                   ''
@@ -163,12 +162,18 @@ const Spending = () => {
           if (row.original.date) {
             const rawDate = row.original.date.toDate();
 
-            return new Intl.DateTimeFormat('en-US', {
-              weekday: 'short',
-              month: 'short',
-              year: 'numeric',
-              day: 'numeric'
-            }).format(rawDate);
+            return !isMobile
+              ? new Intl.DateTimeFormat('en-US', {
+                  weekday: 'short',
+                  month: 'short',
+                  year: 'numeric',
+                  day: 'numeric'
+                }).format(rawDate)
+              : new Intl.DateTimeFormat('en-US', {
+                  month: 'numeric',
+                  year: '2-digit',
+                  day: '2-digit'
+                }).format(rawDate);
           }
           return 'N/A';
         }
@@ -180,21 +185,21 @@ const Spending = () => {
           <button
             className='text-gray-500 hover:text-gray-700'
             onClick={() => {
-              setCurrentSpendingEntry(row.original as IExpense);
-              setShowAddSpendingModal(true);
+              setCurrentExpenseEntry(row.original as IExpense);
+              setShowAddExpenseModal(true);
             }}
           >
-            <PencilIcon className='h-5 w-5 text-gray-600' />
+            <PencilIcon className='w-4 h-4 text-gray-600 md:w-5 md:h-5' />
           </button>
         ),
-        style: { width: '0.1rem', paddingRight: '0' }
+        style: { paddingRight: '0' }
       },
       {
         id: 'delete',
         accessor: undefined,
         Cell: ({ row }: { row: Row<Partial<IExpense>> }) => (
           <button
-            className='w-4 text-red-400 hover:text-red-600'
+            className='text-red-400 hover:text-red-600'
             onClick={() => {
               setShowDeleteModal(true);
               setDeleteDoc({
@@ -203,16 +208,15 @@ const Spending = () => {
               });
             }}
           >
-            <TrashIcon className='h-5 w-5 text-red-600' />
+            <TrashIcon className='w-4 h-4 text-red-600 md:w-5 md:h-5' />
           </button>
-        ),
-        style: { width: '0.1rem' }
+        )
       }
     ],
-    []
+    [isMobile]
   );
 
-  const tableData = useMemo(() => spendingData, [spendingData]);
+  const tableData = useMemo(() => expenseData, [expenseData]);
 
   useEffect(() => {
     if (error)
@@ -226,53 +230,39 @@ const Spending = () => {
       });
   }, [error, notificationDispatch]);
 
-  useEffect(() => {
-    if (showSpendingOverviewModal)
-      setSpendingOverviewModalData(
-        spendingData
-          ?.filter(
-            (d) =>
-              d.category === currentSpendingEntry?.category &&
-              d.id !== currentSpendingEntry.id
-          )
-          .sort((a, b) => {
-            return (
-              new Date(b.date.toDate()).valueOf() -
-              new Date(a.date.toDate()).valueOf()
-            );
-          })
-      );
-  }, [showSpendingOverviewModal, spendingData, currentSpendingEntry]);
-
   return (
     <>
       {/*TODO: Rethink how to add expense chart */}
       {isLoading && <Loader size={48} />}
-      {tableData && <Table columns={tableColumns} data={tableData} paginate />}
-      <div className='fixed bottom-0 right-0 mb-8 mr-8'>
+      {tableData && (
+        <div className='mt-10 md:mt-16'>
+          <Table columns={tableColumns} data={tableData} paginate />
+        </div>
+      )}
+      <div className='fixed bottom-0 right-0 mb-16 mr-8 md:mb-8'>
         <FloatingActionButton
           icon={<PlusIcon className='w-6 h-6 text-gray-100' />}
-          onClickHandler={() => setShowAddSpendingModal(true)}
+          onClickHandler={() => setShowAddExpenseModal(true)}
         />
       </div>
-      {showAddSpendingModal && (
+      {showAddExpenseModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <AddExpenseModal
             uid={user?.uid ?? ''}
-            currentTransaction={currentSpendingEntry}
+            currentTransaction={currentExpenseEntry}
             handleModalClose={() => {
-              setShowAddSpendingModal(false);
+              setShowAddExpenseModal(false);
             }}
           />
         </React.Suspense>
       )}
-      {showSpendingOverviewModal && (
+      {showExpenseOverviewModal && (
         <React.Suspense fallback={<ModalFallback />}>
           <ExpenseOverviewModal
-            currentExpense={currentSpendingEntry}
-            allExpenses={spendingOverviewModalData}
+            currentExpense={currentExpenseEntry}
+            expenseData={expenseData}
             handleModalClose={() => {
-              setShowSpendingOverviewModal(false);
+              setShowExpenseOverviewModal(false);
             }}
           />
         </React.Suspense>

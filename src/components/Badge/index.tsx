@@ -6,39 +6,30 @@ type BadgeProps = {
 };
 
 const Badge: React.FC<BadgeProps> = ({ type }) => {
-  switch (type) {
-    case SpendingCategories.OTHER:
-      return (
-        <div className='rounded-2xl bg-gray-700 text-gray-100 text-center py-1 px-2 text-xxs tracking-wider font-bold'>
-          {type}
-        </div>
-      );
-    case SpendingCategories.RENT:
-      return (
-        <div className='rounded-2xl bg-orange-600 text-gray-100 text-center py-1 px-2 text-xxs tracking-wider font-bold'>
-          {type}
-        </div>
-      );
-    case SpendingCategories.GROCERIES:
-      return (
-        <div className='rounded-2xl bg-purple-700 text-gray-100 text-center py-1 px-2 text-xxs tracking-wider font-bold'>
-          {type}
-        </div>
-      );
-    case SpendingCategories.DINING:
-      return (
-        <div className='rounded-2xl bg-green-600 text-gray-100 text-center py-1 px-2 text-xxs tracking-wider font-bold'>
-          {type}
-        </div>
-      );
-    case SpendingCategories.SHOPPING:
-      return (
-        <div className='rounded-2xl bg-blue-700 text-gray-100 text-center py-1 px-2 text-xxs tracking-wider font-bold'>
-          {type}
-        </div>
-      );
-  }
-  return <div>{type}</div>;
+  const bgColor = (() => {
+    switch (type) {
+      case SpendingCategories.OTHER:
+        return 'bg-gray-700';
+      case SpendingCategories.RENT:
+        return 'bg-orange-600';
+      case SpendingCategories.GROCERIES:
+        return 'bg-purple-700';
+      case SpendingCategories.DINING:
+        return 'bg-green-600';
+      case SpendingCategories.SHOPPING:
+        return 'bg-blue-700';
+      default:
+        return 'bg-indigo-600';
+    }
+  })();
+
+  return (
+    <div
+      className={`px-4 py-1 font-bold tracking-wider text-center text-gray-100 rounded-2xl text-xxs-badge sm:text-xs ${bgColor}`}
+    >
+      {type}
+    </div>
+  );
 };
 
 export default Badge;
