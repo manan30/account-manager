@@ -2,29 +2,36 @@ import { defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import svgr from 'vite-plugin-svgr';
 import { ManifestOptions, VitePWA, VitePWAOptions } from 'vite-plugin-pwa';
-import replace from '@rollup/plugin-replace';
+import replace, { RollupReplaceOptions } from '@rollup/plugin-replace';
 
 const pwaOptions: Partial<VitePWAOptions> = {
+  includeAssets: [
+    'favicon.svg',
+    'favicon.ico',
+    'robots.txt',
+    'apple-touch-icon.png'
+  ],
   mode: process.env.NODE_ENV !== 'production' ? 'development' : 'production',
   base: '/',
-  includeAssets: ['favicon.svg'],
   manifest: {
     name: 'Account Manager',
     short_name: 'AM',
+    description:
+      'Account manager is a web application that helps you keep track of your day to day financial activity. It even helps you understand your spending habits and make you better with your finances',
     theme_color: '#ffffff',
     icons: [
       {
-        src: 'pwa-192x192.png', // <== don't add slash, for testing
+        src: 'pwa-192x192.png',
         sizes: '192x192',
         type: 'image/png'
       },
       {
-        src: '/pwa-512x512.png', // <== don't remove slash, for testing
+        src: 'pwa-512x512.png',
         sizes: '512x512',
         type: 'image/png'
       },
       {
-        src: 'pwa-512x512.png', // <== don't add slash, for testing
+        src: 'pwa-512x512.png',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any maskable'
@@ -33,32 +40,24 @@ const pwaOptions: Partial<VitePWAOptions> = {
   }
 };
 
-const replaceOptions = { __DATE__: new Date().toISOString() };
-const claims = process.env.CLAIMS === 'true';
-const reload = process.env.RELOAD_SW === 'true';
+const replaceOptions: RollupReplaceOptions = {
+  preventAssignment: true,
+  __DATE__: new Date().toISOString()
+};
 
-if (process.env.SW === 'true') {
-  pwaOptions.srcDir = 'src';
-  pwaOptions.filename = claims ? 'claims-sw.ts' : 'prompt-sw.ts';
-  pwaOptions.strategies = 'injectManifest';
-  (pwaOptions.manifest as Partial<ManifestOptions>).name =
-    'PWA Inject Manifest';
-  (pwaOptions.manifest as Partial<ManifestOptions>).short_name = 'PWA Inject';
-}
-
-if (claims) pwaOptions.registerType = 'autoUpdate';
-
-if (reload) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  replaceOptions.__RELOAD_SW__ = 'true';
-}
+pwaOptions.srcDir = 'src';
+pwaOptions.filename = 'prompt-sw.ts';
+pwaOptions.strategies = 'injectManifest';
+(pwaOptions.manifest as Partial<ManifestOptions>).name = 'PWA Inject Manifest';
+(pwaOptions.manifest as Partial<ManifestOptions>).short_name = 'PWA Inject';
 
 export default defineConfig({
   plugins: [
     reactRefresh(),
     svgr(),
     VitePWA(pwaOptions),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     replace(replaceOptions)
   ],
   server: { port: 1741, open: true }

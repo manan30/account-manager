@@ -7,13 +7,14 @@ import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
 import Helmet from '../components/Helmet';
 import { useGeoLocation } from '../hooks/GeoLocation/useGeoLocation';
+import ReloadPrompt from '../components/ReloadPrompt';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 const NotFoundPage = React.lazy(() => import('../pages/404'));
 
 type RouteType = {
   path: string;
-  component: React.LazyExoticComponent<() => JSX.Element>;
+  component: React.LazyExoticComponent<() => JSX.Element | null>;
 };
 
 const routes: RouteType[] = [
@@ -35,7 +36,7 @@ const routes: RouteType[] = [
     component: React.lazy(() => import('../pages/Recurring'))
   },
   { path: '/profile', component: React.lazy(() => import('../pages/Profile')) }
-].filter(Boolean) as RouteType[];
+];
 
 const Router = () => {
   const { user } = useGlobalState();
@@ -50,6 +51,7 @@ const Router = () => {
 
   return (
     <>
+      <ReloadPrompt />
       <BrowserRouter>
         <Helmet />
         <Nav />
