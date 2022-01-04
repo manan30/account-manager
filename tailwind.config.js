@@ -15,7 +15,8 @@ module.exports = {
         modal: '66.666667%'
       },
       minWidth: {
-        button: '6rem'
+        button: '6rem',
+        toast: '18rem'
       },
       maxWidth: {
         notification: '20rem'
@@ -34,9 +35,17 @@ module.exports = {
           '0%': { transform: 'translateY(-80%)' },
           '100%': { transform: 'translateY(0)' }
         },
-        'slide-out-bottom': {
+        'toast-entry': {
+          '0%': { transform: 'translateY(80%)' },
+          '100%': { transform: 'translateY(0)' }
+        },
+        'toast-exit': {
           '0%': { transform: 'translateY(0)' },
-          '100%': { transform: 'translateY(160%)' }
+          '100%': { transform: 'translateY(250%)' }
+        },
+        'slide-in-bottom': {
+          '0%': { transform: 'translateY(50%)' },
+          '100%': { transform: 'translateY(0)' }
         },
         'slide-in-left': {
           '0%': { transform: 'translateX(80%)' },
@@ -49,9 +58,12 @@ module.exports = {
       },
       animation: {
         'slide-in-top': 'slide-in-top 0.8s ease-in-out',
+        'slide-in-bottom': 'slide-in-bottom 0.8s ease-in-out',
         'slide-out-bottom': 'slide-out-bottom 0.8s ease-in-out',
         'slide-in-left': 'slide-in-left 0.5s ease-out',
-        'slide-out-right': 'slide-out-right 0.5s ease-in'
+        'slide-out-right': 'slide-out-right 0.5s ease-in',
+        'toast-entry': 'toast-entry 0.8s ease-in-out',
+        'toast-exit': 'toast-exit 0.8s ease-in-out'
       }
     }
   },

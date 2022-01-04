@@ -15,7 +15,7 @@ const pwaOptions: Partial<VitePWAOptions> = {
   base: '/',
   manifest: {
     name: 'Account Manager',
-    short_name: 'AM',
+    short_name: 'AccMan',
     description:
       'Account manager is a web application that helps you keep track of your day to day financial activity. It even helps you understand your spending habits and make you better with your finances',
     theme_color: '#ffffff',
@@ -46,10 +46,10 @@ const replaceOptions: RollupReplaceOptions = {
 };
 
 pwaOptions.srcDir = 'src';
-pwaOptions.filename = 'prompt-sw.ts';
+pwaOptions.filename = 'sw.ts';
 pwaOptions.strategies = 'injectManifest';
-(pwaOptions.manifest as Partial<ManifestOptions>).name = 'PWA Inject Manifest';
-(pwaOptions.manifest as Partial<ManifestOptions>).short_name = 'PWA Inject';
+(pwaOptions.manifest as Partial<ManifestOptions>).name = 'Account Manager';
+(pwaOptions.manifest as Partial<ManifestOptions>).short_name = 'AccMan';
 
 export default defineConfig({
   plugins: [

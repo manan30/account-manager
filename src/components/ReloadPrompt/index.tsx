@@ -1,11 +1,8 @@
 import React from 'react';
-import './ReloadPrompt.css';
 
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
 function ReloadPrompt() {
-  const buildDate = '__DATE__';
-
   const {
     offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
@@ -25,8 +22,8 @@ function ReloadPrompt() {
   };
 
   return (
-    <div className='ReloadPrompt-container'>
-      {(offlineReady || needRefresh) && (
+    <div className=''>
+      {offlineReady || needRefresh ? (
         <div className='ReloadPrompt-toast'>
           <div className='ReloadPrompt-message'>
             {offlineReady ? (
@@ -37,20 +34,19 @@ function ReloadPrompt() {
               </span>
             )}
           </div>
-          {needRefresh && (
+          {needRefresh ? (
             <button
               className='ReloadPrompt-toast-button'
               onClick={() => updateServiceWorker(true)}
             >
               Reload
             </button>
-          )}
+          ) : null}
           <button className='ReloadPrompt-toast-button' onClick={() => close()}>
             Close
           </button>
         </div>
-      )}
-      <div className='ReloadPrompt-date'>{buildDate}</div>
+      ) : null}
     </div>
   );
 }
