@@ -23,7 +23,10 @@ const ServiceWorkerPrompt = () => {
   };
 
   return offlineReady || needRefresh ? (
-    <Toast>
+    <Toast
+      onDismiss={!needRefresh ? close : undefined}
+      autoDismiss={!needRefresh}
+    >
       <div className='flex items-center'>
         <div className='text-xs text-gray-100 md:text-sm'>
           {offlineReady ? <span>App ready to work offline</span> : null}
