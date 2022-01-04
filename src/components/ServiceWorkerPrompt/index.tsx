@@ -23,10 +23,7 @@ const ServiceWorkerPrompt = () => {
   };
 
   return offlineReady || needRefresh ? (
-    <Toast
-      onDismiss={!needRefresh ? close : undefined}
-      autoDismiss={!needRefresh}
-    >
+    <Toast autoDismiss={false}>
       <div className='flex items-center'>
         <div className='text-xs text-gray-100 md:text-sm'>
           {offlineReady ? <span>App ready to work offline</span> : null}
@@ -48,7 +45,10 @@ const ServiceWorkerPrompt = () => {
               Reload
             </button>
           ) : null}
-          <button className='w-4 h-4 rounded-full md:h-6 md:w-6'>
+          <button
+            className='w-4 h-4 rounded-full md:h-6 md:w-6'
+            onClick={close}
+          >
             <XCircleIcon className='w-full h-full text-gray-100' />
           </button>
         </div>

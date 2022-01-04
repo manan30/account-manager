@@ -32,6 +32,7 @@ const Toast: React.FC<ToastProps> = ({
           onDismiss?.();
         }
       }}
+      style={{ animationFillMode: 'forwards' }}
     >
       {children}
     </div>
