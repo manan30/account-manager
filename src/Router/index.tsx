@@ -7,7 +7,7 @@ import { useGlobalState } from '../providers/GlobalStateProvider';
 import { generateRandomKey } from '../utils/Functions';
 import Helmet from '../components/Helmet';
 import { useGeoLocation } from '../hooks/GeoLocation/useGeoLocation';
-import ReloadPrompt from '../components/ReloadPrompt';
+import ServiceWorkerPrompt from '../components/ServiceWorkerPrompt';
 
 const AuthenticationPage = React.lazy(() => import('../pages/Authentication'));
 const NotFoundPage = React.lazy(() => import('../pages/404'));
@@ -51,7 +51,6 @@ const Router = () => {
 
   return (
     <>
-      <ReloadPrompt />
       <BrowserRouter>
         <Helmet />
         <Nav />
@@ -88,6 +87,7 @@ const Router = () => {
         </Suspense>
       </BrowserRouter>
       <NotificationManager />
+      <ServiceWorkerPrompt />
     </>
   );
 };

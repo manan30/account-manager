@@ -27,6 +27,9 @@ module.exports = {
       height: {
         main: 'calc(100% - 4.8rem)'
       },
+      width: {
+        toast: 'calc(100% - 2rem)'
+      },
       rotate: {
         270: '270deg'
       },

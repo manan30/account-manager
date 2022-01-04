@@ -1,6 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import Toast from '../../components/Toast';
 
 const Home = () => {
   return (
@@ -12,9 +11,6 @@ const Home = () => {
         <meta property='twitter:title' content={`Account Manager - Overview`} />
       </Helmet>
       <div className='grid grid-cols-3 gap-6 m-8'>Overview page</div>
-      <div className='h-10 '>
-        <Toast>ABCD</Toast>
-      </div>
     </>
   );
 };
