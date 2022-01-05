@@ -1,3 +1,4 @@
+/// <reference lib="WebWorker" />
 declare namespace TellerConnect {
   let EnrollmentResponse: {
     accessToken: string;
