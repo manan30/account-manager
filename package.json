@@ -16,9 +16,9 @@
     "build-functions": "cd functions && npm run build",
     "firebase": "npm run build-functions && firebase emulators:start --import=./firestore-data --export-on-exit",
     "deploy-functions": "cd functions && npm run deploy",
-    "compile": "yarn tsc",
+    "compile": "npm run tsc",
     "prepare": "husky install",
-    "pre-commit": "yarn lint && yarn format:check"
+    "pre-commit": "npm run lint && npm run format:check"
   },
   "devDependencies": {
     "@firebase/app-types": "0.6.1",
