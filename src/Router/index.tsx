@@ -61,7 +61,7 @@ const Router = () => {
                 component={AuthenticationPage}
                 exact
               />
-              {routes.map(({ path, component: Component }) => (
+              {/* {routes.map(({ path, component: Component }) => (
                 <Route
                   key={generateRandomKey()}
                   path={path}
@@ -79,7 +79,7 @@ const Router = () => {
                   }}
                   exact
                 />
-              ))}
+              ))} */}
               <Route component={NotFoundPage} />
             </Switch>
           </main>

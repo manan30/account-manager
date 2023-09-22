@@ -19,10 +19,10 @@ function App() {
     <GlobalStateProvider>
       <QueryClientProvider client={queryClient}>
         <NotificationProvider>
-          <FirebaseProvider>
-            <AppRouter />
-            <ReactQueryDevtools initialIsOpen={false} position='bottom-left' />
-          </FirebaseProvider>
+          {/* <FirebaseProvider> */}
+          <AppRouter />
+          <ReactQueryDevtools initialIsOpen={false} position='bottom-left' />
+          {/* </Fi/rebaseProvider> */}
         </NotificationProvider>
       </QueryClientProvider>
     </GlobalStateProvider>
